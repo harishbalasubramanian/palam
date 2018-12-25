@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "299979790782",
+    "firebase_url": "https://psrd-fa583.firebaseio.com",
+    "project_id": "psrd-fa583",
+    "storage_bucket": "psrd-fa583.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299979790782:android:d984b52057e1234c",
+        "android_client_info": {
+          "package_name": "com.happssolutions.prsd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299979790782-8t1u1vomscovci00k53ogm09bcqdi814.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.happssolutions.prsd",
+            "certificate_hash": "13e1f3708b6e0eba216375c2f5715543aaf18b92"
+          }
+        },
+        {
+          "client_id": "299979790782-85nqe9os6f05ktvikmolthgsu844ht9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDILPyO6716jlLeqYlvLwBDOtc4bw540c8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299979790782-85nqe9os6f05ktvikmolthgsu844ht9a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
