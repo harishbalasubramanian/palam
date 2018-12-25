@@ -146,37 +146,49 @@ class AdminPageState extends State<AdminPage>{
   bool a;
 
   static List<Color> calor = new List<Color>();
-    Future<bool> firestoree (int index,DocumentSnapshot snapshot) async {
+    Future<List<bool>> firestoree (int index,DocumentSnapshot snapshot) async {
       bool check;
-   Future<bool> name = Firestore.instance.collection('tests').where('name', isEqualTo: snapshot['name'].replaceAll('.mp4', '.txt')).getDocuments().then((docs){
-     try {
-       if (docs.documents[0].exists) check = true;
+      bool smeck;
+      QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt')).getDocuments();
+//      Future<bool> name = Firestore.instance.collection('tests').where('name', isEqualTo: snapshot['name'].replaceAll('.mp4', '.txt')).getDocuments().then((docs){
+//     try {
+//       if (docs.documents[0].exists) check = true;
+//
+//       SharedPreferences.getInstance().then((pref) {
+//         prefs = pref;
+//       });
+//       cool = prefs.getString(snapshot['name']) != null ? false : true;
+//
+//     }catch(e){
+//       if (e.toString() ==
+//           'RangeError (index): Invalid value: Valid value range is empty: 0') {
+//         check = false;
+//       }
+//     }
+//     return check;
+//   });
+   try{
+     if(docs.documents[0].exists) check = true;
+     prefs = await SharedPreferences.getInstance();
+     cool = prefs.getString(snapshot['name']) != null ? false : true;
 
-       SharedPreferences.getInstance().then((pref) {
-         prefs = pref;
-       });
-       cool = prefs.getString(snapshot['name']) != null ? false : true;
-
-     }catch(e){
-       if (e.toString() ==
-           'RangeError (index): Invalid value: Valid value range is empty: 0') {
-         check = false;
-       }
+   }catch(e){
+     if (e.toString() == 'RangeError (index): Invalid value: Valid value range is empty: 0') {
+       check = false;
      }
-     return check;
-   });
-    bool sleck = await name;
-    return sleck;
+   }
+   smeck = prefs.getString(snapshot['name']) != null ? false : true;
+    return [check,smeck];
   }
 
-  fire(int index, DocumentSnapshot snapshot, bool dreck)async{
-    dreck = false;
-      await firestoree(index, snapshot).then((boolean){
-        dreck = boolean;
-
-      });
-      debugPrint(dreck.toString());
-  }
+//  fire(int index, DocumentSnapshot snapshot, bool dreck)async{
+//    dreck = false;
+//      await firestoree(index, snapshot).then((boolean){
+//        dreck = boolean;
+//
+//      });
+//      debugPrint(dreck.toString());
+//  }
   bool cool = false;
 
   @override
@@ -264,470 +276,640 @@ class AdminPageState extends State<AdminPage>{
 
 
 
-                  Firestore.instance.collection('tests').where('name', isEqualTo: snapshot['name'].replaceAll('.mp4', '.txt')).getDocuments().then((docs){
-                    try {
-                      if (docs.documents[0].exists) value = true;
+//                  Firestore.instance.collection('tests').where('name', isEqualTo: snapshot['name'].replaceAll('.mp4', '.txt')).getDocuments().then((docs){
+//                    try {
+//                      if (docs.documents[0].exists) value = true;
+//
+//                      SharedPreferences.getInstance().then((pref) {
+//                        prefs = pref;
+//                      });
+//                      cool = prefs.getString(snapshot['name']) != null ? false : true;
+//
+//                    }catch(e){
+//                      if (e.toString() ==
+//                          'RangeError (index): Invalid value: Valid value range is empty: 0') {
+//                        value = false;
+//                      }
+//                    }
+//
+//                  });
+                  return FutureBuilder(
+                    future: firestoree(index, snapshot),
+                    builder : (BuildContext context, AsyncSnapshot<List<bool>> snapper) {
+                      //debugPrint(snapper.data.toString() + 'snam');
+                      if(!snapper.hasData){
+                        return Center(
+                          child: CircularProgressIndicator()
+                        );
+                      }
+                      if (snapper.hasData) {
+                        if (snapper.data[0]) {
+                          return ExpansionTile(
+                            title: ListTile(
+                                title: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    Text(snapshot['name']),
 
-                      SharedPreferences.getInstance().then((pref) {
-                        prefs = pref;
-                      });
-                      cool = prefs.getString(snapshot['name']) != null ? false : true;
 
-                    }catch(e){
-                      if (e.toString() ==
-                          'RangeError (index): Invalid value: Valid value range is empty: 0') {
-                        value = false;
+                                    snapper.data[1] ? IconButton(
+                                      icon: Icon(Icons.file_download),
+                                      color: Theme
+                                          .of(context)
+                                          .accentColor,
+                                      onPressed: () async {
+                                        setState(() {
+                                          loading = true;
+                                        });
+                                        await downloadFile(
+                                            snapshot['downloadURL'],
+                                            snapshot['name']);
+                                        QuerySnapshot snapper = await Firestore
+                                            .instance.collection('tests')
+                                            .where('name',
+                                            isEqualTo: snapshot['name']
+                                                .replaceAll('.mp4', '.txt'))
+                                            .getDocuments();
+                                        if (snapper.documents[0].exists) {
+                                          await downloadFile(
+                                              snapper
+                                                  .documents[0]['downloadURL'],
+                                              'Test' +
+                                                  snapper.documents[0]['name']);
+                                        }
+                                        setState(() {
+                                          loading = false;
+                                          scaffold.currentState.showSnackBar(
+                                              SnackBar(
+                                                content: Text(snapshot['name'] +
+                                                    ' has downloaded'),
+                                              ));
+                                          cool = false;
+                                        });
+                                      },
+
+                                    ) :
+                                    IconButton(
+                                        icon: Icon(Icons.delete),
+                                        color: Colors.orange,
+                                        onPressed: () async {
+                                          var alert = AlertDialog(
+                                            title: Text(
+                                                'Are you sure that you want to delete this from your device?'),
+                                            content: Row(
+                                              children: <Widget>[
+                                                FlatButton(
+                                                    child: Text('Yes'),
+                                                    onPressed: () async {
+                                                      prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                      String naame = prefs
+                                                          .getString(
+                                                          snapshot['name']) ??
+                                                          null;
+                                                      debugPrint(naame);
+                                                      if (naame != null) {
+                                                        File file = File(naame);
+                                                        file.delete();
+                                                      }
+                                                      NextPageState.check =
+                                                      false;
+                                                      prefs.remove(
+                                                          snapshot['name']);
+                                                      prefs.remove('Test' +
+                                                          snapshot['name']
+                                                              .replaceAll(
+                                                              '.mp4', '.txt'));
+                                                      setState(() {
+                                                        cool = true;
+                                                      });
+                                                      Navigator.pop(context);
+                                                    }
+                                                ),
+                                                FlatButton(
+                                                    child: Text('No'),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    }
+                                                ),
+
+                                              ],
+                                            ),
+                                          );
+                                          showDialog(context: context,
+                                              builder: (context) {
+                                                return alert;
+                                              });
+                                        }
+                                    ),
+                                    IconButton(
+                                        icon: Icon(Icons.delete_forever),
+                                        color: Colors.red,
+                                        onPressed: () async {
+                                          var alert = AlertDialog(
+                                            title: Text(
+                                                'Are you sure that you want to delete this from the cloud?'),
+                                            content: Row(
+                                              children: <Widget>[
+                                                FlatButton(
+                                                    child: Text('Yes'),
+                                                    onPressed: () async {
+                                                      Directory dir = Directory
+                                                          .systemTemp;
+                                                      File file = File('${dir
+                                                          .path}/${snapshot['name']}');
+                                                      StorageReference ref = FirebaseStorage
+                                                          .instance.ref().child(
+                                                          file.path.replaceAll(
+                                                              '/data/user/0/com.happssolutions.prsd/cache',
+                                                              'videos'));
+                                                      ref.delete();
+                                                      await Firestore.instance
+                                                          .collection('videos')
+                                                          .where('name',
+                                                          isEqualTo: snapshot['name'])
+                                                          .getDocuments()
+                                                          .then((docs) {
+                                                        docs.documents[0]
+                                                            .reference.delete();
+                                                      });
+                                                      dir =
+                                                          Directory.systemTemp;
+                                                      file = File('${dir
+                                                          .path}/${snapshot['name']
+                                                          .replaceAll(
+                                                          '.mp4', '.txt')
+                                                          .replaceAll(
+                                                          ' ', '')}');
+                                                      ref =
+                                                          FirebaseStorage
+                                                              .instance
+                                                              .ref().child(
+                                                              file.path
+                                                                  .replaceAll(
+                                                                  '/data/user/0/com.happssolutions.prsd/cache',
+                                                                  'tests'));
+                                                      ref.delete();
+                                                      Firestore.instance
+                                                          .collection('tests')
+                                                          .where('name',
+                                                          isEqualTo: snapshot['name']
+                                                              .replaceAll(
+                                                              '.mp4', '.txt')
+                                                              .replaceAll(
+                                                              ' ', ''))
+                                                          .getDocuments()
+                                                          .then((docs) {
+                                                        docs.documents[0]
+                                                            .reference.delete();
+                                                      });
+                                                      prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+
+
+                                                      try {
+                                                        prefs.remove(
+                                                            snapshot['name']);
+                                                        prefs.remove(
+                                                            snapshot['name']
+                                                                .replaceAll(
+                                                                ' ', '')
+                                                                .replaceAll(
+                                                                '.mp4',
+                                                                '.txt'));
+                                                      } catch (e) {
+                                                        debugPrint('e $e');
+                                                      }
+                                                      prefs.setBool(
+                                                          snapshot['name']
+                                                              .replaceAll(
+                                                              ' ', '')
+                                                              .replaceAll(
+                                                              '.mp4', '.txt'),
+                                                          true);
+                                                      Navigator.pop(context);
+                                                    }
+                                                ),
+                                                FlatButton(
+                                                    child: Text('No'),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    }
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                          showDialog(context: context,
+                                              builder: (context) {
+                                                return alert;
+                                              });
+                                        }
+                                    ),
+                                    IconButton(
+                                        icon: Icon(Icons.file_upload),
+                                        color: Colors.grey,
+                                        onPressed: () => null
+
+
+                                    ),
+                                  ],
+                                ),
+                                enabled: true,
+                                selected: true,
+
+
+                                onTap: () async {
+                                  url = snapshot['downloadURL'];
+                                  prefs = await SharedPreferences.getInstance();
+                                  String task = prefs.getString(
+                                      snapshot['name']) ?? '';
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) =>
+                                          NextPage(
+                                            name: snapshot['name'],
+                                            task: task,
+                                            auth: auth,
+                                            onSignedOut: onSignedOut,)));
+                                }
+                            ),
+                            children: <Widget>[
+                              ListTile(
+                                title: Row(
+                                  children: <Widget>[
+                                    Text(snapshot['name'].replaceAll(
+                                        '.mp4', '.txt')),
+                                    IconButton(
+                                        icon: Icon(Icons.delete_forever),
+                                        color: Colors.red,
+                                        onPressed: () {
+                                          var alert = AlertDialog(
+                                            title: Text(
+                                                'Are you sure that you want to delete this from the cloud?'),
+                                            content: Row(
+                                              children: <Widget>[
+                                                FlatButton(
+                                                    child: Text('Yes'),
+                                                    onPressed: () async {
+                                                      Directory dir = Directory
+                                                          .systemTemp;
+                                                      File file = File('${dir
+                                                          .path}/${snapshot['name']
+                                                          .replaceAll(
+                                                          '.mp4', '.txt')
+                                                          .replaceAll(
+                                                          ' ', '')}');
+                                                      StorageReference ref = FirebaseStorage
+                                                          .instance.ref().child(
+                                                          file.path.replaceAll(
+                                                              '/data/user/0/com.happssolutions.prsd/cache',
+                                                              'tests'));
+                                                      ref.delete();
+                                                      Firestore.instance
+                                                          .collection('tests')
+                                                          .where('name',
+                                                          isEqualTo: snapshot['name']
+                                                              .replaceAll(
+                                                              '.mp4', '.txt')
+                                                              .replaceAll(
+                                                              ' ', ''))
+                                                          .getDocuments()
+                                                          .then((docs) {
+                                                        docs.documents[0]
+                                                            .reference.delete();
+                                                      });
+                                                      prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                      try {
+                                                        prefs.remove('Test' +
+                                                            snapshot['name']
+                                                                .replaceAll(
+                                                                ' ', '')
+                                                                .replaceAll(
+                                                                '.mp4',
+                                                                '.txt'));
+                                                      } catch (e) {
+                                                        debugPrint('e $e');
+                                                      }
+                                                      //debugPrint(prefs.getBool(snapshot['name'].replaceAll(' ','')).toString());
+                                                      Navigator.pop(context);
+                                                    }
+                                                ),
+                                                FlatButton(
+                                                    child: Text('No'),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    }
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                          showDialog(context: context,
+                                              builder: (context) {
+                                                return alert;
+                                              });
+                                        }
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+
+                        return ListTile(
+                            title: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Text(snapshot['name']),
+
+
+                                snapper.data[1] ? IconButton(
+                                    icon: Icon(Icons.file_download),
+                                    color: Theme
+                                        .of(context)
+                                        .accentColor,
+                                    onPressed: () async {
+                                      setState(() {
+                                        loading = true;
+                                      });
+                                      await downloadFile(
+                                          snapshot['downloadURL'],
+                                          snapshot['name']);
+                                      setState(() {
+                                        loading = false;
+                                        scaffold.currentState.showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  snapshot['name'] +
+                                                      ' has downloaded'),
+                                            ));
+                                      });
+                                      try {
+                                        QuerySnapshot snapper = await Firestore
+                                            .instance
+                                            .collection('tests').where('name',
+                                            isEqualTo: snapshot['name']
+                                                .replaceAll(
+                                                '.mp4', '.txt')).getDocuments();
+                                        if (snapper.documents[0].exists) {
+                                          await downloadFile(
+                                              snapper
+                                                  .documents[0]['downloadURL'],
+                                              'Test' +
+                                                  snapper.documents[0]['name']);
+                                        }
+                                        setState(() {
+                                          loading = false;
+                                          scaffold.currentState.showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    snapshot['name'] +
+                                                        ' has downloaded'),
+                                              ));
+                                          cool = false;
+                                        });
+                                      } catch (e) {
+
+                                      }
+                                    }
+                                ):
+                                IconButton(
+                                    icon: Icon(Icons.delete),
+                                    color: Colors.orange,
+                                    onPressed: () async {
+                                      var alert = AlertDialog(
+                                        title: Text(
+                                            'Are you sure that you want to delete this from your device?'),
+                                        content: Row(
+                                          children: <Widget>[
+                                            FlatButton(
+                                                child: Text('Yes'),
+                                                onPressed: () async {
+                                                  prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                                  String naame = prefs
+                                                      .getString(
+                                                      snapshot['name']) ?? null;
+                                                  if (naame != null) {
+                                                    File file = File(naame);
+                                                    file.delete();
+                                                  }
+                                                  String naaame = prefs
+                                                      .getString(
+                                                      'Test' +
+                                                          snapshot['name']) ??
+                                                      null;
+                                                  if (naaame != null) {
+                                                    File file = File(naaame);
+                                                    file.delete();
+                                                  }
+                                                  NextPageState.check = false;
+                                                  try {
+                                                    prefs.remove(
+                                                        snapshot['name']);
+                                                    prefs.remove('Test' +
+                                                        snapshot['name']
+                                                            .replaceAll(
+                                                            '.mp4', '.txt'));
+                                                  } catch (e) {
+
+                                                  }
+                                                  setState(() {
+                                                    cool = true;
+                                                  });
+                                                  Navigator.pop(context);
+                                                }
+                                            ),
+                                            FlatButton(
+                                                child: Text('No'),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                }
+                                            ),
+
+                                          ],
+                                        ),
+                                      );
+                                      showDialog(
+                                          context: context, builder: (context) {
+                                        return alert;
+                                      });
+                                    }
+                                ),
+                                IconButton(
+                                    icon: Icon(Icons.delete_forever),
+                                    color: Colors.red,
+                                    onPressed: () async {
+                                      var alert = AlertDialog(
+                                        title: Text(
+                                            'Are you sure that you want to delete this from the cloud?'),
+                                        content: Row(
+                                          children: <Widget>[
+                                            FlatButton(
+                                                child: Text('Yes'),
+                                                onPressed: () async {
+                                                  try {
+                                                    prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                    String naame = prefs
+                                                        .getString(
+                                                        snapshot['name']) ??
+                                                        null;
+                                                    if (naame != null) {
+                                                      File file = File(naame);
+                                                      file.delete();
+                                                    }
+                                                    NextPageState.check = false;
+                                                    String naaame = prefs
+                                                        .getString('Test' +
+                                                        snapshot['name']
+                                                            .replaceAll(
+                                                            '.mp4', '.txt')) ??
+                                                        null;
+                                                    if (naaame != null) {
+                                                      File file2 = File(naaame);
+                                                      file2.delete;
+                                                    }
+                                                  } catch (e) {
+                                                    debugPrint(e.toString());
+                                                  }
+                                                  try {
+                                                    Directory dir = Directory
+                                                        .systemTemp;
+                                                    File file = File('${dir
+                                                        .path}/${snapshot['name']}');
+                                                    StorageReference ref = FirebaseStorage
+                                                        .instance.ref().child(
+                                                        file.path.replaceAll(
+                                                            '/data/user/0/com.happssolutions.prsd/cache',
+                                                            'videos'));
+                                                    ref.delete();
+                                                    await Firestore.instance
+                                                        .collection('videos')
+                                                        .where('name',
+                                                        isEqualTo: snapshot['name'])
+                                                        .getDocuments()
+                                                        .then((docs) {
+                                                      docs.documents[0]
+                                                          .reference
+                                                          .delete();
+                                                    });
+                                                    dir = Directory.systemTemp;
+                                                    file = File('${dir
+                                                        .path}/${snapshot['name']
+                                                        .replaceAll(
+                                                        '.mp4', '.txt')
+                                                        .replaceAll(' ', '')}');
+                                                    ref =
+                                                        FirebaseStorage.instance
+                                                            .ref()
+                                                            .child(
+                                                            file.path
+                                                                .replaceAll(
+                                                                '/data/user/0/com.happssolutions.prsd/cache',
+                                                                'tests'));
+                                                    ref.delete();
+                                                    Firestore.instance
+                                                        .collection(
+                                                        'tests')
+                                                        .where('name',
+                                                        isEqualTo: snapshot['name']
+                                                            .replaceAll(
+                                                            '.mp4', '.txt')
+                                                            .replaceAll(
+                                                            ' ', ''))
+                                                        .getDocuments()
+                                                        .then((docs) {
+                                                      docs.documents[0]
+                                                          .reference
+                                                          .delete();
+                                                    });
+                                                    prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+
+
+                                                    try {
+                                                      prefs.remove(
+                                                          snapshot['name']);
+                                                      prefs.remove(
+                                                          snapshot['name']
+                                                              .replaceAll(
+                                                              ' ', '')
+                                                              .replaceAll(
+                                                              '.mp4', '.txt'));
+                                                    } catch (e) {
+                                                      debugPrint('e $e');
+                                                    }
+                                                    prefs.setBool(
+                                                        snapshot['name']
+                                                            .replaceAll(
+                                                            ' ', '')
+                                                            .replaceAll(
+                                                            '.mp4', '.txt'),
+                                                        true);
+                                                    Navigator.pop(context);
+                                                  } catch (e) {
+
+                                                  }
+                                                }
+                                            ),
+                                            FlatButton(
+                                                child: Text('No'),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                }
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      showDialog(
+                                          context: context, builder: (context) {
+                                        return alert;
+                                      });
+                                    }
+                                ),
+                                IconButton(
+                                    icon: Icon(Icons.file_upload),
+                                    color: Colors.orange,
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                          builder: (context) =>
+                                              FileUpload(
+                                                snapshot['name'], auth: auth,
+                                                onSignedOut: onSignedOut,)));
+                                    }
+
+
+                                ),
+                              ],
+                            ),
+                            enabled: true,
+                            selected: true,
+
+
+                            onTap: () async {
+                              url = snapshot['downloadURL'];
+                              prefs = await SharedPreferences.getInstance();
+                              String task = prefs.getString(snapshot['name']) ??
+                                  '';
+                              debugPrint('task $task');
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) =>
+                                      NextPage(
+                                        name: snapshot['name'],
+                                        task: task,
+                                        auth: auth,
+                                        onSignedOut: onSignedOut,)));
+                            }
+                        );
                       }
                     }
-
-                  }).whenComplete((){
-                    //cool = value;
-                    debugPrint(sneck[index].toString());
-                  });
-                  //sneck[index] = cool;
-//                  if(sneck[index]){
-//
-//                    return ExpansionTile(
-//                      title: ListTile(
-//                          title: Row(
-//                            mainAxisSize: MainAxisSize.max,
-//                            children: <Widget>[
-//                              Text(snapshot['name']),
-//
-//
-//
-//                              cool ? IconButton(
-//                                icon: Icon(Icons.file_download),
-//                                color: Theme.of(context).accentColor,
-//                                onPressed: ()async{
-//                                  setState(() {
-//                                    loading = true;
-//                                  });
-//                                  await downloadFile(snapshot['downloadURL'],snapshot['name']);
-//                                  QuerySnapshot snapper = await Firestore.instance.collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt')).getDocuments();
-//                                  if(snapper.documents[0].exists){
-//                                    await downloadFile(snapper.documents[0]['downloadURL'],'Test'+snapper.documents[0]['name']);
-//                                  }
-//                                  setState(() {
-//                                    loading = false;
-//                                    scaffold.currentState.showSnackBar(SnackBar(
-//                                      content: Text(snapshot['name'] + ' has downloaded'),
-//                                    ));
-//                                    cool = false;
-//                                  });
-//
-//
-//                                },
-//
-//                              ):
-//                              IconButton(
-//                                  icon: Icon(Icons.delete),
-//                                  color: Colors.orange,
-//                                  onPressed: () async{
-//                                    var alert = AlertDialog(
-//                                      title: Text('Are you sure that you want to delete this from your device?'),
-//                                      content: Row(
-//                                        children: <Widget>[
-//                                          FlatButton(
-//                                              child: Text('Yes'),
-//                                              onPressed: () async{
-//                                                prefs = await SharedPreferences.getInstance();
-//                                                String naame = prefs.getString(snapshot['name']) ?? null;
-//                                                debugPrint(naame);
-//                                                if(naame != null){
-//                                                  File file = File(naame);
-//                                                  file.delete();
-//                                                }
-//                                                NextPageState.check = false;
-//                                                prefs.remove(snapshot['name']);
-//                                                prefs.remove('Test'+snapshot['name'].replaceAll('.mp4','.txt'));
-//                                                setState(() {
-//                                                  cool = true;
-//                                                });
-//                                                Navigator.pop(context);
-//                                              }
-//                                          ),
-//                                          FlatButton(
-//                                              child: Text('No'),
-//                                              onPressed: () {
-//                                                Navigator.pop(context);
-//                                              }
-//                                          ),
-//
-//                                        ],
-//                                      ),
-//                                    );
-//                                    showDialog(context: context, builder: (context){
-//                                      return alert;
-//                                    });
-//                                  }
-//                              ),
-//                              IconButton(
-//                                  icon: Icon(Icons.delete_forever),
-//                                  color: Colors.red,
-//                                  onPressed: ()async{
-//                                    var alert = AlertDialog(
-//                                      title: Text('Are you sure that you want to delete this from the cloud?'),
-//                                      content: Row(
-//                                        children: <Widget>[
-//                                          FlatButton(
-//                                              child: Text('Yes'),
-//                                              onPressed: ()async{
-//                                                Directory dir = Directory.systemTemp;
-//                                                File file = File('${dir.path}/${snapshot['name']}');
-//                                                StorageReference ref = FirebaseStorage.instance.ref().child(file.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','videos'));
-//                                                ref.delete();
-//                                                await Firestore.instance.collection('videos').where('name',isEqualTo: snapshot['name']).getDocuments().then((docs){
-//                                                  docs.documents[0].reference.delete();
-//                                                });
-//                                                dir = Directory.systemTemp;
-//                                                file = File('${dir.path}/${snapshot['name'].replaceAll('.mp4','.txt').replaceAll(' ','')}');
-//                                                ref = FirebaseStorage.instance.ref().child(file.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','tests'));
-//                                                ref.delete();
-//                                                Firestore.instance.collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt').replaceAll(' ','')).getDocuments().then((docs){
-//                                                  docs.documents[0].reference.delete();
-//                                                });
-//                                                prefs = await SharedPreferences.getInstance();
-//
-//
-//                                                try{
-//                                                  prefs.remove(snapshot['name']);
-//                                                  prefs.remove(snapshot['name'].replaceAll(' ','').replaceAll('.mp4','.txt'));
-//                                                }catch(e){
-//                                                  debugPrint('e $e');
-//                                                }
-//                                                prefs.setBool(snapshot['name'].replaceAll(' ','').replaceAll('.mp4','.txt'),true);
-//                                                Navigator.pop(context);
-//                                              }
-//                                          ),
-//                                          FlatButton(
-//                                              child: Text('No'),
-//                                              onPressed: (){
-//                                                Navigator.pop(context);
-//                                              }
-//                                          ),
-//                                        ],
-//                                      ),
-//                                    );
-//                                    showDialog(context: context, builder: (context){
-//                                      return alert;
-//                                    });
-//
-//                                  }
-//                              ),
-//                              IconButton(
-//                                  icon: Icon(Icons.file_upload),
-//                                  color: Colors.grey,
-//                                  onPressed: () => null
-//
-//
-//
-//                              ),
-//                            ],
-//                          ),
-//                          enabled: true,
-//                          selected: true,
-//
-//
-//                          onTap: ()async {
-//
-//                            url = snapshot['downloadURL'];
-//                            prefs = await SharedPreferences.getInstance();
-//                            String task = prefs.getString(snapshot['name']) ?? '';
-//                            Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage(name: snapshot['name'],task: task, auth: auth,onSignedOut: onSignedOut,)));
-//
-//                          }
-//                      ),
-//                      children: <Widget>[
-//                        ListTile(
-//                          title: Row(
-//                            children: <Widget>[
-//                              Text(snapshot['name'].replaceAll('.mp4','.txt')),
-//                              IconButton(
-//                                  icon: Icon(Icons.delete_forever),
-//                                  color: Colors.red,
-//                                  onPressed: () {
-//                                    var alert = AlertDialog(
-//                                      title: Text('Are you sure that you want to delete this from the cloud?'),
-//                                      content: Row(
-//                                        children: <Widget>[
-//                                          FlatButton(
-//                                              child: Text('Yes'),
-//                                              onPressed: ()async{
-//                                                Directory dir = Directory.systemTemp;
-//                                                File file = File('${dir.path}/${snapshot['name'].replaceAll('.mp4','.txt').replaceAll(' ','')}');
-//                                                StorageReference ref = FirebaseStorage.instance.ref().child(file.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','tests'));
-//                                                ref.delete();
-//                                                Firestore.instance.collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt').replaceAll(' ','')).getDocuments().then((docs){
-//                                                  docs.documents[0].reference.delete();
-//                                                });
-//                                                prefs = await SharedPreferences.getInstance();
-//                                                try{
-//                                                  prefs.remove('Test'+snapshot['name'].replaceAll(' ','').replaceAll('.mp4','.txt'));
-//                                                }catch(e){
-//                                                  debugPrint('e $e');
-//                                                }
-//                                                //debugPrint(prefs.getBool(snapshot['name'].replaceAll(' ','')).toString());
-//                                                Navigator.pop(context);
-//                                              }
-//                                          ),
-//                                          FlatButton(
-//                                              child: Text('No'),
-//                                              onPressed: (){
-//                                                Navigator.pop(context);
-//                                              }
-//                                          ),
-//                                        ],
-//                                      ),
-//                                    );
-//                                    showDialog(context: context, builder: (context){
-//                                      return alert;
-//                                    });
-//                                  }
-//                              ),
-//                            ],
-//                          ),
-//                        ),
-//                      ],
-//                    );
-//                  }
-
-                  return ListTile(
-                      title: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Text(snapshot['name']),
-
-
-
-                          IconButton(
-                            icon: Icon(Icons.file_download),
-                            color: Theme.of(context).accentColor,
-                            onPressed: ()async {
-                              setState(() {
-                                loading = true;
-                              });
-                              await downloadFile(
-                                  snapshot['downloadURL'], snapshot['name']);
-                              setState(() {
-                                loading = false;
-                                scaffold.currentState.showSnackBar(SnackBar(
-                                  content: Text(
-                                      snapshot['name'] + ' has downloaded'),
-                                ));
-                              });
-                              try {
-                                QuerySnapshot snapper = await Firestore.instance
-                                    .collection('tests').where('name',
-                                    isEqualTo: snapshot['name'].replaceAll(
-                                        '.mp4', '.txt')).getDocuments();
-                                if (snapper.documents[0].exists) {
-                                  await downloadFile(
-                                      snapper.documents[0]['downloadURL'],
-                                      'Test' + snapper.documents[0]['name']);
-                                }
-                                setState(() {
-                                  loading = false;
-                                  scaffold.currentState.showSnackBar(SnackBar(
-                                    content: Text(
-                                        snapshot['name'] + ' has downloaded'),
-                                  ));
-                                  cool = false;
-                                });
-                              } catch (e) {
-
-                              }
-
-                            }
-                          ),
-                          IconButton(
-                              icon: Icon(Icons.delete),
-                              color: Colors.orange,
-                              onPressed: () async{
-                                var alert = AlertDialog(
-                                  title: Text('Are you sure that you want to delete this from your device?'),
-                                  content: Row(
-                                    children: <Widget>[
-                                      FlatButton(
-                                          child: Text('Yes'),
-                                          onPressed: () async{
-                                            prefs = await SharedPreferences.getInstance();
-                                            String naame = prefs.getString(snapshot['name']) ?? null;
-                                            if(naame != null){
-                                              File file = File(naame);
-                                              file.delete();
-                                            }
-                                            String naaame = prefs.getString('Test'+snapshot['name']) ?? null;
-                                            if(naaame != null){
-                                              File file = File(naaame);
-                                              file.delete();
-                                            }
-                                            NextPageState.check = false;
-                                            try {
-                                              prefs.remove(snapshot['name']);
-                                              prefs.remove('Test' +
-                                                  snapshot['name'].replaceAll(
-                                                      '.mp4', '.txt'));
-                                            }catch(e){
-
-                                            }
-                                            setState(() {
-                                              cool = true;
-                                            });
-                                            Navigator.pop(context);
-                                          }
-                                      ),
-                                      FlatButton(
-                                          child: Text('No'),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          }
-                                      ),
-
-                                    ],
-                                  ),
-                                );
-                                showDialog(context: context, builder: (context){
-                                  return alert;
-                                });
-                              }
-                          ),
-                          IconButton(
-                              icon: Icon(Icons.delete_forever),
-                              color: Colors.red,
-                              onPressed: ()async{
-                                var alert = AlertDialog(
-                                  title: Text('Are you sure that you want to delete this from the cloud?'),
-                                  content: Row(
-                                    children: <Widget>[
-                                      FlatButton(
-                                          child: Text('Yes'),
-                                          onPressed: ()async{
-                                            try{
-                                              prefs = await SharedPreferences.getInstance();
-                                              String naame = prefs.getString(snapshot['name']) ?? null;
-                                              if(naame != null){
-                                                File file = File(naame);
-                                                file.delete();
-                                              }
-                                              NextPageState.check = false;
-                                              String naaame = prefs.getString('Test'+snapshot['name'].replaceAll('.mp4','.txt')) ?? null;
-                                              if(naaame != null){
-                                                File file2 = File(naaame);
-                                                file2.delete;
-                                              }
-                                            }catch(e){
-                                              debugPrint(e.toString());
-                                            }
-                                            try {
-                                              Directory dir = Directory
-                                                  .systemTemp;
-                                              File file = File('${dir
-                                                  .path}/${snapshot['name']}');
-                                              StorageReference ref = FirebaseStorage
-                                                  .instance.ref().child(
-                                                  file.path.replaceAll(
-                                                      '/data/user/0/com.happssolutions.prsd/cache',
-                                                      'videos'));
-                                              ref.delete();
-                                              await Firestore.instance
-                                                  .collection('videos')
-                                                  .where('name',
-                                                  isEqualTo: snapshot['name'])
-                                                  .getDocuments()
-                                                  .then((docs) {
-                                                docs.documents[0].reference
-                                                    .delete();
-                                              });
-                                              dir = Directory.systemTemp;
-                                              file = File('${dir
-                                                  .path}/${snapshot['name']
-                                                  .replaceAll('.mp4', '.txt')
-                                                  .replaceAll(' ', '')}');
-                                              ref =
-                                                  FirebaseStorage.instance.ref()
-                                                      .child(
-                                                      file.path.replaceAll(
-                                                          '/data/user/0/com.happssolutions.prsd/cache',
-                                                          'tests'));
-                                              ref.delete();
-                                              Firestore.instance.collection(
-                                                  'tests')
-                                                  .where('name',
-                                                  isEqualTo: snapshot['name']
-                                                      .replaceAll(
-                                                      '.mp4', '.txt')
-                                                      .replaceAll(' ', ''))
-                                                  .getDocuments()
-                                                  .then((docs) {
-                                                docs.documents[0].reference
-                                                    .delete();
-                                              });
-                                              prefs = await SharedPreferences
-                                                  .getInstance();
-
-
-                                              try {
-                                                prefs.remove(snapshot['name']);
-                                                prefs.remove(
-                                                    snapshot['name'].replaceAll(
-                                                        ' ', '').replaceAll(
-                                                        '.mp4', '.txt'));
-                                              } catch (e) {
-                                                debugPrint('e $e');
-                                              }
-                                              prefs.setBool(
-                                                  snapshot['name'].replaceAll(
-                                                      ' ', '').replaceAll(
-                                                      '.mp4', '.txt'), true);
-                                              Navigator.pop(context);
-                                            }catch(e){
-
-                                            }
-                                          }
-                                      ),
-                                      FlatButton(
-                                          child: Text('No'),
-                                          onPressed: (){
-                                            Navigator.pop(context);
-                                          }
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                showDialog(context: context, builder: (context){
-                                  return alert;
-                                });
-
-                              }
-                          ),
-                          IconButton(
-                              icon: Icon(Icons.file_upload),
-                              color: Colors.orange,
-                              onPressed: () {
-
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => FileUpload(snapshot['name'], auth: auth,onSignedOut: onSignedOut,)));
-
-                              }
-
-
-
-                          ),
-                        ],
-                      ),
-                      enabled: true,
-                      selected: true,
-
-
-                      onTap: ()async {
-
-                        url = snapshot['downloadURL'];
-                        prefs = await SharedPreferences.getInstance();
-                        String task = prefs.getString(snapshot['name']) ?? '';
-                        debugPrint('task $task');
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage(name: snapshot['name'],task: task, auth: auth,onSignedOut: onSignedOut,)));
-
-                      }
                   );
                 }
             );
