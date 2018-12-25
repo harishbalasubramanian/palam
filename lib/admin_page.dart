@@ -629,7 +629,7 @@ class AdminPageState extends State<AdminPage>{
                                                   file.path.replaceAll(
                                                       '/data/user/0/com.happssolutions.prsd/cache',
                                                       'videos'));
-                                              //ref.delete();
+                                              ref.delete();
                                               await Firestore.instance
                                                   .collection('videos')
                                                   .where('name',
