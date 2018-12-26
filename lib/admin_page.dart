@@ -215,12 +215,12 @@ class AdminPageState extends State<AdminPage>{
             });
             _signOut();
           },),
-          IconButton(icon: Icon(Icons.add),onPressed: ()async{
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>new Second(auth: auth, onSignedOut: onSignedOut,)));
-            //uploadFile(await ImagePicker.pickVideo(source: ImageSource.gallery));
-          }
+//          IconButton(icon: Icon(Icons.add),onPressed: ()async{
+//            Navigator.push(context, MaterialPageRoute(builder: (context)=>new Second(auth: auth, onSignedOut: onSignedOut,)));
+//            //uploadFile(await ImagePicker.pickVideo(source: ImageSource.gallery));
+//          }
 
-          )
+//          )
 
         ],
       ),
@@ -248,6 +248,7 @@ class AdminPageState extends State<AdminPage>{
       body: !loading && signedIn ? StreamBuilder(
           stream: Firestore.instance.collection('videos').snapshots(),
           builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
+
             if(!snap.hasData)
               return Center(
                 child: Row(
@@ -936,7 +937,7 @@ class AdminPageState extends State<AdminPage>{
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () async {
-
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>new Second(auth: auth, onSignedOut: onSignedOut,)));
 //            Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage()));
 //            createVideo();
 //            control.play();
@@ -1198,7 +1199,7 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
 //      });
 //
 //    }
-
+    control = null;
     if(control == null){
       debugPrint('check $check');
       if(check) {
@@ -1271,8 +1272,9 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
               control.seekTo(Duration(seconds: 0));
               control.setVolume(0.0);
               control.removeListener(listen);
-              control = null;
               Navigator.pop(context);
+
+
             }
 
         ),
@@ -1287,13 +1289,16 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
                 if(snap.data) {
                   return FlatButton(
                     child: Text('Take The Quiz'),
-                    onPressed: () =>
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) =>
-                                Test(name: name,
-                                  task: task,
-                                  auth: auth,
-                                  onSignedOut: onSignedOut,))),
+                    onPressed: ()async {
+                      await control.pause();
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) =>
+                              Test(name: name,
+                                task: task,
+                                auth: auth,
+                                onSignedOut: onSignedOut,)));
+
+                    }
                   );
                 }
                 else{
@@ -1718,7 +1723,7 @@ class TestState extends State<Test>{
 
       op.removeWhere((e) => toRemove.contains(e));
       toRemove = [];
-
+      op.add(Padding(padding: EdgeInsets.only(top: 25.0)));
 
       op.add(Text('''$question''', textAlign: TextAlign.center,
           style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),);
@@ -1751,6 +1756,7 @@ class TestState extends State<Test>{
       debugPrint(pushed.toString());
       if (activated != 2) {
         op.add(FlatButton(
+          color: Colors.orange,
             child: Text('Submit'),
             onPressed: () {
               if (!pushed) {
@@ -1777,7 +1783,8 @@ class TestState extends State<Test>{
                 if (trynum == 1) score++;
                 scaffold.currentState.showSnackBar(
                     SnackBar(
-                        content: Text('You are correct')
+                        content: Text('You are correct'),
+                      duration: Duration(milliseconds: 1500),
                     )
                 );
               }
@@ -1787,7 +1794,8 @@ class TestState extends State<Test>{
                 scaffold.currentState.showSnackBar(
                     SnackBar(
                         content: Text(
-                            'You are incorrect choose a different answer and submit again')
+                            'You are incorrect choose a different answer and submit again'),
+                      duration: Duration(milliseconds: 1500),
                     )
                 );
                 debugPrint('choice $choice answer $answer');
@@ -1799,8 +1807,11 @@ class TestState extends State<Test>{
         ));
       }
       if (activated == 2)
-        op.add(Text('''Answer $answer''', textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),);
+        op.add(Container(
+          color: Colors.yellow,
+          child: Text('''Answer $answer''', textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: "Serif", fontSize: 16.0,color: Colors.blue)),
+        ),);
       if (activated == 1 || activated == 2)
         op.add(Text('''$explanation''', textAlign: TextAlign.center,
             style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),);
@@ -1808,6 +1819,7 @@ class TestState extends State<Test>{
       if (next) {
         op.add(
             FlatButton(
+              color: Colors.yellow,
               child: Text('Next Question', textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
               onPressed: () {
@@ -1823,7 +1835,7 @@ class TestState extends State<Test>{
       }
       if (length == index && activated == 2) {
         op.add(FlatButton(
-          color: Colors.grey.shade100,
+          color: Colors.greenAccent,
           child: Text('Finish', textAlign: TextAlign.center,
               style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
           onPressed: () {
@@ -1842,10 +1854,11 @@ class TestState extends State<Test>{
 
       op.removeWhere((e) => toRemove.contains(e));
       toRemove = [];
+      op.add(Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/2.5)));
       op.add(
           Center(
             child: Text(
-                'You\'re final score is ${(score/length*100).ceil()}'
+                'You\'re final score is ${(score/length*100).ceil()}%',textAlign: TextAlign.center, style: TextStyle(fontFamily: "Serif",fontSize: 25.0),
             ),
           )
       );
@@ -1875,9 +1888,13 @@ class TestState extends State<Test>{
       ),
 
       body: loaded ? SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: loopOptions(),
+        child: Center(
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+            children: loopOptions(),
+          ),
         ),
       ) : Center(child: CircularProgressIndicator()),
     );

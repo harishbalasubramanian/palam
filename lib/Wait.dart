@@ -26,6 +26,7 @@ class WaitState extends State<Wait> {
       appBar: AppBar(
         title: Text('You have not been approved'),
         backgroundColor: Colors.orange,
+        automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
             icon: Icon(

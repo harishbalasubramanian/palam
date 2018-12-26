@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'auth.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class LoginPage extends StatefulWidget{
   LoginPage({this.auth,this.onSignedIn});
   final BaseAuth auth;
@@ -36,7 +36,7 @@ class LoginPageState extends State<LoginPage>{
     final form = formKey.currentState;
     form.save();
     if(form.validate()){
-      debugPrint('$email $password');
+      //debugPrint('$email $password');
       return true;
     }
     else{
@@ -185,7 +185,12 @@ class LoginPageState extends State<LoginPage>{
         child: Text('Create an Account',style: TextStyle(fontSize:20.0)),
         onPressed: reg,
       ),
-
+      RaisedButton(
+        child: Text('Forgot Password',style: TextStyle(fontSize: 20.0)),
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>Forgot()));
+        }
+      ),
       ];
 
     }
@@ -256,5 +261,70 @@ class LoginPageState extends State<LoginPage>{
 
     }
 
+  }
+}
+class Forgot extends StatefulWidget {
+  @override
+  ForgotState createState() => ForgotState();
+}
+
+class ForgotState extends State<Forgot> {
+  bool validateAndSave(){
+    final form = formKey.currentState;
+    form.save();
+    if(form.validate()){
+      //debugPrint('$email $password');
+      return true;
+    }
+    else{
+      debugPrint('wa');
+      return false;
+    }
+  }
+  String email;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Password Reset'),
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                validator: (value) => value.isEmpty ? "Email can't be empty": null,
+                onSaved: (value) => email = value,
+
+              ),
+              RaisedButton(
+                onPressed:(){
+                  if(validateAndSave()){
+                    FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_){
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Sending Email'),
+                        ),
+                      );
+                    }
+                    ).catchError((error){
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Password Reset Failed')
+                        ),
+                      );
+                    });
+                  }
+                },
+                child: Text('Send Reset Email'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
