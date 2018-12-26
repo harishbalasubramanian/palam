@@ -166,7 +166,7 @@ class AdminPageState extends State<AdminPage>{
 //       }
 //     }
 //     return check;
-//   });
+
    try{
      if(docs.documents[0].exists) check = true;
      prefs = await SharedPreferences.getInstance();
