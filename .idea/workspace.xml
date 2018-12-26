@@ -4,7 +4,10 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f161d4e7-a0e1-4051-84d0-854d1547355e" name="Default" comment="" />
+    <list default="true" id="f161d4e7-a0e1-4051-84d0-854d1547355e" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/lib/admin_page.dart" afterPath="$PROJECT_DIR$/lib/admin_page.dart" />
+    </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
     <ignored path="$PROJECT_DIR$/.pub/" />
@@ -76,18 +79,18 @@
       <file leaf-file-name="admin_page.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="492">
-              <caret line="179" column="3" lean-forward="false" selection-start-line="179" selection-start-column="3" selection-end-line="179" selection-end-column="3" />
+            <state relative-caret-position="161">
+              <caret line="1164" column="3" lean-forward="true" selection-start-line="1164" selection-start-column="3" selection-end-line="1171" selection-end-column="5" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
                 <element signature="e#987#1217#0" expanded="false" />
-                <element signature="e#49262#49554#0" expanded="false" />
-                <element signature="e#49602#53589#0" expanded="false" />
-                <element signature="e#59838#60096#0" expanded="false" />
-                <element signature="e#60170#60974#0" expanded="false" />
-                <element signature="e#61010#61242#0" expanded="false" />
-                <element signature="e#73770#73812#0" expanded="false" />
-                <marker date="1545764018848" expanded="true" signature="56306:56352" ph="..." />
+                <element signature="e#49696#49988#0" expanded="false" />
+                <element signature="e#50036#54023#0" expanded="false" />
+                <element signature="e#61519#61777#0" expanded="false" />
+                <element signature="e#61851#62655#0" expanded="false" />
+                <element signature="e#62691#62923#0" expanded="false" />
+                <element signature="e#75116#75158#0" expanded="false" />
+                <marker date="1545841678014" expanded="true" signature="56859:56905" ph="..." />
               </folding>
             </state>
           </provider>
@@ -150,12 +153,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>downloadFile</find>
-      <find>name</find>
-      <find>Test</find>
-      <find>done</find>
-      <find>pop</find>
-      <find>Drawer</find>
       <find>StreamBuilder</find>
       <find>where</find>
       <find>email</find>
@@ -172,7 +169,6 @@
       <find>build</find>
       <find>volume</find>
       <find>If</find>
-      <find>NextPageState</find>
       <find>prefs.getString</find>
       <find>cool</find>
       <find>debugPrint</find>
@@ -180,6 +176,13 @@
       <find>signOut</find>
       <find>sneck</find>
       <find>getTest</find>
+      <find>CircularProgressIndi</find>
+      <find>NextPageState</find>
+      <find>debugPrint('task</find>
+      <find>url</find>
+      <find>ListTile</find>
+      <find>seekTo</find>
+      <find>dispose</find>
     </findStrings>
     <replaceStrings>
       <replace>control</replace>
@@ -220,7 +223,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="110" />
+    <option name="x" value="-27" />
     <option name="y" value="23" />
     <option name="width" value="1680" />
     <option name="height" value="947" />
@@ -465,7 +468,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="110" y="23" width="1680" height="947" extended-state="0" />
+    <frame x="-27" y="23" width="1680" height="947" extended-state="0" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298122" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
@@ -487,7 +490,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32986337" sideWeight="0.50644565" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39907193" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39906102" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22832723" sideWeight="0.5074627" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Flutter Inspector" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32986337" sideWeight="0.49355432" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -510,14 +513,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="35" lean-forward="false" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -763,6 +758,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="158">
           <caret line="303" column="24" lean-forward="false" selection-start-line="303" selection-start-column="24" selection-end-line="303" selection-end-column="24" />
+          <folding>
+            <element signature="e#166#207#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -932,20 +930,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Downloads/admin_page.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1962">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="179" column="3" lean-forward="false" selection-start-line="179" selection-start-column="3" selection-end-line="179" selection-end-column="3" />
+        <state relative-caret-position="161">
+          <caret line="1164" column="3" lean-forward="true" selection-start-line="1164" selection-start-column="3" selection-end-line="1171" selection-end-column="5" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
             <element signature="e#987#1217#0" expanded="false" />
-            <element signature="e#49262#49554#0" expanded="false" />
-            <element signature="e#49602#53589#0" expanded="false" />
-            <element signature="e#59838#60096#0" expanded="false" />
-            <element signature="e#60170#60974#0" expanded="false" />
-            <element signature="e#61010#61242#0" expanded="false" />
-            <element signature="e#73770#73812#0" expanded="false" />
-            <marker date="1545764018848" expanded="true" signature="56306:56352" ph="..." />
+            <element signature="e#49696#49988#0" expanded="false" />
+            <element signature="e#50036#54023#0" expanded="false" />
+            <element signature="e#61519#61777#0" expanded="false" />
+            <element signature="e#61851#62655#0" expanded="false" />
+            <element signature="e#62691#62923#0" expanded="false" />
+            <element signature="e#75116#75158#0" expanded="false" />
+            <marker date="1545841678014" expanded="true" signature="56859:56905" ph="..." />
           </folding>
         </state>
       </provider>

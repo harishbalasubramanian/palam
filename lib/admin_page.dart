@@ -114,15 +114,25 @@ class AdminPageState extends State<AdminPage>{
 //    }
 //    String task = '';
     try {
+      debugPrint('1');
       var request = await httpClient.getUrl(Uri.parse(url));
+      debugPrint('2');
       var response = await request.close();
+      debugPrint('3');
       var bytes = await consolidateHttpClientResponseBytes(response);
+      debugPrint('4');
       String dir = (await getApplicationDocumentsDirectory()).path;
+
       File file = new File('$dir/$name');
+
       await file.writeAsBytes(bytes);
+
       prefs = await SharedPreferences.getInstance();
+
       prefs.setString(name,file.path);
+
       debugPrint(file.path);
+
       return file;
 
 //      debugPrint((await getExternalStorageDirectory()).path);
@@ -309,7 +319,7 @@ class AdminPageState extends State<AdminPage>{
                                 title: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
-                                    Text(snapshot['name']),
+                                    Text(snapshot['name'].replaceAll('.mp4','')),
 
 
                                     snapper.data[1] ? IconButton(
@@ -522,6 +532,7 @@ class AdminPageState extends State<AdminPage>{
 
                                 onTap: () async {
                                   url = snapshot['downloadURL'];
+                                  debugPrint('url1 $url');
                                   prefs = await SharedPreferences.getInstance();
                                   String task = prefs.getString(
                                       snapshot['name']) ?? '';
@@ -531,7 +542,9 @@ class AdminPageState extends State<AdminPage>{
                                             name: snapshot['name'],
                                             task: task,
                                             auth: auth,
-                                            onSignedOut: onSignedOut,)));
+                                            onSignedOut: onSignedOut,
+                                            url: url,
+                                          )));
                                 }
                             ),
                             children: <Widget>[
@@ -623,7 +636,7 @@ class AdminPageState extends State<AdminPage>{
                             title: Row(
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                Text(snapshot['name']),
+                                Text(snapshot['name'].replaceAll('.mp4','')),
 
 
                                 snapper.data[1] ? IconButton(
@@ -895,6 +908,7 @@ class AdminPageState extends State<AdminPage>{
 
                             onTap: () async {
                               url = snapshot['downloadURL'];
+                              debugPrint('url1 $url');
                               prefs = await SharedPreferences.getInstance();
                               String task = prefs.getString(snapshot['name']) ??
                                   '';
@@ -905,7 +919,9 @@ class AdminPageState extends State<AdminPage>{
                                         name: snapshot['name'],
                                         task: task,
                                         auth: auth,
-                                        onSignedOut: onSignedOut,)));
+                                        onSignedOut: onSignedOut,
+                                        url: url,
+                                      )));
                             }
                         );
                       }
@@ -1088,14 +1104,14 @@ class FileUploadState extends State<FileUpload>{
 }
 class NextPage extends StatefulWidget{
   String name;
-
+  String url;
   String task;
   BaseAuth auth;
   VoidCallback onSignedOut;
-  NextPage({this.name, this.task, @required this.auth, @required this.onSignedOut});
+  NextPage({this.name, this.task, @required this.auth, @required this.onSignedOut,@required this.url});
   @override
   State<StatefulWidget> createState() {
-    return new NextPageState(this.name, this.task, auth: auth,onSignedOut: onSignedOut);
+    return new NextPageState(this.name, this.task, auth: auth,onSignedOut: onSignedOut, url: url);
   }
 
 }
@@ -1111,8 +1127,9 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
   String name;
   String task;
   VoidCallback onSignedOut;
+  String url;
   Fader fade = Fader(Icon(Icons.play_arrow,size: 100.0));
-  NextPageState(this.name, this.task, {@required this.auth, @required this.onSignedOut});
+  NextPageState(this.name, this.task, {@required this.auth, @required this.onSignedOut, @required this.url});
 
   @override
   void initState() {
@@ -1127,6 +1144,7 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
         sneeze = true;
       }
     });
+    debugPrint('url $url');
     createVideo();
     control.play();
     debugPrint('control ' + control.value.isPlaying.toString());
@@ -1138,22 +1156,20 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
     //control.setVolume(0.0);
 
     //control.setVolume(0.0);
-    control.seekTo(Duration(seconds: 0));
-    control.setVolume(0.0);
-    control.removeListener(listen);
+
 
 
     super.deactivate();
   }
 
-  @override
-  void dispose(){
-    control.seekTo(Duration(seconds: 0));
-    control.setVolume(0.0);
-    control.removeListener(listen);
-    control.dispose();
-    super.dispose();
-  }
+//  @override
+//  void dispose(){
+////    control.seekTo(Duration(seconds: 0));
+////    control.setVolume(0.0);
+////    control.removeListener(listen);
+////    control.dispose();
+//    super.dispose();
+//  }
 
 
 
@@ -1169,9 +1185,11 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
       debugPrint('task '+task);
       File file = File(task);
       AdminPageState._cachedFile = file;
+      debugPrint('file : ${file.path}');
       if(file.existsSync()){
         check = true;
       }
+
     }
 //    if(task != ''){
 //      check = true;
@@ -1188,6 +1206,7 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
           control = VideoPlayerController.file(AdminPageState._cachedFile)
             ..addListener(listen);
           ready = true;
+          debugPrint('iin here');
         }catch(e){
 
         }
@@ -1195,10 +1214,13 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
           //..play();
 
       }
+
       else {
         debugPrint('network');
-        control = VideoPlayerController.network(AdminPageState.url)..addListener(listen);//..setVolume(1.0);//..play();
+        debugPrint('url2 $url');
+        control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
         ready = true;
+
       }
     }
     else{
@@ -1225,6 +1247,16 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
 //      }
 //    }
   }
+  Future<bool> testThere (String name)async{
+    bool isThere = false;
+    QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments();
+    try {
+      if (docs.documents[0].exists) isThere = true;
+    }catch(e){
+      if(e.toString() == "RangeError (index): Invalid value: Valid value range is empty: 0") isThere = false;
+    }
+    return isThere;
+  }
   bool hide = true;
   Widget build(BuildContext context){
 
@@ -1236,17 +1268,40 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> AdminPage(auth: auth, onSignedOut: onSignedOut,)));
-              setState(() {
-
-              });
+              control.seekTo(Duration(seconds: 0));
+              control.setVolume(0.0);
+              control.removeListener(listen);
+              control = null;
+              Navigator.pop(context);
             }
 
         ),
         actions: <Widget>[
-          FlatButton(
-            child: Text('Take The Quiz'),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>Test(name: name,task: task, auth: auth,onSignedOut: onSignedOut,))),
+          FutureBuilder(
+            future: testThere(name),
+            builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+              if(!snap.hasData){
+                return CircularProgressIndicator();
+              }
+              if(snap.hasData) {
+                if(snap.data) {
+                  return FlatButton(
+                    child: Text('Take The Quiz'),
+                    onPressed: () =>
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                Test(name: name,
+                                  task: task,
+                                  auth: auth,
+                                  onSignedOut: onSignedOut,))),
+                  );
+                }
+                else{
+                  return Container();
+                }
+
+              }
+            }
           ),
         ],
       ),
@@ -1816,16 +1871,7 @@ class TestState extends State<Test>{
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: Text('Another Test'),
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> NextPage(name: widget.name, task: widget.task,auth: auth, onSignedOut: onSignedOut,)));
-              setState(() {
 
-              });
-            }
-
-        ),
       ),
 
       body: loaded ? SingleChildScrollView(
