@@ -5,7 +5,6 @@ import 'package:prsd/student_page.dart';
 import 'package:prsd/teacher_page.dart';
 import 'package:prsd/Wait.dart';
 import 'package:prsd/admin_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 class RootPage extends StatefulWidget{
   RootPage({@required this.auth});
   final BaseAuth auth;

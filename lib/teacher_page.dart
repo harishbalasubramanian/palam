@@ -277,8 +277,7 @@ class TeacherPageState extends State<TeacherPage>{
             return ListView.builder(
                 itemCount: messageCount,
                 itemBuilder: (BuildContext context, int index){
-                  List<bool> lister = [];
-                  bool value = false;
+
                   DocumentSnapshot snapshot = snap.data.documents[index];
                   sneck.removeRange(0,sneck.length);
                   for(int i = 0; i < messageCount; i++){
@@ -1165,7 +1164,7 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
   String task;
   VoidCallback onSignedOut;
   String url;
-  Fader fade = Fader(Icon(Icons.play_arrow,size: 100.0));
+  //Fader fade = Fader(Icon(Icons.play_arrow,size: 100.0));
   NextPageState(this.name, this.task, {@required this.auth, @required this.onSignedOut, @required this.url});
 
   @override

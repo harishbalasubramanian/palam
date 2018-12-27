@@ -29,7 +29,7 @@ class StudentPage extends StatefulWidget{
 }
 
 class StudentPageState extends State<StudentPage>{
-  String _path;
+
   static File _cachedFile;
   static List<bool> sneck = [];
   String curpath;
@@ -195,8 +195,7 @@ class StudentPageState extends State<StudentPage>{
             return ListView.builder(
                 itemCount: messageCount,
                 itemBuilder: (BuildContext context, int index){
-                  List<bool> lister = [];
-                  bool value = false;
+
                   DocumentSnapshot snapshot = snap.data.documents[index];
                   sneck.removeRange(0,sneck.length);
                   for(int i = 0; i < messageCount; i++){
@@ -454,7 +453,7 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
   String task;
   VoidCallback onSignedOut;
   String url;
-  Fader fade = Fader(Icon(Icons.play_arrow,size: 100.0));
+  //Fader fade = Fader(Icon(Icons.play_arrow,size: 100.0));
   NextPageState(this.name, this.task, {@required this.auth, @required this.onSignedOut, @required this.url});
 
   @override
