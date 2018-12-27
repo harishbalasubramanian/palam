@@ -29,7 +29,8 @@ class Home extends StatelessWidget{
       theme: ThemeData(
         primarySwatch:  Colors.orange
       ),
-      title: "Name",
+      title: "PRSD",
+      debugShowCheckedModeBanner: false,
     );
   }
 }

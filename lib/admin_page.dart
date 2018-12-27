@@ -44,11 +44,11 @@ class AdminPageState extends State<AdminPage>{
   static FlutterDocumentPickerParams params;
   AdminPageState({this.auth,this.onSignedOut});
   BaseAuth auth;
-  bool signedIn;
+  static bool signedIn;
   bool loading = false;
   final VoidCallback onSignedOut;
 
-  void _signOut() async{
+  void signOut() async{
     try{
       debugPrint('one');
       await FirebaseAuth.instance.signOut();
@@ -209,12 +209,12 @@ class AdminPageState extends State<AdminPage>{
       appBar: AppBar(
         title: Text('Welcome'),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.accessibility),onPressed: () {
-            setState(() {
-              signedIn = false;
-            });
-            _signOut();
-          },),
+//          IconButton(icon: Icon(Icons.accessibility),onPressed: () {
+//            setState(() {
+//              signedIn = false;
+//            });
+//            _signOut();
+//          },),
 //          IconButton(icon: Icon(Icons.add),onPressed: ()async{
 //            Navigator.push(context, MaterialPageRoute(builder: (context)=>new Second(auth: auth, onSignedOut: onSignedOut,)));
 //            //uploadFile(await ImagePicker.pickVideo(source: ImageSource.gallery));
@@ -241,7 +241,16 @@ class AdminPageState extends State<AdminPage>{
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherView()));
                 }
-            )
+            ),
+            ListTile(
+              title: Text('Sign Out'),
+              onTap: (){
+                setState(() {
+                  signedIn = false;
+                });
+                signOut();
+              }
+            ),
           ],
         ),
       ),
@@ -552,8 +561,9 @@ class AdminPageState extends State<AdminPage>{
                               ListTile(
                                 title: Row(
                                   children: <Widget>[
+                                    Padding(padding: EdgeInsets.only(left: 16.0)),
                                     Text(snapshot['name'].replaceAll(
-                                        '.mp4', '.txt')),
+                                        '.mp4', '.txt'),style: TextStyle(color: Colors.orange),),
                                     IconButton(
                                         icon: Icon(Icons.delete_forever),
                                         color: Colors.red,
@@ -637,6 +647,7 @@ class AdminPageState extends State<AdminPage>{
                             title: Row(
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
+                                Padding(padding: EdgeInsets.only(left: 16.0)),
                                 Text(snapshot['name'].replaceAll('.mp4','')),
 
 

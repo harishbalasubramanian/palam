@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'admin_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'authentication/Login.dart';
+import 'authentication/root_page.dart';
+import 'authentication/auth.dart';
 class TeacherView extends StatefulWidget {
   @override
   TeacherViewState createState() => TeacherViewState();
@@ -31,7 +35,28 @@ class TeacherViewState extends State<TeacherView> {
                     Navigator.pop(context);
                   }
               ),
-
+              ListTile(
+                  title: Text('Sign Out'),
+                  onTap: ()async{
+                    AdminPageState.signedIn = false;
+                    try{
+                      debugPrint('one');
+                      await FirebaseAuth.instance.signOut();
+                      LoginPageState.auth = RootPageState.auth = Auth.bauth = null;
+                      debugPrint('two');
+                      setState(() {
+                        RootPageState.authStatus = AuthStat.notSignedIn;
+                        LoginPageState.isLoading = false;
+                        Auth.done = false;
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> RootPage(auth: new Auth())),);
+                      });
+                      debugPrint('${RootPageState.authStatus}');
+                    }catch(e){
+                      debugPrint('e $e');
+//      onSignedOut();
+                    }
+                  }
+              ),
             ],
           ),
         ),
