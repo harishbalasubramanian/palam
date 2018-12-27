@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
 import 'authentication/auth.dart';
+import 'student_view.dart';
 class TeacherView extends StatefulWidget {
   @override
   TeacherViewState createState() => TeacherViewState();
@@ -35,6 +36,13 @@ class TeacherViewState extends State<TeacherView> {
                     Navigator.pop(context);
                   }
               ),
+              RootPageState.auth == AuthStatus.admin ? ListTile(
+                title: Text('View Students'),
+                onTap: (){
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView()));
+                }
+              ):Container(),
               ListTile(
                   title: Text('Sign Out'),
                   onTap: ()async{

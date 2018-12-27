@@ -20,6 +20,7 @@ import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:chewie/chewie.dart';
+import 'student_view.dart';
 class AdminPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
@@ -243,6 +244,13 @@ class AdminPageState extends State<AdminPage>{
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherView()));
                 }
+            ),
+            ListTile(
+              title: Text('View Students'),
+              onTap: (){
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView()));
+              }
             ),
             ListTile(
               title: Text('Sign Out'),

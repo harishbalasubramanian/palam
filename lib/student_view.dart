@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
 import 'authentication/auth.dart';
+import 'teacher_view.dart';
 class StudentView extends StatefulWidget {
   @override
   StudentViewState createState() => StudentViewState();
@@ -12,8 +13,10 @@ class StudentView extends StatefulWidget {
 
 class StudentViewState extends State<StudentView> {
   List<bool> value = [];
+  String role = '';
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           title: Text('View All Students'),
@@ -29,8 +32,15 @@ class StudentViewState extends State<StudentView> {
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherPage()));
                   }
               ),
+              RootPageState.auth == AuthStatus.admin ? ListTile(
+                title: Text('View Teachers'),
+                onTap: (){
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => TeacherView()));
+                }
+              ):Container(),
               ListTile(
-                  title: Text('View Teachers'),
+                  title: Text('View Students'),
                   onTap: () {
                     Navigator.pop(context);
                   }
