@@ -23,10 +23,11 @@ import 'package:chewie/chewie.dart';
 class AdminPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
-  AdminPage({this.auth,this.onSignedOut});
+  String uid;
+  AdminPage({this.auth,this.onSignedOut,this.uid});
   @override
   State<StatefulWidget> createState() {
-    return new AdminPageState(auth: auth, onSignedOut: onSignedOut);
+    return new AdminPageState(auth: auth, onSignedOut: onSignedOut,uid: uid);
   }
 
 
@@ -42,7 +43,8 @@ class AdminPageState extends State<AdminPage>{
   static String url = '';
   GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
   static FlutterDocumentPickerParams params;
-  AdminPageState({this.auth,this.onSignedOut});
+  String uid;
+  AdminPageState({this.auth,this.onSignedOut,this.uid});
   BaseAuth auth;
   static bool signedIn;
   bool loading = false;
@@ -199,7 +201,7 @@ class AdminPageState extends State<AdminPage>{
 //      });
 //      debugPrint(dreck.toString());
 //  }
-  bool cool = false;
+  static bool cool = false;
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +325,9 @@ class AdminPageState extends State<AdminPage>{
                         );
                       }
                       if (snapper.hasData) {
+                        cool = snapper.data[1];
                         if (snapper.data[0]) {
+
                           return ExpansionTile(
                             title: ListTile(
                                 title: Row(
@@ -1103,7 +1107,28 @@ class FileUploadState extends State<FileUpload>{
               });
               prefs = await SharedPreferences.getInstance();
               prefs.setBool('$fileName',false);
+              HttpClient httpClient = HttpClient();
+              if(!AdminPageState.cool){
 
+                debugPrint('1');
+                var request = await httpClient.getUrl(Uri.parse(_path));
+                debugPrint('2');
+                var response = await request.close();
+                debugPrint('3');
+                var bytes = await consolidateHttpClientResponseBytes(response);
+                debugPrint('4');
+                String dir = (await getApplicationDocumentsDirectory()).path;
+
+                File file = new File('$dir/${videoName.replaceAll('.mp4','')}.txt');
+
+                await file.writeAsBytes(bytes);
+
+                prefs = await SharedPreferences.getInstance();
+
+                prefs.setString('Test${videoName.replaceAll('.mp4','')}.txt',file.path);
+
+                debugPrint(file.path);
+              }
             }
         ),
 

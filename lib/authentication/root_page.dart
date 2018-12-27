@@ -5,6 +5,7 @@ import 'package:prsd/student_page.dart';
 import 'package:prsd/teacher_page.dart';
 import 'package:prsd/Wait.dart';
 import 'package:prsd/admin_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class RootPage extends StatefulWidget{
   RootPage({@required this.auth});
   final BaseAuth auth;
@@ -28,6 +29,7 @@ class RootPageState extends State<RootPage>{
  static AuthStat authStatus = AuthStat.notSignedIn;
  LoginPageState l;
   String uid;
+  String name;
  @override
   void initState() {
 
@@ -37,6 +39,7 @@ class RootPageState extends State<RootPage>{
           authStatus =
           userId == null ? AuthStat.notSignedIn : AuthStat.signedIn;
           uid = authStatus.toString().replaceAll('AuthStat.', '');
+
           debugPrint('auth: $auth');
 
         });
@@ -89,6 +92,7 @@ class RootPageState extends State<RootPage>{
           return new StudentPage(
             auth: widget.auth,
             onSignedOut: _signedOut,
+
           );
         }
         if (auth == AuthStatus.teacher) {
@@ -102,6 +106,7 @@ class RootPageState extends State<RootPage>{
           return new AdminPage(
             auth: widget.auth,
             onSignedOut: _signedOut,
+            uid: uid,
           );
         }
       }
