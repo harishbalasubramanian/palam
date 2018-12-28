@@ -5,19 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f161d4e7-a0e1-4051-84d0-854d1547355e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/ios/Podfile" afterPath="$PROJECT_DIR$/ios/Podfile" />
-      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" afterPath="$PROJECT_DIR$/ios/Podfile.lock" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/AppDelegate.swift" afterPath="$PROJECT_DIR$/ios/Runner/AppDelegate.swift" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" afterPath="$PROJECT_DIR$/ios/Runner/Info.plist" />
       <change beforePath="$PROJECT_DIR$/lib/admin_page.dart" afterPath="$PROJECT_DIR$/lib/admin_page.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/student_view.dart" afterPath="$PROJECT_DIR$/lib/student_view.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/teacher_page.dart" afterPath="$PROJECT_DIR$/lib/teacher_page.dart" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" afterPath="$PROJECT_DIR$/pubspec.lock" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" afterPath="$PROJECT_DIR$/pubspec.yaml" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -107,16 +96,16 @@
       <file leaf-file-name="admin_page.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-115">
-              <caret line="569" column="71" lean-forward="false" selection-start-line="569" selection-start-column="57" selection-end-line="569" selection-end-column="71" />
+            <state relative-caret-position="-126">
+              <caret line="603" column="74" lean-forward="true" selection-start-line="603" selection-start-column="74" selection-end-line="603" selection-end-column="74" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
-                <element signature="e#50428#50720#0" expanded="false" />
-                <element signature="e#66180#66438#0" expanded="false" />
-                <element signature="e#66512#67316#0" expanded="false" />
-                <element signature="e#67352#67584#0" expanded="false" />
-                <element signature="e#80744#80786#0" expanded="false" />
-                <marker date="1546019977324" expanded="true" signature="61592:61640" ph="..." />
+                <element signature="e#51237#51529#0" expanded="false" />
+                <element signature="e#67142#67400#0" expanded="false" />
+                <element signature="e#67474#68278#0" expanded="false" />
+                <element signature="e#68314#68546#0" expanded="false" />
+                <element signature="e#81706#81748#0" expanded="false" />
+                <marker date="1546022927198" expanded="true" signature="62554:62602" ph="..." />
               </folding>
             </state>
           </provider>
@@ -169,13 +158,11 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>CircularProgressIndicator</find>
       <find>Icons.accessibility</find>
       <find>signOut</find>
       <find>signedIn</find>
       <find>cool</find>
       <find>bool cool</find>
-      <find>FileUpload</find>
       <find>TeacherView</find>
       <find>image</find>
       <find>uid</find>
@@ -199,6 +186,8 @@
       <find>NextPage</find>
       <find>Second</find>
       <find>delete_forever</find>
+      <find>FileUpload</find>
+      <find>ref.delete()</find>
     </findStrings>
     <replaceStrings>
       <replace>control</replace>
@@ -485,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1545849057574</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="iPhone Upload Works and download is now sourced to dio package">
+      <created>1546021455412</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1546021455412</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -566,7 +562,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixed Video Bug 12/26/18" />
     <MESSAGE value="Password Reset 12/26/18" />
-    <option name="LAST_COMMIT_MESSAGE" value="Password Reset 12/26/18" />
+    <MESSAGE value="iPhone Upload Works and download is now sourced to dio package" />
+    <option name="LAST_COMMIT_MESSAGE" value="iPhone Upload Works and download is now sourced to dio package" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -989,16 +986,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-115">
-          <caret line="569" column="71" lean-forward="false" selection-start-line="569" selection-start-column="57" selection-end-line="569" selection-end-column="71" />
+        <state relative-caret-position="-126">
+          <caret line="603" column="74" lean-forward="true" selection-start-line="603" selection-start-column="74" selection-end-line="603" selection-end-column="74" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
-            <element signature="e#50428#50720#0" expanded="false" />
-            <element signature="e#66180#66438#0" expanded="false" />
-            <element signature="e#66512#67316#0" expanded="false" />
-            <element signature="e#67352#67584#0" expanded="false" />
-            <element signature="e#80744#80786#0" expanded="false" />
-            <marker date="1546019977324" expanded="true" signature="61592:61640" ph="..." />
+            <element signature="e#51237#51529#0" expanded="false" />
+            <element signature="e#67142#67400#0" expanded="false" />
+            <element signature="e#67474#68278#0" expanded="false" />
+            <element signature="e#68314#68546#0" expanded="false" />
+            <element signature="e#81706#81748#0" expanded="false" />
+            <marker date="1546022927198" expanded="true" signature="62554:62602" ph="..." />
           </folding>
         </state>
       </provider>

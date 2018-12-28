@@ -444,7 +444,7 @@ class AdminPageState extends State<AdminPage>{
                                                       StorageReference ref = FirebaseStorage
                                                           .instance.ref().child(
                                                           file.path.replaceAll(
-                                                              '/data/user/0/com.happssolutions.prsd/cache',
+                                                              '${Directory.systemTemp.path}',
                                                               'videos'));
                                                       ref.delete();
                                                       await Firestore.instance
@@ -470,7 +470,7 @@ class AdminPageState extends State<AdminPage>{
                                                               .ref().child(
                                                               file.path
                                                                   .replaceAll(
-                                                                  '/data/user/0/com.happssolutions.prsd/cache',
+                                                                  '${Directory.systemTemp.path}',
                                                                   'tests'));
                                                       ref.delete();
                                                       Firestore.instance
@@ -578,19 +578,22 @@ class AdminPageState extends State<AdminPage>{
                                                 FlatButton(
                                                     child: Text('Yes'),
                                                     onPressed: () async {
-                                                      Directory dir = Directory
-                                                          .systemTemp;
+                                                      Directory dir =
+                                                          Directory.systemTemp;
                                                       File file = File('${dir
                                                           .path}/${snapshot['name']
                                                           .replaceAll(
                                                           '.mp4', '.txt')
                                                           .replaceAll(
                                                           ' ', '')}');
-                                                      StorageReference ref = FirebaseStorage
-                                                          .instance.ref().child(
-                                                          file.path.replaceAll(
-                                                              '/data/user/0/com.happssolutions.prsd/cache',
-                                                              'tests'));
+                                                      StorageReference ref =
+                                                          FirebaseStorage
+                                                              .instance
+                                                              .ref().child(
+                                                              file.path
+                                                                  .replaceAll(
+                                                                  '${Directory.systemTemp.path}',
+                                                                  'tests'));
                                                       ref.delete();
                                                       Firestore.instance
                                                           .collection('tests')
@@ -608,8 +611,12 @@ class AdminPageState extends State<AdminPage>{
                                                       prefs =
                                                       await SharedPreferences
                                                           .getInstance();
+
+
                                                       try {
-                                                        prefs.remove('Test' +
+                                                        prefs.remove(
+                                                            snapshot['name']);
+                                                        prefs.remove(
                                                             snapshot['name']
                                                                 .replaceAll(
                                                                 ' ', '')
@@ -619,8 +626,17 @@ class AdminPageState extends State<AdminPage>{
                                                       } catch (e) {
                                                         debugPrint('e $e');
                                                       }
-                                                      //debugPrint(prefs.getBool(snapshot['name'].replaceAll(' ','')).toString());
+                                                      prefs.setBool(
+                                                          snapshot['name']
+                                                              .replaceAll(
+                                                              ' ', '')
+                                                              .replaceAll(
+                                                              '.mp4', '.txt'),
+                                                          true);
                                                       Navigator.pop(context);
+                                                      setState(() {
+
+                                                      });
                                                     }
                                                 ),
                                                 FlatButton(
@@ -1010,6 +1026,7 @@ class FileUploadState extends State<FileUpload>{
   String val = '';
   String ind = '';
   BaseAuth auth;
+  bool loading = false;
   VoidCallback onSignedOut;
   FileUploadState(this.videoName, {@required this.auth, @required this.onSignedOut});
   Widget build(BuildContext context){
@@ -1028,7 +1045,7 @@ class FileUploadState extends State<FileUpload>{
       ),
 
       body:  Center(
-        child:  InkWell(
+        child:  !loading ? InkWell(
 
             child: Container(
                 padding: EdgeInsets.all(40.0),
@@ -1096,7 +1113,7 @@ class FileUploadState extends State<FileUpload>{
               String fileName = '${videoName.replaceAll('.mp4','.txt')}'.replaceAll(' ','');
               file2 = File('${Directory.systemTemp.path}/$fileName');
               file2.writeAsBytesSync(bytes.buffer.asInt8List(),mode: FileMode.write);
-              StorageReference ref = FirebaseStorage.instance.ref().child(file2.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','tests'));
+              StorageReference ref = FirebaseStorage.instance.ref().child(file2.path.replaceAll('${Directory.systemTemp.path}','tests'));
               StorageUploadTask task = ref.putFile(file2);
               ref = FirebaseStorage.instance.ref().child('$file2');
               String _path = await(await task.onComplete).ref.getDownloadURL();
@@ -1129,6 +1146,11 @@ class FileUploadState extends State<FileUpload>{
                 debugPrint(file.path);
               }
             }
+        ) : Row(
+          children: <Widget>[
+            CircularProgressIndicator(),
+            Text('Uploading'),
+          ],
         ),
 
 
