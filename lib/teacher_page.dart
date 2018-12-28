@@ -13,7 +13,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import 'package:flutter_document_picker/flutter_document_picker.dart';
+import 'package:file_picker/file_picker.dart';
+//import 'package:flutter_document_picker/flutter_document_picker.dart';
 import 'student_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'authentication/Login.dart';
@@ -42,7 +43,7 @@ class TeacherPageState extends State<TeacherPage>{
   SharedPreferences prefs;
   static String url = '';
   GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
-  static FlutterDocumentPickerParams params;
+  //static FlutterDocumentPickerParams params;
   String uid;
   TeacherPageState({this.auth,this.onSignedOut,this.uid});
   BaseAuth auth;
@@ -80,9 +81,9 @@ class TeacherPageState extends State<TeacherPage>{
   @override
   void initState(){
     super.initState();
-    params = FlutterDocumentPickerParams(
-      allowedFileExtensions: ['txt'],
-    );
+//    params = FlutterDocumentPickerParams(
+//      allowedFileExtensions: ['txt'],
+//    );
     signedIn = true;
   }
 
@@ -1043,7 +1044,7 @@ class FileUploadState extends State<FileUpload>{
             onTap: ()async{
               List<Map<String,dynamic>>test = [];
 
-              path = await FlutterDocumentPicker.openDocument(params: TeacherPageState.params);
+              path = await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: '.txt');
               File file = File(path);
 
               val = await file.readAsString();

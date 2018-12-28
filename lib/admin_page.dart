@@ -13,14 +13,14 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import 'package:flutter_document_picker/flutter_document_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'teacher_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
-import 'package:after_layout/after_layout.dart';
 import 'package:chewie/chewie.dart';
 import 'student_view.dart';
+import 'package:dio/dio.dart';
 class AdminPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
@@ -43,7 +43,7 @@ class AdminPageState extends State<AdminPage>{
   SharedPreferences prefs;
   static String url = '';
   GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
-  static FlutterDocumentPickerParams params;
+  //static FlutterDocumentPickerParams params;
   String uid;
   AdminPageState({this.auth,this.onSignedOut,this.uid});
   BaseAuth auth;
@@ -81,9 +81,9 @@ class AdminPageState extends State<AdminPage>{
   @override
   void initState(){
     super.initState();
-    params = FlutterDocumentPickerParams(
-      allowedFileExtensions: ['txt'],
-    );
+//    params = FlutterDocumentPickerParams(
+//      allowedFileExtensions: ['txt'],
+//    );
     signedIn = true;
   }
 
@@ -92,7 +92,7 @@ class AdminPageState extends State<AdminPage>{
     prefs = await SharedPreferences.getInstance();
   }
   static var httpClient = new HttpClient();
-  Future<File> downloadFile (String url,String name) async{
+  void downloadFile (String url,String name) async{
 //    bool check = false;
 //    while(!check){
 //      if(Platform.isIOS){
@@ -117,26 +117,17 @@ class AdminPageState extends State<AdminPage>{
 //    }
 //    String task = '';
     try {
-      debugPrint('1');
-      var request = await httpClient.getUrl(Uri.parse(url));
-      debugPrint('2');
-      var response = await request.close();
-      debugPrint('3');
-      var bytes = await consolidateHttpClientResponseBytes(response);
-      debugPrint('4');
+      Dio dio = Dio();
       String dir = (await getApplicationDocumentsDirectory()).path;
-
-      File file = new File('$dir/$name');
-
-      await file.writeAsBytes(bytes);
-
+      String path = '$dir/$name';
+      await dio.download(url, path);
       prefs = await SharedPreferences.getInstance();
 
-      prefs.setString(name,file.path);
+      prefs.setString(name,path);
 
-      debugPrint(file.path);
+      debugPrint(path);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage(auth: auth, onSignedOut: onSignedOut, name: name, url: url, task: path)));
 
-      return file;
 
 //      debugPrint((await getExternalStorageDirectory()).path);
 //      String directory = (await getExternalStorageDirectory()).path;
@@ -296,7 +287,7 @@ class AdminPageState extends State<AdminPage>{
                   while(index+1>calor.length){
                     calor.add(Colors.orange);
                   }
-                  colorr(snapshot['name'].replaceAll('.mp4','.txt'),index);
+//                  colorr(snapshot['name'].replaceAll('.mp4','.txt'),index);
                   SharedPreferences.getInstance().then((pref){
                     prefs = pref;
                     //debugPrint('sup '+prefs.get(snapshot['name']).toString());
@@ -1051,7 +1042,8 @@ class FileUploadState extends State<FileUpload>{
             onTap: ()async{
               List<Map<String,dynamic>>test = [];
 
-              path = await FlutterDocumentPicker.openDocument(params: AdminPageState.params);
+              path = await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: 'txt');
+
               File file = File(path);
 
               val = await file.readAsString();
@@ -1160,7 +1152,7 @@ class NextPage extends StatefulWidget{
 
 }
 
-class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
+class NextPageState extends State<NextPage>{
   bool sneeze = false;
   BaseAuth auth;
   bool fullScreen;
@@ -1179,20 +1171,106 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
   void initState() {
     super.initState();
     listen = (){
-      setState(() {
-
-      });
+//      setState(() {
+//
+//      });
     };
     Firestore.instance.collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments().then((docs){
-      if(docs.documents[0].exists){
-        sneeze = true;
+      try {
+        if (docs.documents[0].exists) {
+          sneeze = true;
+        }
+      }catch(e){
+        sneeze = false;
       }
     });
-    debugPrint('url $url');
-    createVideo();
-    control.play();
-    debugPrint('control ' + control.value.isPlaying.toString());
-    tapped = false;
+    check = false;
+    debugPrint('task $task');
+    if(task != ''){
+
+      File file = File(task);
+      AdminPageState._cachedFile = file;
+      debugPrint('file : ${file.lengthSync()}');
+      if(file.existsSync()){
+        check = true;
+      }
+      control = VideoPlayerController.file(file)
+        ..addListener(listen);
+      ready = true;
+      debugPrint('iin here');
+      debugPrint('control' + control.toString());
+      control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+      //control.setVolume(1.0);
+      debugPrint('here');
+
+    }
+//    if(task != ''){
+//      check = true;
+//      FlutterDownloader.open(taskId: task).then((success){
+//        debugPrint(success.toString());
+//      });
+//
+//    }
+
+    debugPrint('check $check');
+    if(check) {
+      try {
+          debugPrint(AdminPageState._cachedFile.toString());
+          control = VideoPlayerController.file(AdminPageState._cachedFile)
+            ..addListener(listen);
+          ready = true;
+          debugPrint('iin here');
+          debugPrint('control' + control.toString());
+          control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+          //control.setVolume(1.0);
+          debugPrint('here');
+          control.play();
+
+      }catch(e){
+
+      }
+      //..setVolume(1.0);
+      //..play();
+
+    }
+
+    else {
+        debugPrint('network');
+        debugPrint('url2 $url');
+        control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
+        ready = true;
+        debugPrint('control' + control.toString());
+        control.initialize();
+        control.seekTo(Duration(seconds: 0));
+        //control.setVolume(1.0);
+        control.play();
+    }
+
+//    else{
+//      ready = true;
+////      control.initialize();
+////      control.setVolume(1.0);
+////      control.seekTo(Duration(seconds: 0));
+//      //control.play();
+//
+//    }
+//    if (control == null) {
+//      control = VideoPlayerController.network(
+//          "https://firebasestorage.googleapis.com/v0/b/psrd-fa583.appspot.com/o/videos%2FTest.mp4?alt=media&token=d3ef43ea-bcbc-4baf-a074-5555d396164c")
+//        ..addListener(listen)
+//        ..setVolume(1.0)
+//        ..initialize()
+//        ..play();
+//    } else {
+//      if (control.value.isPlaying) {
+//        control.pause();
+//      } else {
+//        control.initialize();
+//        control.play();
+//      }
+//    }
 
   }
   @override
@@ -1222,17 +1300,27 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
 
 
 
-  void createVideo(){
+  void createVideo()async{
 
     check = false;
+    debugPrint('task $task');
     if(task != ''){
-      debugPrint('task '+task);
+
       File file = File(task);
       AdminPageState._cachedFile = file;
-      debugPrint('file : ${file.path}');
+      debugPrint('file : ${file.lengthSync()}');
       if(file.existsSync()){
         check = true;
       }
+      control = VideoPlayerController.file(file)
+        ..addListener(listen);
+      ready = true;
+      debugPrint('iin here');
+      debugPrint('control' + control.toString());
+      control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+      //control.setVolume(1.0);
+      debugPrint('here');
 
     }
 //    if(task != ''){
@@ -1242,15 +1330,22 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
 //      });
 //
 //    }
-    control = null;
-    if(control == null){
+
       debugPrint('check $check');
       if(check) {
         try {
-          control = VideoPlayerController.file(AdminPageState._cachedFile)
-            ..addListener(listen);
-          ready = true;
-          debugPrint('iin here');
+//          debugPrint(AdminPageState._cachedFile.toString());
+//          control = VideoPlayerController.file(AdminPageState._cachedFile)
+//            ..addListener(listen);
+//          ready = true;
+//          debugPrint('iin here');
+//          debugPrint('control' + control.toString());
+//          control.initialize();
+////          control.seekTo(Duration(seconds: 0));
+//          //control.setVolume(1.0);
+//          debugPrint('here');
+//          control.play();
+
         }catch(e){
 
         }
@@ -1260,21 +1355,25 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
       }
 
       else {
-        debugPrint('network');
-        debugPrint('url2 $url');
-        control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
-        ready = true;
-
+//        debugPrint('network');
+//        debugPrint('url2 $url');
+//        control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
+//        ready = true;
+//        debugPrint('control' + control.toString());
+//        control.initialize();
+//        control.seekTo(Duration(seconds: 0));
+//        //control.setVolume(1.0);
+//        control.play();
       }
-    }
-    else{
-      ready = true;
-//      control.initialize();
-//      control.setVolume(1.0);
-//      control.seekTo(Duration(seconds: 0));
-      //control.play();
 
-    }
+//    else{
+//      ready = true;
+////      control.initialize();
+////      control.setVolume(1.0);
+////      control.seekTo(Duration(seconds: 0));
+//      //control.play();
+//
+//    }
 //    if (control == null) {
 //      control = VideoPlayerController.network(
 //          "https://firebasestorage.googleapis.com/v0/b/psrd-fa583.appspot.com/o/videos%2FTest.mp4?alt=media&token=d3ef43ea-bcbc-4baf-a074-5555d396164c")
@@ -1312,7 +1411,7 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: (){
-              control.seekTo(Duration(seconds: 0));
+              //control.seekTo(Duration(seconds: 0));
               control.setVolume(0.0);
               control.removeListener(listen);
               Navigator.pop(context);
@@ -1412,17 +1511,15 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
     );
   }
 
-  @override
-  void afterFirstLayout(BuildContext context) {
-    setState(() {
-      if(ready) {
-        control.initialize();
-        control.seekTo(Duration(seconds: 0));
-        //control.setVolume(1.0);
-        control.play();
-      }
-    });
-  }
+//  @override
+//  void afterFirstLayout(BuildContext context) {
+//    setState(() {
+//      if(ready) {
+//
+//
+//      }
+//    });
+//  }
 }
 class Fader extends StatefulWidget{
   BaseAuth auth;
@@ -1508,27 +1605,33 @@ class SecondState extends State<Second>{
   Future<Null> uploadFile (File camerafile) async{
 
     String filepath = camerafile.path;
-    final ByteData bytes = await rootBundle.load(filepath);
-    final Directory tempDir = Directory.systemTemp;
-    final String fileName = '${control.text}.mp4';
-    final File file = File('${tempDir.path}/$fileName');
-    file.writeAsBytes(bytes.buffer.asInt8List(),mode: FileMode.write);
 
-    StorageReference ref = FirebaseStorage.instance.ref().child(file.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','videos'));
-    StorageUploadTask task = ref.putFile(file);
+    final ByteData bytes = await rootBundle.load(filepath);
+    debugPrint(bytes.lengthInBytes.toString());
+//    final Directory tempDir = await getApplicationDocumentsDirectory();
+//    final String fileName = '${control.text}.mp4';
+
+//    File file = File('${Directory.systemTemp}/${control.text}.mp4');
+//    file.write
+//   file.writeAsBytesSync(bytes.buffer.asInt8List(),mode: FileMode.write);
+//    debugPrint('file'+file.path);
+    //file.writeAsBytes(bytes.buffer.asInt8List(),mode: FileMode.write);
+
+    StorageReference ref = FirebaseStorage.instance.ref().child(camerafile.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','videos').replaceAll('.MOV','.mp4'));
+    StorageUploadTask task = ref.putFile(camerafile);
     u = task;
-    ref = FirebaseStorage.instance.ref().child('$file');
+    ref = FirebaseStorage.instance.ref().child('$camerafile');
     _path = await (await task.onComplete).ref.getDownloadURL();
     debugPrint(_path);
-    curpath = fileName;
+    curpath = control.text;
     Firestore.instance.collection('videos').document().setData(<String,dynamic>{
-      'name' : fileName,
+      'name' : control.text+'.mp4',
       'downloadURL' : _path
     });
     setState(() {
       isLoading = false;
     });
-
+    camerafile.deleteSync();
   }
   @override
   void initState() {
@@ -1610,6 +1713,7 @@ class SecondState extends State<Second>{
       });
       await uploadFile(
           await ImagePicker.pickVideo(source: ImageSource.gallery));
+    //debugPrint('Path:'+(await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
       setState(() {
         isLoading = false;
         control.text = '';

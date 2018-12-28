@@ -6,6 +6,7 @@ import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
 import 'authentication/auth.dart';
 import 'teacher_view.dart';
+import 'admin_page.dart';
 class StudentView extends StatefulWidget {
   @override
   StudentViewState createState() => StudentViewState();
@@ -29,7 +30,9 @@ class StudentViewState extends State<StudentView> {
                   title: Text('Home'),
                   onTap: (){
                     Navigator.pop(context);
+                    if(RootPageState.auth == AuthStatus.teacher)
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherPage()));
+                    else Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminPage()));
                   }
               ),
               RootPageState.auth == AuthStatus.admin ? ListTile(
