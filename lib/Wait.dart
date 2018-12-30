@@ -26,15 +26,27 @@ class WaitState extends State<Wait> {
       appBar: AppBar(
         title: Text('You have not been approved'),
         backgroundColor: Colors.orange,
-        automaticallyImplyLeading: false,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.accessibility,
+
+
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              title: Text('Home'),
+              onTap: (){
+                Navigator.pop(context);
+              }
             ),
-            onPressed: _signOut,
-          )
-        ],
+            ListTile(
+              title: Text('Sign Out'),
+              onTap: () {
+                _signOut();
+                Navigator.pop(context);
+              }
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: Text(

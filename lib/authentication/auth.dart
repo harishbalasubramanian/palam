@@ -35,10 +35,10 @@ class Auth implements BaseAuth{
           else if (docs.documents[0].data['status'] == 'admin'){
             role = AuthStatus.admin;
           }
-          if(docs.documents[0].data['approved'] == 'false'){
+          if(!docs.documents[0].data['approved']){
             RootPageState.auther = Auther.notApproved;
           }
-          else if (docs.documents[0].data['approved'] == 'true'){
+          else if (docs.documents[0].data['approved']){
             RootPageState.auther = Auther.approved;
           }
         }
@@ -50,7 +50,8 @@ class Auth implements BaseAuth{
       debugPrint('root: ${RootPageState.auth}');
       debugPrint('done');
       done = true;
-
+      RootPageState.uid = user.uid;
+      RootPageState.check();
     });
 
     return user.uid;
@@ -77,21 +78,23 @@ class Auth implements BaseAuth{
         else if (docs.documents[0].data['status'] == 'admin'){
           role = AuthStatus.admin;
         }
-        if(docs.documents[0].data['approved'] == 'false'){
+        if(!docs.documents[0].data['approved']){
           RootPageState.auther = Auther.notApproved;
         }
-        else if (docs.documents[0].data['approved'] == 'true'){
+        else if (docs.documents[0].data['approved']){
           RootPageState.auther = Auther.approved;
         }
       }
 
-
+      debugPrint('autther ${RootPageState.auther}');
       bauth = role;
       LoginPageState.auth = RootPageState.auth = bauth;
       debugPrint('login: ${LoginPageState.auth}');
       debugPrint('root: ${RootPageState.auth}');
       debugPrint('done');
       done = true;
+      RootPageState.uid = user.uid;
+      RootPageState.check();
     });
     return user.uid;
   }

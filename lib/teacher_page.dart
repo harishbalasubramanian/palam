@@ -14,13 +14,12 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:file_picker/file_picker.dart';
-//import 'package:flutter_document_picker/flutter_document_picker.dart';
-import 'student_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
-import 'package:after_layout/after_layout.dart';
 import 'package:chewie/chewie.dart';
+import 'student_view.dart';
+import 'package:dio/dio.dart';
 class TeacherPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
@@ -92,7 +91,7 @@ class TeacherPageState extends State<TeacherPage>{
     prefs = await SharedPreferences.getInstance();
   }
   static var httpClient = new HttpClient();
-  Future<File> downloadFile (String url,String name) async{
+  void downloadFile (String url,String name) async{
 //    bool check = false;
 //    while(!check){
 //      if(Platform.isIOS){
@@ -117,26 +116,17 @@ class TeacherPageState extends State<TeacherPage>{
 //    }
 //    String task = '';
     try {
-      debugPrint('1');
-      var request = await httpClient.getUrl(Uri.parse(url));
-      debugPrint('2');
-      var response = await request.close();
-      debugPrint('3');
-      var bytes = await consolidateHttpClientResponseBytes(response);
-      debugPrint('4');
+      Dio dio = Dio();
       String dir = (await getApplicationDocumentsDirectory()).path;
-
-      File file = new File('$dir/$name');
-
-      await file.writeAsBytes(bytes);
-
+      String path = '$dir/$name';
+      await dio.download(url, path);
       prefs = await SharedPreferences.getInstance();
 
-      prefs.setString(name,file.path);
+      prefs.setString(name,path);
 
-      debugPrint(file.path);
+      debugPrint(path);
+      //Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage(auth: auth, onSignedOut: onSignedOut, name: name, url: url, task: path)));
 
-      return file;
 
 //      debugPrint((await getExternalStorageDirectory()).path);
 //      String directory = (await getExternalStorageDirectory()).path;
@@ -236,10 +226,9 @@ class TeacherPageState extends State<TeacherPage>{
                   Navigator.pop(context);
                 }
             ),
+
             ListTile(
-                title: Text(
-                    'View Students'
-                ),
+                title: Text('View Students'),
                 onTap: (){
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView()));
@@ -289,7 +278,7 @@ class TeacherPageState extends State<TeacherPage>{
                   while(index+1>calor.length){
                     calor.add(Colors.orange);
                   }
-                  colorr(snapshot['name'].replaceAll('.mp4','.txt'),index);
+//                  colorr(snapshot['name'].replaceAll('.mp4','.txt'),index);
                   SharedPreferences.getInstance().then((pref){
                     prefs = pref;
                     //debugPrint('sup '+prefs.get(snapshot['name']).toString());
@@ -446,7 +435,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                         StorageReference ref = FirebaseStorage
                                                             .instance.ref().child(
                                                             file.path.replaceAll(
-                                                                '/data/user/0/com.happssolutions.prsd/cache',
+                                                                '${Directory.systemTemp.path}',
                                                                 'videos'));
                                                         ref.delete();
                                                         await Firestore.instance
@@ -472,7 +461,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                                 .ref().child(
                                                                 file.path
                                                                     .replaceAll(
-                                                                    '/data/user/0/com.happssolutions.prsd/cache',
+                                                                    '${Directory.systemTemp.path}',
                                                                     'tests'));
                                                         ref.delete();
                                                         Firestore.instance
@@ -580,18 +569,21 @@ class TeacherPageState extends State<TeacherPage>{
                                                   FlatButton(
                                                       child: Text('Yes'),
                                                       onPressed: () async {
-                                                        Directory dir = Directory
-                                                            .systemTemp;
+                                                        Directory dir =
+                                                            Directory.systemTemp;
                                                         File file = File('${dir
                                                             .path}/${snapshot['name']
                                                             .replaceAll(
                                                             '.mp4', '.txt')
                                                             .replaceAll(
                                                             ' ', '')}');
-                                                        StorageReference ref = FirebaseStorage
-                                                            .instance.ref().child(
-                                                            file.path.replaceAll(
-                                                                '/data/user/0/com.happssolutions.prsd/cache',
+                                                        StorageReference ref =
+                                                        FirebaseStorage
+                                                            .instance
+                                                            .ref().child(
+                                                            file.path
+                                                                .replaceAll(
+                                                                '${Directory.systemTemp.path}',
                                                                 'tests'));
                                                         ref.delete();
                                                         Firestore.instance
@@ -610,8 +602,12 @@ class TeacherPageState extends State<TeacherPage>{
                                                         prefs =
                                                         await SharedPreferences
                                                             .getInstance();
+
+
                                                         try {
-                                                          prefs.remove('Test' +
+                                                          prefs.remove(
+                                                              snapshot['name']);
+                                                          prefs.remove(
                                                               snapshot['name']
                                                                   .replaceAll(
                                                                   ' ', '')
@@ -621,8 +617,17 @@ class TeacherPageState extends State<TeacherPage>{
                                                         } catch (e) {
                                                           debugPrint('e $e');
                                                         }
-                                                        //debugPrint(prefs.getBool(snapshot['name'].replaceAll(' ','')).toString());
+                                                        prefs.setBool(
+                                                            snapshot['name']
+                                                                .replaceAll(
+                                                                ' ', '')
+                                                                .replaceAll(
+                                                                '.mp4', '.txt'),
+                                                            true);
                                                         Navigator.pop(context);
+                                                        setState(() {
+
+                                                        });
                                                       }
                                                   ),
                                                   FlatButton(
@@ -1012,6 +1017,7 @@ class FileUploadState extends State<FileUpload>{
   String val = '';
   String ind = '';
   BaseAuth auth;
+  bool loading = false;
   VoidCallback onSignedOut;
   FileUploadState(this.videoName, {@required this.auth, @required this.onSignedOut});
   Widget build(BuildContext context){
@@ -1030,7 +1036,7 @@ class FileUploadState extends State<FileUpload>{
       ),
 
       body:  Center(
-        child:  InkWell(
+        child:  !loading ? InkWell(
 
             child: Container(
                 padding: EdgeInsets.all(40.0),
@@ -1044,7 +1050,8 @@ class FileUploadState extends State<FileUpload>{
             onTap: ()async{
               List<Map<String,dynamic>>test = [];
 
-              path = await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: '.txt');
+              path = await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: 'txt');
+
               File file = File(path);
 
               val = await file.readAsString();
@@ -1097,7 +1104,7 @@ class FileUploadState extends State<FileUpload>{
               String fileName = '${videoName.replaceAll('.mp4','.txt')}'.replaceAll(' ','');
               file2 = File('${Directory.systemTemp.path}/$fileName');
               file2.writeAsBytesSync(bytes.buffer.asInt8List(),mode: FileMode.write);
-              StorageReference ref = FirebaseStorage.instance.ref().child(file2.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','tests'));
+              StorageReference ref = FirebaseStorage.instance.ref().child(file2.path.replaceAll('${Directory.systemTemp.path}','tests'));
               StorageUploadTask task = ref.putFile(file2);
               ref = FirebaseStorage.instance.ref().child('$file2');
               String _path = await(await task.onComplete).ref.getDownloadURL();
@@ -1130,6 +1137,11 @@ class FileUploadState extends State<FileUpload>{
                 debugPrint(file.path);
               }
             }
+        ) : Row(
+          children: <Widget>[
+            CircularProgressIndicator(),
+            Text('Uploading'),
+          ],
         ),
 
 
@@ -1153,7 +1165,7 @@ class NextPage extends StatefulWidget{
 
 }
 
-class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
+class NextPageState extends State<NextPage>{
   bool sneeze = false;
   BaseAuth auth;
   bool fullScreen;
@@ -1172,20 +1184,106 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
   void initState() {
     super.initState();
     listen = (){
-      setState(() {
-
-      });
+//      setState(() {
+//
+//      });
     };
     Firestore.instance.collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments().then((docs){
-      if(docs.documents[0].exists){
-        sneeze = true;
+      try {
+        if (docs.documents[0].exists) {
+          sneeze = true;
+        }
+      }catch(e){
+        sneeze = false;
       }
     });
-    debugPrint('url $url');
-    createVideo();
-    control.play();
-    debugPrint('control ' + control.value.isPlaying.toString());
-    tapped = false;
+    check = false;
+    debugPrint('task $task');
+    if(task != ''){
+
+      File file = File(task);
+      TeacherPageState._cachedFile = file;
+      debugPrint('file : ${file.lengthSync()}');
+      if(file.existsSync()){
+        check = true;
+      }
+      control = VideoPlayerController.file(file)
+        ..addListener(listen);
+      ready = true;
+      debugPrint('iin here');
+      debugPrint('control' + control.toString());
+      control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+      //control.setVolume(1.0);
+      debugPrint('here');
+
+    }
+//    if(task != ''){
+//      check = true;
+//      FlutterDownloader.open(taskId: task).then((success){
+//        debugPrint(success.toString());
+//      });
+//
+//    }
+
+    debugPrint('check $check');
+    if(check) {
+      try {
+        debugPrint(TeacherPageState._cachedFile.toString());
+        control = VideoPlayerController.file(TeacherPageState._cachedFile)
+          ..addListener(listen);
+        ready = true;
+        debugPrint('iin here');
+        debugPrint('control' + control.toString());
+        control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+        //control.setVolume(1.0);
+        debugPrint('here');
+        control.play();
+
+      }catch(e){
+
+      }
+      //..setVolume(1.0);
+      //..play();
+
+    }
+
+    else {
+      debugPrint('network');
+      debugPrint('url2 $url');
+      control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
+      ready = true;
+      debugPrint('control' + control.toString());
+      control.initialize();
+      control.seekTo(Duration(seconds: 0));
+      //control.setVolume(1.0);
+      control.play();
+    }
+
+//    else{
+//      ready = true;
+////      control.initialize();
+////      control.setVolume(1.0);
+////      control.seekTo(Duration(seconds: 0));
+//      //control.play();
+//
+//    }
+//    if (control == null) {
+//      control = VideoPlayerController.network(
+//          "https://firebasestorage.googleapis.com/v0/b/psrd-fa583.appspot.com/o/videos%2FTest.mp4?alt=media&token=d3ef43ea-bcbc-4baf-a074-5555d396164c")
+//        ..addListener(listen)
+//        ..setVolume(1.0)
+//        ..initialize()
+//        ..play();
+//    } else {
+//      if (control.value.isPlaying) {
+//        control.pause();
+//      } else {
+//        control.initialize();
+//        control.play();
+//      }
+//    }
 
   }
   @override
@@ -1215,17 +1313,27 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
 
 
 
-  void createVideo(){
+  void createVideo()async{
 
     check = false;
+    debugPrint('task $task');
     if(task != ''){
-      debugPrint('task '+task);
+
       File file = File(task);
       TeacherPageState._cachedFile = file;
-      debugPrint('file : ${file.path}');
+      debugPrint('file : ${file.lengthSync()}');
       if(file.existsSync()){
         check = true;
       }
+      control = VideoPlayerController.file(file)
+        ..addListener(listen);
+      ready = true;
+      debugPrint('iin here');
+      debugPrint('control' + control.toString());
+      control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+      //control.setVolume(1.0);
+      debugPrint('here');
 
     }
 //    if(task != ''){
@@ -1235,39 +1343,50 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
 //      });
 //
 //    }
-    control = null;
-    if(control == null){
-      debugPrint('check $check');
-      if(check) {
-        try {
-          control = VideoPlayerController.file(TeacherPageState._cachedFile)
-            ..addListener(listen);
-          ready = true;
-          debugPrint('iin here');
-        }catch(e){
 
-        }
-        //..setVolume(1.0);
-        //..play();
+    debugPrint('check $check');
+    if(check) {
+      try {
+//          debugPrint(AdminPageState._cachedFile.toString());
+//          control = VideoPlayerController.file(AdminPageState._cachedFile)
+//            ..addListener(listen);
+//          ready = true;
+//          debugPrint('iin here');
+//          debugPrint('control' + control.toString());
+//          control.initialize();
+////          control.seekTo(Duration(seconds: 0));
+//          //control.setVolume(1.0);
+//          debugPrint('here');
+//          control.play();
 
-      }
-
-      else {
-        debugPrint('network');
-        debugPrint('url2 $url');
-        control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
-        ready = true;
+      }catch(e){
 
       }
-    }
-    else{
-      ready = true;
-//      control.initialize();
-//      control.setVolume(1.0);
-//      control.seekTo(Duration(seconds: 0));
-      //control.play();
+      //..setVolume(1.0);
+      //..play();
 
     }
+
+    else {
+//        debugPrint('network');
+//        debugPrint('url2 $url');
+//        control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
+//        ready = true;
+//        debugPrint('control' + control.toString());
+//        control.initialize();
+//        control.seekTo(Duration(seconds: 0));
+//        //control.setVolume(1.0);
+//        control.play();
+    }
+
+//    else{
+//      ready = true;
+////      control.initialize();
+////      control.setVolume(1.0);
+////      control.seekTo(Duration(seconds: 0));
+//      //control.play();
+//
+//    }
 //    if (control == null) {
 //      control = VideoPlayerController.network(
 //          "https://firebasestorage.googleapis.com/v0/b/psrd-fa583.appspot.com/o/videos%2FTest.mp4?alt=media&token=d3ef43ea-bcbc-4baf-a074-5555d396164c")
@@ -1305,7 +1424,7 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: (){
-              control.seekTo(Duration(seconds: 0));
+              //control.seekTo(Duration(seconds: 0));
               control.setVolume(0.0);
               control.removeListener(listen);
               Navigator.pop(context);
@@ -1405,17 +1524,15 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
     );
   }
 
-  @override
-  void afterFirstLayout(BuildContext context) {
-    setState(() {
-      if(ready) {
-        control.initialize();
-        control.seekTo(Duration(seconds: 0));
-        //control.setVolume(1.0);
-        control.play();
-      }
-    });
-  }
+//  @override
+//  void afterFirstLayout(BuildContext context) {
+//    setState(() {
+//      if(ready) {
+//
+//
+//      }
+//    });
+//  }
 }
 class Fader extends StatefulWidget{
   BaseAuth auth;
@@ -1501,27 +1618,33 @@ class SecondState extends State<Second>{
   Future<Null> uploadFile (File camerafile) async{
 
     String filepath = camerafile.path;
-    final ByteData bytes = await rootBundle.load(filepath);
-    final Directory tempDir = Directory.systemTemp;
-    final String fileName = '${control.text}.mp4';
-    final File file = File('${tempDir.path}/$fileName');
-    file.writeAsBytes(bytes.buffer.asInt8List(),mode: FileMode.write);
 
-    StorageReference ref = FirebaseStorage.instance.ref().child(file.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','videos'));
-    StorageUploadTask task = ref.putFile(file);
+    final ByteData bytes = await rootBundle.load(filepath);
+    debugPrint(bytes.lengthInBytes.toString());
+//    final Directory tempDir = await getApplicationDocumentsDirectory();
+//    final String fileName = '${control.text}.mp4';
+
+//    File file = File('${Directory.systemTemp}/${control.text}.mp4');
+//    file.write
+//   file.writeAsBytesSync(bytes.buffer.asInt8List(),mode: FileMode.write);
+//    debugPrint('file'+file.path);
+    //file.writeAsBytes(bytes.buffer.asInt8List(),mode: FileMode.write);
+
+    StorageReference ref = FirebaseStorage.instance.ref().child(camerafile.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','videos').replaceAll('.MOV','.mp4'));
+    StorageUploadTask task = ref.putFile(camerafile);
     u = task;
-    ref = FirebaseStorage.instance.ref().child('$file');
+    ref = FirebaseStorage.instance.ref().child('$camerafile');
     _path = await (await task.onComplete).ref.getDownloadURL();
     debugPrint(_path);
-    curpath = fileName;
+    curpath = control.text;
     Firestore.instance.collection('videos').document().setData(<String,dynamic>{
-      'name' : fileName,
+      'name' : control.text+'.mp4',
       'downloadURL' : _path
     });
     setState(() {
       isLoading = false;
     });
-
+    camerafile.deleteSync();
   }
   @override
   void initState() {
@@ -1603,6 +1726,7 @@ class SecondState extends State<Second>{
       });
       await uploadFile(
           await ImagePicker.pickVideo(source: ImageSource.gallery));
+      //debugPrint('Path:'+(await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
       setState(() {
         isLoading = false;
         control.text = '';

@@ -13,8 +13,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
-import 'package:after_layout/after_layout.dart';
 import 'package:chewie/chewie.dart';
+import 'package:dio/dio.dart';
 class StudentPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
@@ -29,7 +29,7 @@ class StudentPage extends StatefulWidget{
 }
 
 class StudentPageState extends State<StudentPage>{
-
+  String _path;
   static File _cachedFile;
   static List<bool> sneck = [];
   String curpath;
@@ -37,7 +37,7 @@ class StudentPageState extends State<StudentPage>{
   SharedPreferences prefs;
   static String url = '';
   GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
-
+  //static FlutterDocumentPickerParams params;
   String uid;
   StudentPageState({this.auth,this.onSignedOut,this.uid});
   BaseAuth auth;
@@ -75,7 +75,9 @@ class StudentPageState extends State<StudentPage>{
   @override
   void initState(){
     super.initState();
-
+//    params = FlutterDocumentPickerParams(
+//      allowedFileExtensions: ['txt'],
+//    );
     signedIn = true;
   }
 
@@ -84,30 +86,55 @@ class StudentPageState extends State<StudentPage>{
     prefs = await SharedPreferences.getInstance();
   }
   static var httpClient = new HttpClient();
-  Future<File> downloadFile (String url,String name) async{
-
+  void downloadFile (String url,String name) async{
+//    bool check = false;
+//    while(!check){
+//      if(Platform.isIOS){
+//        check = true;
+//        continue;
+//      }
+//      PermissionStatus perm = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+//      if(perm != PermissionStatus.granted){
+//        Map<PermissionGroup,PermissionStatus> map = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+//        if(map[PermissionGroup.storage] == PermissionStatus.granted){
+//          check = true;
+//          continue;
+//        }
+//        else{
+//          continue;
+//        }
+//      }
+//      else{
+//        check = true;
+//        continue;
+//      }
+//    }
+//    String task = '';
     try {
-      debugPrint('1');
-      var request = await httpClient.getUrl(Uri.parse(url));
-      debugPrint('2');
-      var response = await request.close();
-      debugPrint('3');
-      var bytes = await consolidateHttpClientResponseBytes(response);
-      debugPrint('4');
+      Dio dio = Dio();
       String dir = (await getApplicationDocumentsDirectory()).path;
-
-      File file = new File('$dir/$name');
-
-      await file.writeAsBytes(bytes);
-
+      String path = '$dir/$name';
+      await dio.download(url, path);
       prefs = await SharedPreferences.getInstance();
 
-      prefs.setString(name,file.path);
+      prefs.setString(name,path);
 
-      debugPrint(file.path);
+      debugPrint(path);
+      //Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage(auth: auth, onSignedOut: onSignedOut, name: name, url: url, task: path)));
 
-      return file;
 
+//      debugPrint((await getExternalStorageDirectory()).path);
+//      String directory = (await getExternalStorageDirectory()).path;
+//      FlutterDownloader.enqueue(
+//          url: url,
+//          savedDir: directory,
+//        showNotification: true,
+//        openFileFromNotification: true,
+//      ).then((string)async {
+//        task = string;
+//        prefs = await SharedPreferences.getInstance();
+//        prefs.setString(name, task);
+//      });
 
     }catch(e){
       debugPrint('error in download $e');
@@ -121,7 +148,22 @@ class StudentPageState extends State<StudentPage>{
     bool check;
     bool smeck;
     QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt')).getDocuments();
-
+//      Future<bool> name = Firestore.instance.collection('tests').where('name', isEqualTo: snapshot['name'].replaceAll('.mp4', '.txt')).getDocuments().then((docs){
+//     try {
+//       if (docs.documents[0].exists) check = true;
+//
+//       SharedPreferences.getInstance().then((pref) {
+//         prefs = pref;
+//       });
+//       cool = prefs.getString(snapshot['name']) != null ? false : true;
+//
+//     }catch(e){
+//       if (e.toString() ==
+//           'RangeError (index): Invalid value: Valid value range is empty: 0') {
+//         check = false;
+//       }
+//     }
+//     return check;
 
     try{
       if(docs.documents[0].exists) check = true;
@@ -137,6 +179,13 @@ class StudentPageState extends State<StudentPage>{
     return [check,smeck];
   }
 
+//  fire(int index, DocumentSnapshot snapshot, bool dreck)async{
+//    dreck = false;
+//      await firestoree(index, snapshot).then((boolean){
+//        dreck = boolean;
+//
+//      });
+//      debugPrint(dreck.toString());
 //  }
   static bool cool = false;
 
@@ -148,7 +197,18 @@ class StudentPageState extends State<StudentPage>{
       appBar: AppBar(
         title: Text('Welcome'),
         actions: <Widget>[
+//          IconButton(icon: Icon(Icons.accessibility),onPressed: () {
+//            setState(() {
+//              signedIn = false;
+//            });
+//            _signOut();
+//          },),
+//          IconButton(icon: Icon(Icons.add),onPressed: ()async{
+//            Navigator.push(context, MaterialPageRoute(builder: (context)=>new Second(auth: auth, onSignedOut: onSignedOut,)));
+//            //uploadFile(await ImagePicker.pickVideo(source: ImageSource.gallery));
+//          }
 
+//          )
 
         ],
       ),
@@ -161,6 +221,7 @@ class StudentPageState extends State<StudentPage>{
                   Navigator.pop(context);
                 }
             ),
+
 
             ListTile(
                 title: Text('Sign Out'),
@@ -206,12 +267,32 @@ class StudentPageState extends State<StudentPage>{
                   while(index+1>calor.length){
                     calor.add(Colors.orange);
                   }
-                  colorr(snapshot['name'].replaceAll('.mp4','.txt'),index);
+//                  colorr(snapshot['name'].replaceAll('.mp4','.txt'),index);
                   SharedPreferences.getInstance().then((pref){
                     prefs = pref;
                     //debugPrint('sup '+prefs.get(snapshot['name']).toString());
                   });
+                  //debugPrint(calor[index].toString());
 
+
+
+//                  Firestore.instance.collection('tests').where('name', isEqualTo: snapshot['name'].replaceAll('.mp4', '.txt')).getDocuments().then((docs){
+//                    try {
+//                      if (docs.documents[0].exists) value = true;
+//
+//                      SharedPreferences.getInstance().then((pref) {
+//                        prefs = pref;
+//                      });
+//                      cool = prefs.getString(snapshot['name']) != null ? false : true;
+//
+//                    }catch(e){
+//                      if (e.toString() ==
+//                          'RangeError (index): Invalid value: Valid value range is empty: 0') {
+//                        value = false;
+//                      }
+//                    }
+//
+//                  });
                   return FutureBuilder(
                       future: firestoree(index, snapshot),
                       builder : (BuildContext context, AsyncSnapshot<List<bool>> snapper) {
@@ -223,8 +304,6 @@ class StudentPageState extends State<StudentPage>{
                         }
                         if (snapper.hasData) {
                           cool = snapper.data[1];
-
-
                           return ListTile(
                               title: Row(
                                 mainAxisSize: MainAxisSize.max,
@@ -381,15 +460,7 @@ class StudentPageState extends State<StudentPage>{
       ) :
       Center(child: CircularProgressIndicator()),
 
-//      floatingActionButton: FloatingActionButton(
-//          child: Icon(Icons.add),
-//          onPressed: () async {
-//            Navigator.push(context, MaterialPageRoute(builder: (context)=>new Second(auth: auth, onSignedOut: onSignedOut,)));
-////            Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage()));
-////            createVideo();
-////            control.play();
-//          }
-//      ),
+
     );
   }
   method(bool cool, DocumentSnapshot snapshot, int index){
@@ -441,7 +512,7 @@ class NextPage extends StatefulWidget{
 
 }
 
-class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
+class NextPageState extends State<NextPage>{
   bool sneeze = false;
   BaseAuth auth;
   bool fullScreen;
@@ -460,20 +531,106 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
   void initState() {
     super.initState();
     listen = (){
-      setState(() {
-
-      });
+//      setState(() {
+//
+//      });
     };
     Firestore.instance.collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments().then((docs){
-      if(docs.documents[0].exists){
-        sneeze = true;
+      try {
+        if (docs.documents[0].exists) {
+          sneeze = true;
+        }
+      }catch(e){
+        sneeze = false;
       }
     });
-    debugPrint('url $url');
-    createVideo();
-    control.play();
-    debugPrint('control ' + control.value.isPlaying.toString());
-    tapped = false;
+    check = false;
+    debugPrint('task $task');
+    if(task != ''){
+
+      File file = File(task);
+      StudentPageState._cachedFile = file;
+      debugPrint('file : ${file.lengthSync()}');
+      if(file.existsSync()){
+        check = true;
+      }
+      control = VideoPlayerController.file(file)
+        ..addListener(listen);
+      ready = true;
+      debugPrint('iin here');
+      debugPrint('control' + control.toString());
+      control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+      //control.setVolume(1.0);
+      debugPrint('here');
+
+    }
+//    if(task != ''){
+//      check = true;
+//      FlutterDownloader.open(taskId: task).then((success){
+//        debugPrint(success.toString());
+//      });
+//
+//    }
+
+    debugPrint('check $check');
+    if(check) {
+      try {
+        debugPrint(StudentPageState._cachedFile.toString());
+        control = VideoPlayerController.file(StudentPageState._cachedFile)
+          ..addListener(listen);
+        ready = true;
+        debugPrint('iin here');
+        debugPrint('control' + control.toString());
+        control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+        //control.setVolume(1.0);
+        debugPrint('here');
+        control.play();
+
+      }catch(e){
+
+      }
+      //..setVolume(1.0);
+      //..play();
+
+    }
+
+    else {
+      debugPrint('network');
+      debugPrint('url2 $url');
+      control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
+      ready = true;
+      debugPrint('control' + control.toString());
+      control.initialize();
+      control.seekTo(Duration(seconds: 0));
+      //control.setVolume(1.0);
+      control.play();
+    }
+
+//    else{
+//      ready = true;
+////      control.initialize();
+////      control.setVolume(1.0);
+////      control.seekTo(Duration(seconds: 0));
+//      //control.play();
+//
+//    }
+//    if (control == null) {
+//      control = VideoPlayerController.network(
+//          "https://firebasestorage.googleapis.com/v0/b/psrd-fa583.appspot.com/o/videos%2FTest.mp4?alt=media&token=d3ef43ea-bcbc-4baf-a074-5555d396164c")
+//        ..addListener(listen)
+//        ..setVolume(1.0)
+//        ..initialize()
+//        ..play();
+//    } else {
+//      if (control.value.isPlaying) {
+//        control.pause();
+//      } else {
+//        control.initialize();
+//        control.play();
+//      }
+//    }
 
   }
   @override
@@ -503,17 +660,27 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
 
 
 
-  void createVideo(){
+  void createVideo()async{
 
     check = false;
+    debugPrint('task $task');
     if(task != ''){
-      debugPrint('task '+task);
+
       File file = File(task);
       StudentPageState._cachedFile = file;
-      debugPrint('file : ${file.path}');
+      debugPrint('file : ${file.lengthSync()}');
       if(file.existsSync()){
         check = true;
       }
+      control = VideoPlayerController.file(file)
+        ..addListener(listen);
+      ready = true;
+      debugPrint('iin here');
+      debugPrint('control' + control.toString());
+      control.initialize();
+//          control.seekTo(Duration(seconds: 0));
+      //control.setVolume(1.0);
+      debugPrint('here');
 
     }
 //    if(task != ''){
@@ -523,39 +690,50 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
 //      });
 //
 //    }
-    control = null;
-    if(control == null){
-      debugPrint('check $check');
-      if(check) {
-        try {
-          control = VideoPlayerController.file(StudentPageState._cachedFile)
-            ..addListener(listen);
-          ready = true;
-          debugPrint('iin here');
-        }catch(e){
 
-        }
-        //..setVolume(1.0);
-        //..play();
+    debugPrint('check $check');
+    if(check) {
+      try {
+//          debugPrint(AdminPageState._cachedFile.toString());
+//          control = VideoPlayerController.file(AdminPageState._cachedFile)
+//            ..addListener(listen);
+//          ready = true;
+//          debugPrint('iin here');
+//          debugPrint('control' + control.toString());
+//          control.initialize();
+////          control.seekTo(Duration(seconds: 0));
+//          //control.setVolume(1.0);
+//          debugPrint('here');
+//          control.play();
 
-      }
-
-      else {
-        debugPrint('network');
-        debugPrint('url2 $url');
-        control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
-        ready = true;
+      }catch(e){
 
       }
-    }
-    else{
-      ready = true;
-//      control.initialize();
-//      control.setVolume(1.0);
-//      control.seekTo(Duration(seconds: 0));
-      //control.play();
+      //..setVolume(1.0);
+      //..play();
 
     }
+
+    else {
+//        debugPrint('network');
+//        debugPrint('url2 $url');
+//        control = VideoPlayerController.network(url)..addListener(listen);//..setVolume(1.0);//..play();
+//        ready = true;
+//        debugPrint('control' + control.toString());
+//        control.initialize();
+//        control.seekTo(Duration(seconds: 0));
+//        //control.setVolume(1.0);
+//        control.play();
+    }
+
+//    else{
+//      ready = true;
+////      control.initialize();
+////      control.setVolume(1.0);
+////      control.seekTo(Duration(seconds: 0));
+//      //control.play();
+//
+//    }
 //    if (control == null) {
 //      control = VideoPlayerController.network(
 //          "https://firebasestorage.googleapis.com/v0/b/psrd-fa583.appspot.com/o/videos%2FTest.mp4?alt=media&token=d3ef43ea-bcbc-4baf-a074-5555d396164c")
@@ -593,7 +771,7 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: (){
-              control.seekTo(Duration(seconds: 0));
+              //control.seekTo(Duration(seconds: 0));
               control.setVolume(0.0);
               control.removeListener(listen);
               Navigator.pop(context);
@@ -693,75 +871,15 @@ class NextPageState extends State<NextPage> with AfterLayoutMixin<NextPage>{
     );
   }
 
-  @override
-  void afterFirstLayout(BuildContext context) {
-    setState(() {
-      if(ready) {
-        control.initialize();
-        control.seekTo(Duration(seconds: 0));
-        //control.setVolume(1.0);
-        control.play();
-      }
-    });
-  }
-}
-class Fader extends StatefulWidget{
-  BaseAuth auth;
-  Fader(this.child, {this.duration = const Duration(milliseconds: 500), @required this.auth});
-  final Widget child;
-  final Duration duration;
-
-  @override
-  State<StatefulWidget> createState() {
-    return FaderState( auth: auth);
-  }
-
-}
-class FaderState extends State<Fader> with SingleTickerProviderStateMixin{
-  AnimationController anim;
-  BaseAuth auth;
-  FaderState({@required this.auth});
-  @override
-  void initState() {
-    super.initState();
-    anim = AnimationController(duration: widget.duration, vsync: this);
-    anim.addListener((){
-      if(mounted){
-        setState(() {
-
-        });
-      }
-    });
-  }
-
-  @override
-  void deactivate() {
-    anim.stop();
-    super.deactivate();
-  }
-
-  @override
-  void didUpdateWidget(Fader old) {
-    super.didUpdateWidget(old);
-    if(old.child != widget.child){
-      anim.forward(from: 0.0);
-    }
-  }
-
-  @override
-  void dispose() {
-    anim.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return anim.isAnimating ? Opacity(
-        opacity: 1.0-anim.value,
-        child: widget.child
-    ) : Container();
-  }
-
+//  @override
+//  void afterFirstLayout(BuildContext context) {
+//    setState(() {
+//      if(ready) {
+//
+//
+//      }
+//    });
+//  }
 }
 
 class Test extends StatefulWidget {

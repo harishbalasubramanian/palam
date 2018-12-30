@@ -126,7 +126,7 @@ class AdminPageState extends State<AdminPage>{
       prefs.setString(name,path);
 
       debugPrint(path);
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage(auth: auth, onSignedOut: onSignedOut, name: name, url: url, task: path)));
+      //Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage(auth: auth, onSignedOut: onSignedOut, name: name, url: url, task: path)));
 
 
 //      debugPrint((await getExternalStorageDirectory()).path);

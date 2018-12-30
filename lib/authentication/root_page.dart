@@ -5,6 +5,7 @@ import 'package:prsd/student_page.dart';
 import 'package:prsd/teacher_page.dart';
 import 'package:prsd/Wait.dart';
 import 'package:prsd/admin_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class RootPage extends StatefulWidget{
   RootPage({@required this.auth});
   final BaseAuth auth;
@@ -27,7 +28,7 @@ class RootPageState extends State<RootPage>{
 
  static AuthStat authStatus = AuthStat.notSignedIn;
  LoginPageState l;
-  String uid;
+  static String uid;
   String name;
  @override
   void initState() {
@@ -37,7 +38,7 @@ class RootPageState extends State<RootPage>{
         setState(() {
           authStatus =
           userId == null ? AuthStat.notSignedIn : AuthStat.signedIn;
-          uid = authStatus.toString().replaceAll('AuthStat.', '');
+          uid = userId;
 
           debugPrint('auth: $auth');
 
@@ -51,6 +52,7 @@ class RootPageState extends State<RootPage>{
     });
 
     l = new LoginPageState();
+
     super.initState();
   }
  void _signedIn(){
@@ -73,7 +75,19 @@ class RootPageState extends State<RootPage>{
 
    });
  }
+  static void check()async{
+    QuerySnapshot docs = await Firestore.instance.collection('users').where('uid',isEqualTo: uid).getDocuments();
+    if(docs.documents[0].exists){
+      if(!docs.documents[0].data['approved']){
+        auther = Auther.notApproved;
+      }
+      else if (docs.documents[0].data['approved']){
+        debugPrint('docs ${docs.documents[0].data['approved']}');
+        auther = Auther.approved;
+      }
+    }
 
+  }
  static AuthStatus auth;
  static Auther auther;
   @override
@@ -84,8 +98,9 @@ class RootPageState extends State<RootPage>{
 
       debugPrint('now $auth');
       if(auth == AuthStatus.admin){
-        auther == Auther.approved;
+        auther = Auther.approved;
       }
+
       if(auther == Auther.approved) {
         if (auth == AuthStatus.student) {
           return new StudentPage(

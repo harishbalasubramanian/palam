@@ -74,6 +74,7 @@ class TeacherViewState extends State<TeacherView> {
               if(!snapshot.hasData){
                 return Center(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       CircularProgressIndicator(),
                       Text('   Loading')
@@ -93,10 +94,10 @@ class TeacherViewState extends State<TeacherView> {
                     while(value.length < snapshot.data.documents.length){
                       value.add(false);
                     }
-                    if(snapshot.data.documents[index]['approved'] == 'false'){
+                    if(!snapshot.data.documents[index]['approved']){
                       value[index] = false;
                     }
-                    else if (snapshot.data.documents[index]['approved'] == 'true'){
+                    else if (snapshot.data.documents[index]['approved']){
                       value[index] = true;
                     }
                     return new ListTile(
@@ -109,7 +110,7 @@ class TeacherViewState extends State<TeacherView> {
                             DocumentReference ref = docs.documents[0].reference;
                             ref.updateData(
                                 {
-                                  'approved' : change ? 'true' : 'false'
+                                  'approved' : change
                                 }
                             );
                           });

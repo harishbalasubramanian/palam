@@ -79,6 +79,7 @@ class StudentViewState extends State<StudentView> {
               if(!snapshot.hasData){
                 return Center(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       CircularProgressIndicator(),
                       Text('   Loading')
@@ -98,12 +99,15 @@ class StudentViewState extends State<StudentView> {
                     while(value.length < snapshot.data.documents.length){
                       value.add(false);
                     }
-                    if(snapshot.data.documents[index]['approved'] == 'false'){
+//                    debugPrint(snapshot.data.documents[0].data['approved'].toString());
+                    if(!snapshot.data.documents[index].data['approved']){
                       value[index] = false;
                     }
-                    else if (snapshot.data.documents[index]['approved'] == 'true'){
+
+                    else if (snapshot.data.documents[index]['approved']){
                       value[index] = true;
                     }
+
                     return new ListTile(
                         title: Text(snapshot.data.documents[index]['name']),
                         trailing: Switch(value: value[index], onChanged: (bool change){
@@ -112,11 +116,13 @@ class StudentViewState extends State<StudentView> {
                           });
                           Firestore.instance.collection('users').where('uid',isEqualTo: snapshot.data.documents[index]['uid']).getDocuments().then((docs){
                             DocumentReference ref = docs.documents[0].reference;
+                            debugPrint('heello');
                             ref.updateData(
                                 {
-                                  'approved' : change ? 'true' : 'false'
+                                  'approved' : change
                                 }
                             );
+
                           });
                         })
                     );
