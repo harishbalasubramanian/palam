@@ -201,7 +201,7 @@ class AdminPageState extends State<AdminPage>{
     return Scaffold(
       key: scaffold,
       appBar: AppBar(
-        title: Text('Welcome'),
+        title: Text('Lessons'),
         actions: <Widget>[
 //          IconButton(icon: Icon(Icons.accessibility),onPressed: () {
 //            setState(() {

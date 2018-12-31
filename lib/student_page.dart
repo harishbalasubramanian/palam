@@ -195,7 +195,7 @@ class StudentPageState extends State<StudentPage>{
     return Scaffold(
       key: scaffold,
       appBar: AppBar(
-        title: Text('Welcome'),
+        title: Text('Lessons'),
         actions: <Widget>[
 //          IconButton(icon: Icon(Icons.accessibility),onPressed: () {
 //            setState(() {

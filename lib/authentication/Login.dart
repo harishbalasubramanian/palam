@@ -53,9 +53,13 @@ class LoginPageState extends State<LoginPage>{
     if(validateAndSave()){
       try {
         if (_form == FormType.login) {
-
+//          setState(() {
+//            isLoading = true;
+//          });
           String userId = await widget.auth.signInWithEmailAndPassword(email, password,auth);
+          RootPageState.uuserId = userId;
           debugPrint('User $userId');
+
 
         }
         else{
@@ -63,7 +67,7 @@ class LoginPageState extends State<LoginPage>{
             isLoading = true;
           });
           String userId = await widget.auth.createUserWithEmailAndPassword(email,password,auth,name);
-
+          RootPageState.uuserId = userId;
           debugPrint('Reg $userId');
         }
         widget.onSignedIn();
@@ -124,38 +128,32 @@ class LoginPageState extends State<LoginPage>{
   static bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-
+    debugPrint(isLoading.toString());
     return Scaffold(
       appBar: AppBar(
-        title: Text("Name"),
+        title: _form == FormType.login ? Text("Login") : Text("Create an Account"),
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: Stack(
-            children: <Widget>[
-              Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: buildInputs(),
-                ),
-              ),
-              isLoading ?  Align(
-                  child: Container(
-                    color: Colors.grey[200],
-                    width:70.0,
-                    height: 70.0,
-                    child: new Padding(padding: EdgeInsets.all(5.0),child: Center(child: CircularProgressIndicator())),
+      body:  !isLoading ? SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: buildInputs(),
+                    ),
                   ),
-                alignment: Alignment.center,
-              ) : Container(),
-            ],
-          ),
-        ),
+
+
+            ),
+          ) :
+      Center(
+        child: CircularProgressIndicator(),
       ),
-    );
+
+      );
+
   }
   int val = 0;
   List<Widget> buildInputs(){
@@ -168,30 +166,44 @@ class LoginPageState extends State<LoginPage>{
         validator: (value)=>value.isEmpty ? 'Email can\'t be empty':null,
         onSaved: (value)=>email = value,
       ),
-      TextFormField(
-        decoration: InputDecoration(labelText:'Password'),
-        obscureText: true,
-        validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
-        onSaved: (value)=> password= value,
-      ),
-      RaisedButton(
-        child: Text('Login',style: TextStyle(fontSize:20.0)),
+
+          TextFormField(
+            decoration: InputDecoration(labelText:'Password'),
+            obscureText: true,
+            validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
+            onSaved: (value)=> password= value,
+          ),
+
+      RawMaterialButton(
+        child: Text('Login',style: TextStyle(fontSize:16.0)),
+        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
         onPressed: (){
+          setState(() {
+            isLoading = true;
+          });
           validateAndSubmit();
-
+//          setState(() {
+//            isLoading = false;
+//          });
         },
-
+        fillColor: Colors.orange,
+        elevation: 0.0,
       ),
-      RaisedButton(
-        child: Text('Create an Account',style: TextStyle(fontSize:20.0)),
+      RawMaterialButton(
+        child: Text('Create an Account',style: TextStyle(fontSize:16.0)),
+        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+        fillColor: Colors.orange,
         onPressed: reg,
       ),
-      RaisedButton(
-        child: Text('Forgot Password',style: TextStyle(fontSize: 20.0)),
+      RawMaterialButton(
+        child: Text('Forgot Password',style: TextStyle(fontSize: 16.0)),
+        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100.0)),
+        fillColor: Colors.orange,
         onPressed: (){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>Forgot()));
         }
       ),
+
       ];
 
     }
@@ -213,16 +225,20 @@ class LoginPageState extends State<LoginPage>{
         validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
         onSaved: (value)=> password= value,
       ),
-      RaisedButton(
+      RawMaterialButton(
         child: Text('Register',style: TextStyle(fontSize:20.0)),
+        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+        fillColor: Colors.orange,
         onPressed: (){
           validateAndSubmit();
 
         },
 
       ),
-      RaisedButton(
+      RawMaterialButton(
         child: Text('Login to Your Account',style: TextStyle(fontSize:20.0)),
+        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+        fillColor: Colors.orange,
         onPressed: log,
       ),
       Row(

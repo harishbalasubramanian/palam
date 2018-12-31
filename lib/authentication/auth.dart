@@ -35,12 +35,7 @@ class Auth implements BaseAuth{
           else if (docs.documents[0].data['status'] == 'admin'){
             role = AuthStatus.admin;
           }
-          if(!docs.documents[0].data['approved']){
-            RootPageState.auther = Auther.notApproved;
-          }
-          else if (docs.documents[0].data['approved']){
-            RootPageState.auther = Auther.approved;
-          }
+
         }
 
 
@@ -51,7 +46,7 @@ class Auth implements BaseAuth{
       debugPrint('done');
       done = true;
       RootPageState.uid = user.uid;
-      RootPageState.check();
+
     });
 
     return user.uid;
@@ -78,12 +73,7 @@ class Auth implements BaseAuth{
         else if (docs.documents[0].data['status'] == 'admin'){
           role = AuthStatus.admin;
         }
-        if(!docs.documents[0].data['approved']){
-          RootPageState.auther = Auther.notApproved;
-        }
-        else if (docs.documents[0].data['approved']){
-          RootPageState.auther = Auther.approved;
-        }
+
       }
 
       debugPrint('autther ${RootPageState.auther}');
@@ -94,7 +84,7 @@ class Auth implements BaseAuth{
       debugPrint('done');
       done = true;
       RootPageState.uid = user.uid;
-      RootPageState.check();
+
     });
     return user.uid;
   }
@@ -117,12 +107,7 @@ class Auth implements BaseAuth{
           bauth = AuthStatus.teacher;
         else if (val == 'admin')
           bauth = AuthStatus.admin;
-        if(value.documents[0].data['approved'] == 'false'){
-          RootPageState.auther = Auther.notApproved;
-        }
-        else if (value.documents[0].data['approved'] == 'true'){
-          RootPageState.auther = Auther.approved;
-        }
+
         debugPrint('val $val');
       }
 
