@@ -167,12 +167,29 @@ class LoginPageState extends State<LoginPage>{
         onSaved: (value)=>email = value,
       ),
 
-          TextFormField(
-            decoration: InputDecoration(labelText:'Password'),
-            obscureText: true,
-            validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
-            onSaved: (value)=> password= value,
-          ),
+
+              Container(
+                padding: EdgeInsets.only(right: 100.0),
+
+                    child: TextFormField(
+                      decoration: InputDecoration(labelText:'Password'),
+                      obscureText: true,
+                      validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
+                      onSaved: (value)=> password= value,
+                    ),
+
+              ),
+              RawMaterialButton(
+                child: Text('Forgot Password',style: TextStyle(fontSize: 16.0)),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                fillColor: Colors.orange,
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Forgot()));
+                },
+                padding: EdgeInsets.all(10.0),
+                elevation: 0.0,
+              ),
+
 
       RawMaterialButton(
         child: Text('Login',style: TextStyle(fontSize:16.0)),
@@ -194,15 +211,10 @@ class LoginPageState extends State<LoginPage>{
         shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
         fillColor: Colors.orange,
         onPressed: reg,
+        elevation: 0.0,
+        padding: EdgeInsets.all(10.0),
       ),
-      RawMaterialButton(
-        child: Text('Forgot Password',style: TextStyle(fontSize: 16.0)),
-        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100.0)),
-        fillColor: Colors.orange,
-        onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>Forgot()));
-        }
-      ),
+
 
       ];
 
@@ -226,20 +238,23 @@ class LoginPageState extends State<LoginPage>{
         onSaved: (value)=> password= value,
       ),
       RawMaterialButton(
-        child: Text('Register',style: TextStyle(fontSize:20.0)),
+        child: Text('Register',style: TextStyle(fontSize:16.0)),
         shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
         fillColor: Colors.orange,
         onPressed: (){
           validateAndSubmit();
-
         },
+        padding: EdgeInsets.all(10.0),
+        elevation: 0.0,
 
       ),
       RawMaterialButton(
-        child: Text('Login to Your Account',style: TextStyle(fontSize:20.0)),
+        child: Text('Login to Your Account',style: TextStyle(fontSize:16.0)),
         shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
         fillColor: Colors.orange,
         onPressed: log,
+        elevation: 0.0,
+        padding: EdgeInsets.all(10.0),
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
