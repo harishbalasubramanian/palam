@@ -1036,18 +1036,14 @@ class FileUploadState extends State<FileUpload>{
       ),
 
       body:  Center(
-        child:  !loading ? InkWell(
+        child:  !loading ? RawMaterialButton(
 
-            child: Container(
-                padding: EdgeInsets.all(40.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.teal,
-
-                ),
-                child: Text('Upload File')
-            ),
-            onTap: ()async{
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            fillColor: Colors.orange,
+            elevation: 0.0,
+            padding: EdgeInsets.all(20.0),
+            child: Text('Upload Test'),
+            onPressed: ()async{
               List<Map<String,dynamic>>test = [];
 
               path = await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: 'txt');
@@ -1692,16 +1688,18 @@ class SecondState extends State<Second>{
                     }
                 ),
               ),
-              InkWell(
-                child: Container(
-                    padding: EdgeInsets.all(40.0),
-                    decoration: BoxDecoration(
-                        color: Colors.teal,
-                        shape: BoxShape.circle
-                    ),
-                    child: Text('Upload Video')
+              Container(
+                padding: EdgeInsets.only(top: 30.0),
+                child: RawMaterialButton(
+
+                  child: Text('Upload Video'),
+
+                  onPressed: () => doStuff(),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                  padding: EdgeInsets.all(15.0),
+                  fillColor: Colors.orange,
+                  elevation: 0.0,
                 ),
-                onTap: () => doStuff(),
               ),
             ],
           )
@@ -1915,8 +1913,11 @@ class TestState extends State<Test>{
       debugPrint(colorlist.toString());
       debugPrint(pushed.toString());
       if (activated != 2) {
-        op.add(FlatButton(
-            color: Colors.orange,
+        op.add(RawMaterialButton(
+            fillColor: Colors.orange,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            elevation: 0.0,
+            padding: EdgeInsets.all(10.0),
             child: Text('Submit'),
             onPressed: () {
               if (!pushed) {
@@ -1978,8 +1979,11 @@ class TestState extends State<Test>{
 
       if (next) {
         op.add(
-            FlatButton(
-              color: Colors.yellow,
+            RawMaterialButton(
+              fillColor: Colors.orange,
+              padding: EdgeInsets.all(10.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+              elevation: 0.0,
               child: Text('Next Question', textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
               onPressed: () {
@@ -1994,8 +1998,11 @@ class TestState extends State<Test>{
         );
       }
       if (length == index && activated == 2) {
-        op.add(FlatButton(
-          color: Colors.greenAccent,
+        op.add(RawMaterialButton(
+          fillColor: Colors.orange,
+          elevation: 0.0,
+          padding: EdgeInsets.all(10.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           child: Text('Finish', textAlign: TextAlign.center,
               style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
           onPressed: () {

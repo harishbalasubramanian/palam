@@ -1032,7 +1032,7 @@ class FileUploadState extends State<FileUpload>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text('File Upload'),
+        title: Text('Test Upload'),
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: (){
@@ -1045,18 +1045,14 @@ class FileUploadState extends State<FileUpload>{
       ),
 
       body:  Center(
-        child:  !loading ? InkWell(
+        child:  !loading ? RawMaterialButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                fillColor: Colors.orange,
+                elevation: 0.0,
+                padding: EdgeInsets.all(20.0),
+                child: Text('Upload Test'),
 
-            child: Container(
-                padding: EdgeInsets.all(40.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.teal,
-
-                ),
-                child: Text('Upload File')
-            ),
-            onTap: ()async{
+            onPressed: ()async{
               List<Map<String,dynamic>>test = [];
 
               path = await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: 'txt');
@@ -1662,6 +1658,7 @@ class SecondState extends State<Second>{
     storage = new FirebaseStorage();
   }
   bool isLoading = false;
+  GlobalKey<FormState> formkey = new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
 
@@ -1683,36 +1680,42 @@ class SecondState extends State<Second>{
         ),
       ),
       body: !isLoading ? SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(8.0),
-                child: TextFormField(
-                    controller: control,
-                    decoration: InputDecoration(labelText: 'Title of Video'),
-                    validator: (value) {
-                      if(value.isEmpty){
-                        return 'Title can\'t be empty';
+          child: Form(
+            key: formkey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                      controller: control,
+                      decoration: InputDecoration(labelText: 'Title of Video'),
+                      validator: (value) {
+                        if(value.isEmpty){
+                          return 'Title can\'t be empty';
+                        }
+                        if(value.length > 15){
+                          return 'Title has to be less or equal than 15 characters';
+                        }
                       }
-                      if(value.length > 15){
-                        return 'Title has to be less or equal than 15 characters';
-                      }
-                    }
+                  ),
                 ),
-              ),
-              InkWell(
-                child: Container(
-                    padding: EdgeInsets.all(40.0),
-                    decoration: BoxDecoration(
-                        color: Colors.teal,
-                        shape: BoxShape.circle
-                    ),
-                    child: Text('Upload Video')
+
+                Container(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: RawMaterialButton(
+
+                      child: Text('Upload Video'),
+
+                      onPressed: () => doStuff(),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                      padding: EdgeInsets.all(15.0),
+                      fillColor: Colors.orange,
+                      elevation: 0.0,
+                  ),
                 ),
-                onTap: () => doStuff(),
-              ),
-            ],
+              ],
+            ),
           )
       ) : Center(
         child: Row(
@@ -1726,27 +1729,36 @@ class SecondState extends State<Second>{
     );
 
   }
-
-  void doStuff()async{
-    try {
-
-      setState(() {
-        isLoading = true;
-      });
-      await uploadFile(
-          await ImagePicker.pickVideo(source: ImageSource.gallery));
-    //debugPrint('Path:'+(await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
-      setState(() {
-        isLoading = false;
-        control.text = '';
-
-        _showSnackBar();
-
-      });
-
+  bool validation(){
+    final form = formkey.currentState;
+    form.save();
+    if(form.validate()){
+      return true;
     }
-    catch(e){
-      debugPrint(e.toString());
+    return false;
+  }
+  void doStuff()async{
+    if (validation()) {
+      try {
+
+        setState(() {
+          isLoading = true;
+        });
+        await uploadFile(
+            await ImagePicker.pickVideo(source: ImageSource.gallery));
+      //debugPrint('Path:'+(await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
+        setState(() {
+          isLoading = false;
+          control.text = '';
+
+          _showSnackBar();
+
+        });
+
+      }
+      catch(e){
+        debugPrint(e.toString());
+      }
     }
   }
   void _showSnackBar(){
@@ -1924,8 +1936,11 @@ class TestState extends State<Test>{
       debugPrint(colorlist.toString());
       debugPrint(pushed.toString());
       if (activated != 2) {
-        op.add(FlatButton(
-          color: Colors.orange,
+        op.add(RawMaterialButton(
+            fillColor: Colors.orange,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            elevation: 0.0,
+            padding: EdgeInsets.all(10.0),
             child: Text('Submit'),
             onPressed: () {
               if (!pushed) {
@@ -1987,8 +2002,11 @@ class TestState extends State<Test>{
 
       if (next) {
         op.add(
-            FlatButton(
-              color: Colors.yellow,
+            RawMaterialButton(
+              fillColor: Colors.orange,
+              padding: EdgeInsets.all(10.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+              elevation: 0.0,
               child: Text('Next Question', textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
               onPressed: () {
@@ -2003,8 +2021,11 @@ class TestState extends State<Test>{
         );
       }
       if (length == index && activated == 2) {
-        op.add(FlatButton(
-          color: Colors.greenAccent,
+        op.add(RawMaterialButton(
+          fillColor: Colors.orange,
+          elevation: 0.0,
+          padding: EdgeInsets.all(10.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           child: Text('Finish', textAlign: TextAlign.center,
               style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
           onPressed: () {

@@ -1047,8 +1047,11 @@ class TestState extends State<Test>{
       debugPrint(colorlist.toString());
       debugPrint(pushed.toString());
       if (activated != 2) {
-        op.add(FlatButton(
-            color: Colors.orange,
+        op.add(RawMaterialButton(
+            fillColor: Colors.orange,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            elevation: 0.0,
+            padding: EdgeInsets.all(10.0),
             child: Text('Submit'),
             onPressed: () {
               if (!pushed) {
@@ -1110,8 +1113,11 @@ class TestState extends State<Test>{
 
       if (next) {
         op.add(
-            FlatButton(
-              color: Colors.yellow,
+            RawMaterialButton(
+              fillColor: Colors.orange,
+              padding: EdgeInsets.all(10.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+              elevation: 0.0,
               child: Text('Next Question', textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
               onPressed: () {
@@ -1126,8 +1132,11 @@ class TestState extends State<Test>{
         );
       }
       if (length == index && activated == 2) {
-        op.add(FlatButton(
-          color: Colors.greenAccent,
+        op.add(RawMaterialButton(
+          fillColor: Colors.orange,
+          elevation: 0.0,
+          padding: EdgeInsets.all(10.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           child: Text('Finish', textAlign: TextAlign.center,
               style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
           onPressed: () {

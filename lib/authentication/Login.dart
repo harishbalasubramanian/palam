@@ -156,6 +156,7 @@ class LoginPageState extends State<LoginPage>{
 
   }
   int val = 0;
+  Color forgotpasswordcolor = Colors.orange;
   List<Widget> buildInputs(){
 
     if(_form == FormType.login){
@@ -167,28 +168,43 @@ class LoginPageState extends State<LoginPage>{
         onSaved: (value)=>email = value,
       ),
 
+        Container(
 
+          child: Row(
+            children: <Widget>[
               Container(
-                padding: EdgeInsets.only(right: 100.0),
 
-                    child: TextFormField(
-                      decoration: InputDecoration(labelText:'Password'),
-                      obscureText: true,
-                      validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
-                      onSaved: (value)=> password= value,
-                    ),
+                width: MediaQuery.of(context).size.width/1.7,
+                child: TextFormField(
+                  decoration: InputDecoration(labelText:'Password'),
+                  obscureText: true,
+                  validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
+                  onSaved: (value)=> password= value,
+                ),
 
               ),
-              RawMaterialButton(
-                child: Text('Forgot Password',style: TextStyle(fontSize: 16.0)),
-                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                fillColor: Colors.orange,
-                onPressed: (){
+              Padding(
+                padding: EdgeInsets.only(left: 15.0),
+              ),
+              InkWell(
+                child: Text('Forgot Password?',style: TextStyle(fontSize: 11.0,color: forgotpasswordcolor)),
+
+                onTap: (){
+                  setState(() {
+                    forgotpasswordcolor = Colors.deepOrange;
+                  });
+                  debugPrint('forgotpasswordcolor $forgotpasswordcolor');
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>Forgot()));
+                  setState(() {
+                    forgotpasswordcolor = Colors.orange;
+                  });
                 },
-                padding: EdgeInsets.all(10.0),
-                elevation: 0.0,
+
               ),
+            ],
+          ),
+        ),
+
 
 
       RawMaterialButton(
@@ -324,37 +340,47 @@ class ForgotState extends State<Forgot> {
         title: Text('Password Reset'),
       ),
       body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                validator: (value) => value.isEmpty ? "Email can't be empty": null,
-                onSaved: (value) => email = value,
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  validator: (value) => value.isEmpty ? "Email can't be empty": null,
+                  onSaved: (value) => email = value,
+                  decoration: InputDecoration(
+                    labelText: "Email",
 
-              ),
-              RaisedButton(
-                onPressed:(){
-                  if(validateAndSave()){
-                    FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_){
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Sending Email'),
-                        ),
-                      );
+                  ),
+                ),
+                RawMaterialButton(
+                  onPressed:(){
+                    if(validateAndSave()){
+                      FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_){
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Sending Email'),
+                          ),
+                        );
+                      }
+                      ).catchError((error){
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Password Reset Failed')
+                          ),
+                        );
+                      });
                     }
-                    ).catchError((error){
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Password Reset Failed')
-                        ),
-                      );
-                    });
-                  }
-                },
-                child: Text('Send Reset Email'),
-              ),
-            ],
+                  },
+                  elevation: 0.0,
+                  shape: new RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                  fillColor: Colors.orange,
+                  padding: EdgeInsets.all(10.0),
+                  child: Text('Send Reset Email'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
