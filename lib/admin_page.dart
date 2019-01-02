@@ -2030,9 +2030,7 @@ class TestState extends State<Test>{
               style: TextStyle(fontFamily: "Serif", fontSize: 16.0)),
           onPressed: () {
             done = true;
-            setState(() {
-
-            });
+            setState(() {});
           },
         ));
       }
