@@ -45,6 +45,7 @@ class LoginPageState extends State<LoginPage>{
       return false;
     }
   }
+  GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
   static bool done;
   void validateAndSubmit()async{
     debugPrint('started');
@@ -74,6 +75,34 @@ class LoginPageState extends State<LoginPage>{
       }
       catch(e){
         debugPrint('Error $e');
+        if(e.toString() == 'PlatformException(exception, The password is invalid or the user does not have a password., null)'){
+          scaffold.currentState.showSnackBar(
+            SnackBar(
+              content: Text('Incorrect Email or Password'),
+            ),
+          );
+        }
+        else if(e.toString() == 'PlatformException(exception, There is no user record corresponding to this identifier. The user may have been deleted., null)'){
+          scaffold.currentState.showSnackBar(
+            SnackBar(
+              content: Text('This user doesn\'t exist'),
+            ),
+          );
+        }
+        else if(e.toString() == 'PlatformException(exception, The email address is already in use by another account., null)'){
+          scaffold.currentState.showSnackBar(
+            SnackBar(
+              content: Text('This email is already associated with an acount'),
+            ),
+          );
+        }
+        else {
+          scaffold.currentState.showSnackBar(
+            SnackBar(
+              content: Text('An error occured'),
+            ),
+          );
+        }
         setState(() {
           isLoading = false;
         });
@@ -130,6 +159,7 @@ class LoginPageState extends State<LoginPage>{
   Widget build(BuildContext context) {
     debugPrint(isLoading.toString());
     return Scaffold(
+      key: scaffold,
       appBar: AppBar(
         title: _form == FormType.login ? Text("Login") : Text("Create an Account"),
         automaticallyImplyLeading: false,
@@ -178,7 +208,12 @@ class LoginPageState extends State<LoginPage>{
                 child: TextFormField(
                   decoration: InputDecoration(labelText:'Password'),
                   obscureText: true,
-                  validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
+                  validator: (value){
+                    if(value.isEmpty) {
+                      return 'Password can\'t be empty';
+                    }
+                    return null;
+                  },
                   onSaved: (value)=> password= value,
                 ),
 
@@ -244,13 +279,29 @@ class LoginPageState extends State<LoginPage>{
         ),
         TextFormField(
         decoration: InputDecoration(labelText:'Email'),
-        validator: (value)=>value.isEmpty ? 'Email can\'t be empty':null,
+        validator: (value){
+          if(value.isEmpty){
+            return 'Email can\'t be empty';
+          }
+          else if (!value.contains('@') || !value.contains('.') || value.indexOf('@') + 1 > value.indexOf('.')){
+            return 'Email isn\'t formatted correctly';
+          }
+        },
         onSaved: (value)=>email = value,
       ),
       TextFormField(
         decoration: InputDecoration(labelText:'Password'),
         obscureText: true,
-        validator: (value)=>value.isEmpty ? 'Password can\'t be empty':null,
+        validator: (value){
+          if(value.isEmpty) {
+            return 'Password can\'t be empty';
+          }
+          else if (value.length < 6){
+            return 'Password is not long enough';
+          }
+
+          return null;
+        },
         onSaved: (value)=> password= value,
       ),
       RawMaterialButton(

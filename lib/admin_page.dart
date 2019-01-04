@@ -221,6 +221,9 @@ class AdminPageState extends State<AdminPage>{
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
+            DrawerHeader(
+              child: Image.asset('images/PalamLogo.jpeg'),
+            ),
             ListTile(
                 title: Text('Home'),
                 onTap: (){
@@ -1424,7 +1427,7 @@ class NextPageState extends State<NextPage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Test'),
+        title: Text(name.replaceAll('.mp4','').replaceAll('.MOV','').replaceAll('.mov','')),
 
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -1620,12 +1623,13 @@ class SecondState extends State<Second>{
   FirebaseStorage storage;
   TextEditingController control;
   bool check = true;
-  Future<Null> uploadFile (File camerafile) async{
-
-    String filepath = camerafile.path;
-
-    final ByteData bytes = await rootBundle.load(filepath);
-    debugPrint(bytes.lengthInBytes.toString());
+  Future<Null> uploadFile (String path) async{
+    try {
+      //String filepath = camerafile.path;
+      debugPrint('here');
+      //final ByteData bytes = await rootBundle.load(path);
+      debugPrint('here2');
+      //debugPrint(bytes.lengthInBytes.toString());
 //    final Directory tempDir = await getApplicationDocumentsDirectory();
 //    final String fileName = '${control.text}.mp4';
 
@@ -1633,23 +1637,34 @@ class SecondState extends State<Second>{
 //    file.write
 //   file.writeAsBytesSync(bytes.buffer.asInt8List(),mode: FileMode.write);
 //    debugPrint('file'+file.path);
-    //file.writeAsBytes(bytes.buffer.asInt8List(),mode: FileMode.write);
+      //file.writeAsBytes(bytes.buffer.asInt8List(),mode: FileMode.write);
 
-    StorageReference ref = FirebaseStorage.instance.ref().child(camerafile.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','videos').replaceAll('.MOV','.mp4'));
-    StorageUploadTask task = ref.putFile(camerafile);
-    u = task;
-    ref = FirebaseStorage.instance.ref().child('$camerafile');
-    _path = await (await task.onComplete).ref.getDownloadURL();
-    debugPrint(_path);
-    curpath = control.text;
-    Firestore.instance.collection('videos').document().setData(<String,dynamic>{
-      'name' : control.text+'.mp4',
-      'downloadURL' : _path
-    });
-    setState(() {
-      isLoading = false;
-    });
-    camerafile.deleteSync();
+//      StorageReference ref = FirebaseStorage.instance.ref().child(
+//          camerafile.path.replaceAll(
+//              '/data/user/0/com.happssolutions.prsd/cache', 'videos')
+//              .replaceAll('.MOV', '.mp4'));
+      File file = File(path);
+      StorageReference ref = FirebaseStorage.instance.ref().child(file.path.replaceAll(
+              '/data/user/0/com.happssolutions.prsd/cache', 'videos')
+              .replaceAll('.MOV', '.mp4'));
+      StorageUploadTask task = ref.putFile(file);
+      u = task;
+      ref = FirebaseStorage.instance.ref().child('$file');
+      _path = await (await task.onComplete).ref.getDownloadURL();
+      debugPrint(_path);
+      curpath = control.text;
+      Firestore.instance.collection('videos').document().setData(
+          <String, dynamic>{
+            'name': control.text + '.mp4',
+            'downloadURL': _path
+          });
+      setState(() {
+        isLoading = false;
+      });
+      file.deleteSync();
+    }catch(e){
+      debugPrint('e $e');
+    }
   }
   @override
   void initState() {
@@ -1667,7 +1682,7 @@ class SecondState extends State<Second>{
 
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Add Page'),
+        title: Text('Upload A Video'),
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: (){
@@ -1744,8 +1759,9 @@ class SecondState extends State<Second>{
         setState(() {
           isLoading = true;
         });
+//        debugPrint((await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
         await uploadFile(
-            await ImagePicker.pickVideo(source: ImageSource.gallery));
+            await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: 'mp4'));
       //debugPrint('Path:'+(await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
         setState(() {
           isLoading = false;
@@ -2071,7 +2087,7 @@ class TestState extends State<Test>{
       key: scaffold,
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Another Test'),
+        title: Text(name.replaceAll('.mp4','')+" Quiz"),
 
       ),
 

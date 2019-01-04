@@ -215,6 +215,9 @@ class StudentPageState extends State<StudentPage>{
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
+            DrawerHeader(
+              child: Image.asset('images/PalamLogo.jpeg'),
+            ),
             ListTile(
                 title: Text('Home'),
                 onTap: (){

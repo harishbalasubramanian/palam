@@ -201,25 +201,14 @@ class TeacherPageState extends State<TeacherPage>{
       key: scaffold,
       appBar: AppBar(
         title: Text('Lessons'),
-        actions: <Widget>[
-//          IconButton(icon: Icon(Icons.accessibility),onPressed: () {
-//            setState(() {
-//              signedIn = false;
-//            });
-//            _signOut();
-//          },),
-//          IconButton(icon: Icon(Icons.add),onPressed: ()async{
-//            Navigator.push(context, MaterialPageRoute(builder: (context)=>new Second(auth: auth, onSignedOut: onSignedOut,)));
-//            //uploadFile(await ImagePicker.pickVideo(source: ImageSource.gallery));
-//          }
-
-//          )
-
-        ],
+         // ,trailing: Image.asset('images/PalamLogo.jpeg'),
       ),
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
+            DrawerHeader(
+              child: Image.asset('images/PalamLogo.jpeg'),
+            ),
             ListTile(
                 title: Text('Home'),
                 onTap: (){
@@ -1415,7 +1404,7 @@ class NextPageState extends State<NextPage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Test'),
+        title: Text(name.replaceAll('.mp4','')),
 
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -1611,12 +1600,12 @@ class SecondState extends State<Second>{
   FirebaseStorage storage;
   TextEditingController control;
   bool check = true;
-  Future<Null> uploadFile (File camerafile) async{
+  Future<Null> uploadFile (String path) async{
 
-    String filepath = camerafile.path;
 
-    final ByteData bytes = await rootBundle.load(filepath);
-    debugPrint(bytes.lengthInBytes.toString());
+
+//    final ByteData bytes = await rootBundle.load(filepath);
+//    debugPrint(bytes.lengthInBytes.toString());
 //    final Directory tempDir = await getApplicationDocumentsDirectory();
 //    final String fileName = '${control.text}.mp4';
 
@@ -1625,11 +1614,11 @@ class SecondState extends State<Second>{
 //   file.writeAsBytesSync(bytes.buffer.asInt8List(),mode: FileMode.write);
 //    debugPrint('file'+file.path);
     //file.writeAsBytes(bytes.buffer.asInt8List(),mode: FileMode.write);
-
-    StorageReference ref = FirebaseStorage.instance.ref().child(camerafile.path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','videos').replaceAll('.MOV','.mp4'));
-    StorageUploadTask task = ref.putFile(camerafile);
+    File file = File(path);
+    StorageReference ref = FirebaseStorage.instance.ref().child(path.replaceAll('/data/user/0/com.happssolutions.prsd/cache','videos').replaceAll('.MOV','.mp4'));
+    StorageUploadTask task = ref.putFile(file);
     u = task;
-    ref = FirebaseStorage.instance.ref().child('$camerafile');
+    ref = FirebaseStorage.instance.ref().child('$file');
     _path = await (await task.onComplete).ref.getDownloadURL();
     debugPrint(_path);
     curpath = control.text;
@@ -1640,7 +1629,7 @@ class SecondState extends State<Second>{
     setState(() {
       isLoading = false;
     });
-    camerafile.deleteSync();
+    file.deleteSync();
   }
   @override
   void initState() {
@@ -1657,7 +1646,7 @@ class SecondState extends State<Second>{
 
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Add Page'),
+        title: Text('Upload A Video'),
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: (){
@@ -1723,7 +1712,7 @@ class SecondState extends State<Second>{
         isLoading = true;
       });
       await uploadFile(
-          await ImagePicker.pickVideo(source: ImageSource.gallery));
+          await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: 'mp4'));
       //debugPrint('Path:'+(await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
       setState(() {
         isLoading = false;
@@ -2050,7 +2039,7 @@ class TestState extends State<Test>{
       key: scaffold,
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Another Test'),
+        title: Text(name.replaceAll('.mp4','')+' Quiz'),
 
       ),
 
