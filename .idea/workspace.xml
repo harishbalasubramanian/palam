@@ -5,40 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f161d4e7-a0e1-4051-84d0-854d1547355e" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/images/PalamLogo.jpeg" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/android/app/proguard-rules.pro" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/android/key.properties" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/key.jks" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" afterPath="$PROJECT_DIR$/android/app/build.gradle" />
+      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" afterPath="$PROJECT_DIR$/ios/Podfile.lock" />
       <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png" afterPath="$PROJECT_DIR$/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png" />
-      <change beforePath="$PROJECT_DIR$/lib/admin_page.dart" afterPath="$PROJECT_DIR$/lib/admin_page.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/authentication/Login.dart" afterPath="$PROJECT_DIR$/lib/authentication/Login.dart" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" afterPath="$PROJECT_DIR$/ios/Runner/Info.plist" />
       <change beforePath="$PROJECT_DIR$/lib/student_page.dart" afterPath="$PROJECT_DIR$/lib/student_page.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/student_view.dart" afterPath="$PROJECT_DIR$/lib/student_view.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/teacher_page.dart" afterPath="$PROJECT_DIR$/lib/teacher_page.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/teacher_view.dart" afterPath="$PROJECT_DIR$/lib/teacher_view.dart" />
-      <change beforePath="$PROJECT_DIR$/nexus" afterPath="$PROJECT_DIR$/nexus" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" afterPath="$PROJECT_DIR$/pubspec.lock" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" afterPath="$PROJECT_DIR$/pubspec.yaml" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -56,107 +31,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Login.dart" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/authentication/Login.dart">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/android/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1035">
-              <caret line="72" column="9" lean-forward="false" selection-start-line="72" selection-start-column="9" selection-end-line="72" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="nexus" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nexus">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="24" lean-forward="false" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="auth.dart" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/authentication/auth.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1560">
-              <caret line="109" column="0" lean-forward="false" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="admin_page.dart" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="680">
-              <caret line="2106" column="1" lean-forward="false" selection-start-line="2106" selection-start-column="1" selection-end-line="2106" selection-end-column="1" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-                <element signature="e#51339#51631#0" expanded="false" />
-                <element signature="e#67299#67557#0" expanded="false" />
-                <element signature="e#67631#68435#0" expanded="false" />
-                <element signature="e#68471#68703#0" expanded="false" />
-                <element signature="e#83398#83440#0" expanded="false" />
-                <marker date="1546544633189" expanded="true" signature="62647:62695" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="student_view.dart" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/student_view.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="30" column="16" lean-forward="false" selection-start-line="30" selection-start-column="16" selection-end-line="30" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pubspec.yaml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pubspec.yaml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="9" lean-forward="false" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="teacher_page.dart" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lib/teacher_page.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="2041" column="53" lean-forward="false" selection-start-line="2041" selection-start-column="53" selection-end-line="2041" selection-end-column="53" />
-              <folding>
-                <element signature="e#51768#52060#0" expanded="false" />
-                <element signature="e#67688#67946#0" expanded="false" />
-                <element signature="e#68020#68824#0" expanded="false" />
-                <element signature="e#68860#69092#0" expanded="false" />
-                <element signature="e#82829#82871#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="student_page.dart" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/student_page.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3045">
-              <caret line="219" column="14" lean-forward="false" selection-start-line="219" selection-start-column="14" selection-end-line="219" selection-end-column="14" />
-              <folding>
-                <element signature="e#39420#39462#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="teacher_view.dart" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/teacher_view.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="27" column="16" lean-forward="false" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
+            <state relative-caret-position="331">
+              <caret line="57" column="94" lean-forward="false" selection-start-line="57" selection-start-column="94" selection-end-line="57" selection-end-column="94" />
               <folding />
             </state>
           </provider>
@@ -173,7 +52,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>uid</find>
       <find>reg</find>
       <find>isLoading</find>
       <find>onPressed</find>
@@ -203,6 +81,7 @@
       <find>Second</find>
       <find>Another Test</find>
       <find>NextPageState</find>
+      <find>Test</find>
     </findStrings>
     <replaceStrings>
       <replace>control</replace>
@@ -224,13 +103,11 @@
         <option value="$PROJECT_DIR$/android/build.gradle" />
         <option value="$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/packages/flutter/lib/src/scheduler/binding.dart" />
         <option value="$PROJECT_DIR$/android/gradle.properties" />
-        <option value="$PROJECT_DIR$/android/app/build.gradle" />
         <option value="$PROJECT_DIR$/lib/main.dart" />
         <option value="$PROJECT_DIR$/ios/Runner/Info.plist" />
         <option value="$PROJECT_DIR$/lib/Wait.dart" />
         <option value="$PROJECT_DIR$/lib/authentication/auth.dart" />
         <option value="$PROJECT_DIR$/lib/authentication/root_page.dart" />
-        <option value="$PROJECT_DIR$/lib/student_page.dart" />
         <option value="$PROJECT_DIR$/lib/teacher_view.dart" />
         <option value="$PROJECT_DIR$/lib/student_view.dart" />
         <option value="$PROJECT_DIR$/lib/authentication/Login.dart" />
@@ -239,12 +116,16 @@
         <option value="$PROJECT_DIR$/lib/admin_page.dart" />
         <option value="$PROJECT_DIR$/pubspec.yaml" />
         <option value="$PROJECT_DIR$/lib/teacher_page.dart" />
+        <option value="$PROJECT_DIR$/lib/student_page.dart" />
+        <option value="$PROJECT_DIR$/android/key.properties" />
+        <option value="$PROJECT_DIR$/android/app/proguard-rules.pro" />
+        <option value="$PROJECT_DIR$/android/app/build.gradle" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="140" />
-    <option name="y" value="39" />
+    <option name="x" value="1047" />
+    <option name="y" value="141" />
     <option name="width" value="1473" />
     <option name="height" value="947" />
   </component>
@@ -304,6 +185,15 @@
             <path>
               <item name="prsd" type="b2602c69:ProjectViewProjectNode" />
               <item name="prsd" type="462c0819:PsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="res" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="prsd" type="b2602c69:ProjectViewProjectNode" />
+              <item name="prsd" type="462c0819:PsiDirectoryNode" />
               <item name="images" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -332,16 +222,17 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/android/app/src/main/res" />
+      <recent name="$PROJECT_DIR$/images" />
+      <recent name="$PROJECT_DIR$/lib/authentication" />
+      <recent name="$PROJECT_DIR$/lib" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/lib" />
       <recent name="$PROJECT_DIR$/android/app" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/images" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/lib/authentication" />
-      <recent name="$PROJECT_DIR$/lib" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -507,7 +398,14 @@
       <option name="project" value="LOCAL" />
       <updated>1546393806045</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="First Roll Out Version For IOS 1/4/19">
+      <created>1546626917290</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1546626917290</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView">
@@ -520,7 +418,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="140" y="39" width="1473" height="947" extended-state="0" />
+    <frame x="1047" y="141" width="1473" height="947" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298122" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
@@ -532,7 +431,7 @@
       <window_info id="Dart Analysis" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32629108" sideWeight="0.496337" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37089202" sideWeight="0.497558" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298122" sideWeight="0.4947589" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29107982" sideWeight="0.49266246" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29107982" sideWeight="0.49266246" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Flutter Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32792583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297619" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -592,7 +491,8 @@
     <MESSAGE value="There was a bug with people being able to access content even if they weren't approved, but now it is fixed, with some ui updates. 12/30/18" />
     <MESSAGE value="Changed Some stuff regarding UI" />
     <MESSAGE value="Some UI Updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="Some UI Updates" />
+    <MESSAGE value="First Roll Out Version For IOS 1/4/19" />
+    <option name="LAST_COMMIT_MESSAGE" value="First Roll Out Version For IOS 1/4/19" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -601,27 +501,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/lib/authentication/Login.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/teacher_page.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="47" lean-forward="false" selection-start-line="2" selection-start-column="47" selection-end-line="2" selection-end-column="47" />
-          <folding>
-            <element signature="e#51768#52060#0" expanded="false" />
-            <element signature="e#67688#67946#0" expanded="false" />
-            <element signature="e#68020#68824#0" expanded="false" />
-            <element signature="e#68860#69092#0" expanded="false" />
-            <element signature="e#82829#82871#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pubspec.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -808,14 +687,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/android/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="58">
-          <caret line="26" column="24" lean-forward="false" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/packages/flutter/lib/src/widgets/framework.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
@@ -912,16 +783,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/student_page.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3045">
-          <caret line="219" column="14" lean-forward="false" selection-start-line="219" selection-start-column="14" selection-end-line="219" selection-end-column="14" />
-          <folding>
-            <element signature="e#39420#39462#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/teacher_view.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -962,14 +823,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="9" lean-forward="false" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/student_view.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="259">
@@ -996,8 +849,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/teacher_page.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="2041" column="53" lean-forward="false" selection-start-line="2041" selection-start-column="53" selection-end-line="2041" selection-end-column="53" />
+        <state relative-caret-position="843">
+          <caret line="2053" column="10" lean-forward="false" selection-start-line="2053" selection-start-column="10" selection-end-line="2053" selection-end-column="10" />
           <folding>
             <element signature="e#51768#52060#0" expanded="false" />
             <element signature="e#67688#67946#0" expanded="false" />
@@ -1005,6 +858,48 @@
             <element signature="e#68860#69092#0" expanded="false" />
             <element signature="e#82829#82871#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/student_page.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="1189" column="77" lean-forward="false" selection-start-line="1189" selection-start-column="77" selection-end-line="1189" selection-end-column="77" />
+          <folding>
+            <element signature="e#39484#39526#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pubspec.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="9" lean-forward="false" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/app/proguard-rules.pro">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/key.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="49" lean-forward="false" selection-start-line="3" selection-start-column="49" selection-end-line="3" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="331">
+          <caret line="57" column="94" lean-forward="false" selection-start-line="57" selection-start-column="94" selection-end-line="57" selection-end-column="94" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -769,7 +769,7 @@ class NextPageState extends State<NextPage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Test'),
+        title: Text(name.replaceAll('.mp4','')),
 
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -1187,7 +1187,7 @@ class TestState extends State<Test>{
       key: scaffold,
       appBar: AppBar(
         backgroundColor: Colors.orange,
-        title: Text('Another Test'),
+        title: Text(name.replaceAll('.mp4','').replaceAll('.txt','') + " Quiz"),
 
       ),
 
