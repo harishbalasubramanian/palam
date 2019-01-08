@@ -6,6 +6,7 @@ import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
 import 'authentication/auth.dart';
 import 'teacher_view.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'admin_page.dart';
 class StudentView extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class StudentView extends StatefulWidget {
 
 class StudentViewState extends State<StudentView> {
   List<bool> value = [];
+  FirebaseMessaging messaging = new FirebaseMessaging();
   String role = '';
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,8 @@ class StudentViewState extends State<StudentView> {
                   title: Text('Sign Out'),
                   onTap: ()async{
                     TeacherPageState.signedIn = false;
+                    messaging.unsubscribeFromTopic('studentNotifier');
+                    messaging.unsubscribeFromTopic('teacherNotifier');
                     try{
                       debugPrint('one');
                       await FirebaseAuth.instance.signOut();

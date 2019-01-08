@@ -5,3 +5,11 @@
 -keep class io.flutter.view.**  { *; }
 -keep class io.flutter.**  { *; }
 -keep class io.flutter.plugins.**  { *; }
+-keep class com.google.firebase.** { *; }
+-ignorewarnings
+
+-keep class * {
+ public private *;
+}
+-keep public class com.google.android.gms.* { public *; }
+-dontwarn com.google.android.gms.**

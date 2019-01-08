@@ -3,7 +3,7 @@ import 'package:prsd/authentication/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
-import 'package:image_picker/image_picker.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,7 +77,7 @@ class AdminPageState extends State<AdminPage>{
 //    }
   }
 
-
+  FirebaseMessaging messaging = new FirebaseMessaging();
   @override
   void initState(){
     super.initState();
@@ -85,6 +85,27 @@ class AdminPageState extends State<AdminPage>{
 //      allowedFileExtensions: ['txt'],
 //    );
     signedIn = true;
+    messaging.configure(
+      onLaunch: (Map<String, dynamic> map){
+        debugPrint('onLaunch called');
+      },
+      onMessage: (Map<String, dynamic> map){
+        debugPrint('onMessage called');
+      },
+      onResume: (Map<String, dynamic> map){
+        debugPrint('onResume called');
+      },
+    );
+    messaging.requestNotificationPermissions(
+      const IosNotificationSettings(
+          sound: true,
+          alert: true,
+          badge: true
+      ),
+    );
+    messaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+      debugPrint('IOS Settings Registered');
+    });
   }
 
 
@@ -118,11 +139,15 @@ class AdminPageState extends State<AdminPage>{
 //    String task = '';
     try {
       Dio dio = Dio();
+      debugPrint('here1');
       String dir = (await getApplicationDocumentsDirectory()).path;
+      debugPrint('here2');
       String path = '$dir/$name';
+      debugPrint('here3');
       await dio.download(url, path);
+      debugPrint('here4');
       prefs = await SharedPreferences.getInstance();
-
+    debugPrint('here5');
       prefs.setString(name,path);
 
       debugPrint(path);
@@ -153,7 +178,8 @@ class AdminPageState extends State<AdminPage>{
     Future<List<bool>> firestoree (int index,DocumentSnapshot snapshot) async {
       bool check;
       bool smeck;
-      QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt')).getDocuments();
+
+      QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt').replaceAll(' ','')).getDocuments();
 //      Future<bool> name = Firestore.instance.collection('tests').where('name', isEqualTo: snapshot['name'].replaceAll('.mp4', '.txt')).getDocuments().then((docs){
 //     try {
 //       if (docs.documents[0].exists) check = true;
@@ -252,6 +278,8 @@ class AdminPageState extends State<AdminPage>{
                 setState(() {
                   signedIn = false;
                 });
+                messaging.unsubscribeFromTopic('studentNotifier');
+                messaging.unsubscribeFromTopic('teacherNotifier');
                 signOut();
               }
             ),
@@ -353,7 +381,7 @@ class AdminPageState extends State<AdminPage>{
                                             .instance.collection('tests')
                                             .where('name',
                                             isEqualTo: snapshot['name']
-                                                .replaceAll('.mp4', '.txt'))
+                                                .replaceAll('.mp4', '.txt').replaceAll(' ',''))
                                             .getDocuments();
                                         if (snapper.documents[0].exists) {
                                           await downloadFile(
@@ -1106,13 +1134,16 @@ class FileUploadState extends State<FileUpload>{
 
               }
               ind = json.encode(test).replaceAll(r'\r','');
-              File file2 = File('${Directory.systemTemp.path}/${videoName.replaceAll('.mp4','')}.txt'.replaceAll(' ',''));
+              File file2 = File('${(await getTemporaryDirectory()).path}/${videoName.replaceAll('.mp4','.txt').replaceAll(' ','')}');
               await file2.writeAsString(ind);
+
               ByteData bytes = await rootBundle.load(file2.path);
-              String fileName = '${videoName.replaceAll('.mp4','.txt')}'.replaceAll(' ','');
-              file2 = File('${Directory.systemTemp.path}/$fileName');
+
+              String fileName = '${videoName.replaceAll('.mp4','.txt').replaceAll(' ','')}';
+              debugPrint('fileName'+fileName);
+              file2 = File('${(await getTemporaryDirectory()).path}/$fileName');
               file2.writeAsBytesSync(bytes.buffer.asInt8List(),mode: FileMode.write);
-              StorageReference ref = FirebaseStorage.instance.ref().child(file2.path.replaceAll('${Directory.systemTemp.path}','tests'));
+              StorageReference ref = FirebaseStorage.instance.ref().child(file2.path.replaceAll('${(await getTemporaryDirectory()).path}','tests'));
               StorageUploadTask task = ref.putFile(file2);
               ref = FirebaseStorage.instance.ref().child('$file2');
               String _path = await(await task.onComplete).ref.getDownloadURL();
@@ -1413,7 +1444,7 @@ class NextPageState extends State<NextPage>{
   }
   Future<bool> testThere (String name)async{
     bool isThere = false;
-    QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments();
+    QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt').replaceAll(' ','')).getDocuments();
     try {
       if (docs.documents[0].exists) isThere = true;
     }catch(e){
@@ -1822,7 +1853,7 @@ class TestState extends State<Test>{
     }
     if(filepath == "") {
       QuerySnapshot docs = await Firestore.instance.collection('tests').where(
-          'name', isEqualTo: name.replaceAll('.mp4', '.txt')).getDocuments();
+          'name', isEqualTo: name.replaceAll('.mp4', '.txt').replaceAll(' ','')).getDocuments();
 
       if (docs.documents[0].exists) {
         downloadUrl = docs.documents[0].data['downloadURL'];
@@ -1976,6 +2007,7 @@ class TestState extends State<Test>{
                   explanations[value]['explanation ${value + 1}']
                       .toString()
                       .substring(3);
+              debugPrint('choice + $choice + answer + $answer');
               if (choice.replaceAll(' ', '') == answer.replaceAll(' ', '')) {
                 activated = 2;
                 if (index != length) next = true;

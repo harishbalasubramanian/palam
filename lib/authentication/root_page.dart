@@ -6,6 +6,7 @@ import 'package:prsd/teacher_page.dart';
 import 'package:prsd/Wait.dart';
 import 'package:prsd/admin_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 class RootPage extends StatefulWidget{
   RootPage({@required this.auth});
   final BaseAuth auth;
@@ -74,6 +75,7 @@ class RootPageState extends State<RootPage>{
 
    });
  }
+ FirebaseMessaging messaging = new FirebaseMessaging();
   static void check()async{
     debugPrint('userId $uuserId');
     QuerySnapshot docs = await Firestore.instance.collection('users').where('uid',isEqualTo: uid).getDocuments();
@@ -121,6 +123,43 @@ class RootPageState extends State<RootPage>{
               debugPrint('autther ${snapshot.data.documents[0].data}');
               if (auther == Auther.approved) {
                 if (auth == AuthStatus.student) {
+                  Firestore.instance.collection('users').where('uid', isEqualTo: uid).getDocuments().then((docs){
+                    if(docs.documents[0].exists){
+                      messaging.configure(
+                        onLaunch: (Map<String, dynamic> map){
+                          debugPrint('onLaunch called');
+                        },
+                        onMessage: (Map<String, dynamic> map){
+                          debugPrint('onMessage called');
+                        },
+                        onResume: (Map<String, dynamic> map){
+                          debugPrint('onResume called');
+                        },
+                      );
+                      messaging.requestNotificationPermissions(
+                        const IosNotificationSettings(
+                            sound: true,
+                            alert: true,
+                            badge: true
+                        ),
+                      );
+                      messaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+                        debugPrint('IOS Settings Registered');
+                      });
+                      messaging.getToken().then((token){
+                        debugPrint(token);
+                        docs.documents[0].reference.updateData({
+                          'fcmtoken' : token
+                        });
+                      });
+                    }
+                  });
+                  try{
+                    messaging.unsubscribeFromTopic('studentNotifier');
+                    messaging.unsubscribeFromTopic('teacherNotifier');
+                  }catch(e){
+
+                  }
                   return new StudentPage(
                     auth: widget.auth,
                     onSignedOut: _signedOut,
@@ -129,15 +168,85 @@ class RootPageState extends State<RootPage>{
                 }
                 if (auth == AuthStatus.teacher) {
                   debugPrint('sababanana');
+                 Firestore.instance.collection('users').where('uid', isEqualTo: uid).getDocuments().then((docs){
+                   if(docs.documents[0].exists){
+                     messaging.configure(
+                       onLaunch: (Map<String, dynamic> map){
+                         debugPrint('onLaunch called');
+                       },
+                       onMessage: (Map<String, dynamic> map){
+                         debugPrint('onMessage called');
+                       },
+                       onResume: (Map<String, dynamic> map){
+                         debugPrint('onResume called');
+                       },
+                     );
+                     messaging.requestNotificationPermissions(
+                       const IosNotificationSettings(
+                           sound: true,
+                           alert: true,
+                           badge: true
+                       ),
+                     );
+                     messaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+                       debugPrint('IOS Settings Registered');
+                     });
+                     messaging.getToken().then((token){
+                       debugPrint(token);
+                       docs.documents[0].reference.updateData({
+                         'fcmtoken' : token
+                       });
+                     });
+
+                     messaging.subscribeToTopic('studentNotifier');
+                     try {
+                       messaging.unsubscribeFromTopic('teacherNotifier');
+                     }catch(e){
+
+                     }
+                   }
+                 });
+
                   return new TeacherPage(
                     auth: widget.auth,
                     onSignedOut: _signedOut,
                   );
                 }
                 if (auth == AuthStatus.admin) {
-                  //          setState(() {
-                  //            LoginPageState.isLoading = false;
-                  //          });
+                  Firestore.instance.collection('users').where('uid', isEqualTo: uid).getDocuments().then((docs){
+                    if(docs.documents[0].exists){
+                      messaging.configure(
+                        onLaunch: (Map<String, dynamic> map){
+                          debugPrint('onLaunch called');
+                        },
+                        onMessage: (Map<String, dynamic> map){
+                          debugPrint('onMessage called');
+                        },
+                        onResume: (Map<String, dynamic> map){
+                          debugPrint('onResume called');
+                        },
+                      );
+                      messaging.requestNotificationPermissions(
+                        const IosNotificationSettings(
+                            sound: true,
+                            alert: true,
+                            badge: true
+                        ),
+                      );
+                      messaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+                        debugPrint('IOS Settings Registered');
+                      });
+                      messaging.getToken().then((token){
+                        debugPrint(token);
+                        docs.documents[0].reference.updateData({
+                          'fcmtoken' : token
+                        });
+                      });
+
+                      messaging.subscribeToTopic('studentNotifier');
+                      messaging.subscribeToTopic('teacherNotifier');
+                    }
+                  });
                   return new AdminPage(
                     auth: widget.auth,
                     onSignedOut: _signedOut,

@@ -3,7 +3,7 @@ import 'package:prsd/authentication/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:typed_data';
-import 'package:image_picker/image_picker.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -76,7 +76,7 @@ class TeacherPageState extends State<TeacherPage>{
 //    }
   }
 
-
+  FirebaseMessaging messaging = new FirebaseMessaging();
   @override
   void initState(){
     super.initState();
@@ -84,6 +84,28 @@ class TeacherPageState extends State<TeacherPage>{
 //      allowedFileExtensions: ['txt'],
 //    );
     signedIn = true;
+    messaging.configure(
+      onLaunch: (Map<String, dynamic> map){
+        debugPrint('onLaunch called');
+      },
+      onMessage: (Map<String, dynamic> map){
+        debugPrint('onMessage called');
+      },
+      onResume: (Map<String, dynamic> map){
+        debugPrint('onResume called');
+      },
+    );
+    messaging.requestNotificationPermissions(
+      const IosNotificationSettings(
+          sound: true,
+          alert: true,
+          badge: true
+      ),
+    );
+    messaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+      debugPrint('IOS Settings Registered');
+    });
+
   }
 
 
@@ -229,6 +251,8 @@ class TeacherPageState extends State<TeacherPage>{
                   setState(() {
                     signedIn = false;
                   });
+                  messaging.unsubscribeFromTopic('studentNotifier');
+                  messaging.unsubscribeFromTopic('teacherNotifier');
                   signOut();
                 }
             ),
@@ -1671,9 +1695,14 @@ class SecondState extends State<Second>{
                       if(value.isEmpty){
                         return 'Title can\'t be empty';
                       }
+
+                      if(value.contains(' ')){
+                        return 'Title can\'t contain any spaces';
+                      }
                       if(value.length > 15){
                         return 'Title has to be less or equal than 15 characters';
                       }
+
                     }
                 ),
               ),
