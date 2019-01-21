@@ -51,6 +51,7 @@ class LoginPageState extends State<LoginPage>{
     debugPrint('started');
     debugPrint(auth.toString());
     auth = auth ?? AuthStatus.student;
+    debugPrint('isLoading $isLoading');
     if(validateAndSave()){
       try {
         if (_form == FormType.login) {
@@ -109,6 +110,11 @@ class LoginPageState extends State<LoginPage>{
       }
 
     }
+    else{
+      setState(() {
+        isLoading = false;
+      });
+    }
     debugPrint('started2');
     debugPrint(auth.toString());
     auth = auth ?? AuthStatus.student;
@@ -137,6 +143,11 @@ class LoginPageState extends State<LoginPage>{
         });
       }
 
+    }
+    else{
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 

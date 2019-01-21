@@ -57,6 +57,12 @@
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_downloader/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_downloader/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_downloader/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_local_notifications/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_local_notifications/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_local_notifications/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_local_notifications/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_local_notifications/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/flutter_local_notifications/example/build" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/image_picker/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/image_picker/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/image_picker/build" />

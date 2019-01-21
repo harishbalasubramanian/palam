@@ -15,11 +15,15 @@ import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
 import 'package:chewie/chewie.dart';
 import 'package:dio/dio.dart';
+import 'Wait.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'studentHub.dart';
 class StudentPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
   String uid;
-  StudentPage({this.auth,this.onSignedOut,this.uid});
+  String className;
+  StudentPage({this.auth,this.onSignedOut,this.uid,this.className});
   @override
   State<StatefulWidget> createState() {
     return new StudentPageState(auth: auth, onSignedOut: onSignedOut,uid: uid);
@@ -38,6 +42,7 @@ class StudentPageState extends State<StudentPage>{
   static String url = '';
   GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
   //static FlutterDocumentPickerParams params;
+
   String uid;
   StudentPageState({this.auth,this.onSignedOut,this.uid});
   BaseAuth auth;
@@ -56,6 +61,9 @@ class StudentPageState extends State<StudentPage>{
         LoginPageState.isLoading = false;
         Auth.done = false;
         Navigator.push(context, MaterialPageRoute(builder: (context)=> RootPage(auth: new Auth())),);
+        Auth.remail = '';
+        Auth.rname = '';
+        Auth.rstatus = null;
       });
       debugPrint('${RootPageState.authStatus}');
     }catch(e){
@@ -78,6 +86,7 @@ class StudentPageState extends State<StudentPage>{
 //    params = FlutterDocumentPickerParams(
 //      allowedFileExtensions: ['txt'],
 //    );
+
     signedIn = true;
   }
 
@@ -195,7 +204,7 @@ class StudentPageState extends State<StudentPage>{
     return Scaffold(
       key: scaffold,
       appBar: AppBar(
-        title: Text('Lessons'),
+        title: Text(widget.className),
         actions: <Widget>[
 //          IconButton(icon: Icon(Icons.accessibility),onPressed: () {
 //            setState(() {
@@ -216,7 +225,13 @@ class StudentPageState extends State<StudentPage>{
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              child: Image.asset('images/PalamLogo.jpeg'),
+              child: Image.asset('images/PalamLogo.png'),
+            ),
+            ListTile(
+              title: Text('Back to Hub'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> StudentHub()));
+              },
             ),
             ListTile(
                 title: Text('Home'),
@@ -224,13 +239,12 @@ class StudentPageState extends State<StudentPage>{
                   Navigator.pop(context);
                 }
             ),
-
-
             ListTile(
                 title: Text('Sign Out'),
                 onTap: (){
                   setState(() {
                     signedIn = false;
+
                   });
                   signOut();
                 }
@@ -521,7 +535,7 @@ class NextPageState extends State<NextPage>{
   bool fullScreen;
   double aspectRatio;
   static VideoPlayerController control;
-  VoidCallback listen ;
+  static VoidCallback listen ;
   bool tapped;
   String name;
   String task;
@@ -766,58 +780,72 @@ class NextPageState extends State<NextPage>{
   bool hide = true;
   Widget build(BuildContext context){
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text(name.replaceAll('.mp4','')),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uid).snapshots(),
+        builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if(!snapshot.hasData){
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.orange,
+                title: Text(name.replaceAll('.mp4', '')),
+              ),
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          RootPageState.auther = snapshot.data.documents[0].data['approved'] ? Auther.approved : Auther.notApproved;
+          if(RootPageState.auther == Auther.approved) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.orange,
+                title: Text(name.replaceAll('.mp4', '')),
 
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){
-              //control.seekTo(Duration(seconds: 0));
-              control.setVolume(0.0);
-              control.removeListener(listen);
-              Navigator.pop(context);
+                leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      //control.seekTo(Duration(seconds: 0));
+                      control.setVolume(0.0);
+                      control.removeListener(listen);
+                      Navigator.pop(context);
+                    }
 
-
-            }
-
-        ),
-        actions: <Widget>[
-          FutureBuilder(
-              future: testThere(name),
-              builder: (BuildContext context, AsyncSnapshot<bool> snap) {
-                if(!snap.hasData){
-                  return CircularProgressIndicator();
-                }
-                if(snap.hasData) {
-                  if(snap.data) {
-                    return FlatButton(
-                        child: Text('Take The Quiz'),
-                        onPressed: ()async {
-                          await control.pause();
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) =>
-                                  Test(name: name,
-                                    task: task,
-                                    auth: auth,
-                                    onSignedOut: onSignedOut,)));
-
+                ),
+                actions: <Widget>[
+                  FutureBuilder(
+                      future: testThere(name),
+                      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+                        if (!snap.hasData) {
+                          return CircularProgressIndicator();
                         }
-                    );
-                  }
-                  else{
-                    return Container();
-                  }
+                        if (snap.hasData) {
+                          if (snap.data) {
+                            return FlatButton(
+                                child: Text('Take The Quiz'),
+                                onPressed: () async {
+                                  await control.pause();
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) =>
+                                          Test(name: name,
+                                            task: task,
+                                            auth: auth,
+                                            onSignedOut: onSignedOut,)));
+                                }
+                            );
+                          }
+                          else {
+                            return Container();
+                          }
+                        }
+                      }
+                  ),
+                ],
+              ),
 
-                }
-              }
-          ),
-        ],
-      ),
-
-      body: SingleChildScrollView(
-        child: Container(
+              body: SingleChildScrollView(
+                child: Container(
 //          child: AspectRatio(
 //            aspectRatio: 16/9,
 //            child: Container(
@@ -859,9 +887,9 @@ class NextPageState extends State<NextPage>{
 //
 //          ) ,
 
-            child: Chewie(control, aspectRatio: 16/9,)
-        ),
-      ),
+                    child: Chewie(control, aspectRatio: 16 / 9,)
+                ),
+              ),
 //      floatingActionButton: !tapped ? FloatingActionButton(child: Icon(Icons.play_arrow),onPressed: () {
 //        setState(() {
 //          tapped = true;
@@ -870,7 +898,21 @@ class NextPageState extends State<NextPage>{
 //
 //
 //      },) : Container(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButtonLocation: FloatingActionButtonLocation
+                  .centerFloat,
+            );
+          }
+          else{
+            try{
+              control.pause();
+            }
+            catch(e){
+
+            }
+            return Wait(auth: auth, onSignedOut: onSignedOut,);
+          }
+        }
+      ),
     );
   }
 
@@ -1183,24 +1225,47 @@ class TestState extends State<Test>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffold,
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text(name.replaceAll('.mp4','').replaceAll('.txt','') + " Quiz"),
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uid).snapshots(),
+      builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+        if(!snapshot.hasData){
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.orange,
+              title: Text(name.replaceAll('.mp4', '').replaceAll('.txt', '') + " Quiz"),
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        RootPageState.auther = snapshot.data.documents[0].data['approved'] ? Auther.approved : Auther.notApproved;
+        if(RootPageState.auther == Auther.approved) {
+          return Scaffold(
+            key: scaffold,
+            appBar: AppBar(
+              backgroundColor: Colors.orange,
+              title: Text(
+                  name.replaceAll('.mp4', '').replaceAll('.txt', '') + " Quiz"),
 
-      ),
+            ),
 
-      body: loaded ? SingleChildScrollView(
-        child: Center(
+            body: loaded ? SingleChildScrollView(
+              child: Center(
 
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
 
-            children: loopOptions(),
-          ),
-        ),
-      ) : Center(child: CircularProgressIndicator()),
+                  children: loopOptions(),
+                ),
+              ),
+            ) : Center(child: CircularProgressIndicator()),
+          );
+        }
+        else{
+          return Wait(auth: auth, onSignedOut: onSignedOut,);
+        }
+      },
     );
   }
 

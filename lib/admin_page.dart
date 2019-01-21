@@ -21,6 +21,7 @@ import 'authentication/root_page.dart';
 import 'package:chewie/chewie.dart';
 import 'student_view.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class AdminPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
@@ -62,6 +63,9 @@ class AdminPageState extends State<AdminPage>{
         LoginPageState.isLoading = false;
         Auth.done = false;
         Navigator.push(context, MaterialPageRoute(builder: (context)=> RootPage(auth: new Auth())),);
+        Auth.remail = '';
+        Auth.rname = '';
+        Auth.rstatus = null;
       });
       debugPrint('${RootPageState.authStatus}');
     }catch(e){
@@ -78,6 +82,7 @@ class AdminPageState extends State<AdminPage>{
   }
 
   FirebaseMessaging messaging = new FirebaseMessaging();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
   @override
   void initState(){
     super.initState();
@@ -89,8 +94,24 @@ class AdminPageState extends State<AdminPage>{
       onLaunch: (Map<String, dynamic> map){
         debugPrint('onLaunch called');
       },
-      onMessage: (Map<String, dynamic> map){
-        debugPrint('onMessage called');
+      onMessage: (Map<String, dynamic> map)async{
+        flutterLocalNotificationsPlugin =
+        new FlutterLocalNotificationsPlugin();
+        debugPrint('1');
+        var android = new AndroidNotificationDetails(
+            'channel_id', 'CHANNEL NAME', 'channel Description',
+            icon: '@mipmap/ic_launcher.png');
+        debugPrint('2');
+        var ios = new IOSNotificationDetails(
+          presentAlert: true, presentBadge: true, presentSound: true,);
+        debugPrint('3');
+        var platform = new NotificationDetails(android, ios);
+        debugPrint('4');
+        String title = map['title'];
+        String body = map['body'];
+        await flutterLocalNotificationsPlugin.show(
+            0, title, body, platform);
+        debugPrint('finished');
       },
       onResume: (Map<String, dynamic> map){
         debugPrint('onResume called');
@@ -248,7 +269,7 @@ class AdminPageState extends State<AdminPage>{
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              child: Image.asset('images/PalamLogo.jpeg'),
+              child: Image.asset('images/PalamLogo.png'),
             ),
             ListTile(
                 title: Text('Home'),
@@ -262,14 +283,14 @@ class AdminPageState extends State<AdminPage>{
                 ),
                 onTap: (){
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherView()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherView(auth, onSignedOut)));
                 }
             ),
             ListTile(
               title: Text('View Students'),
               onTap: (){
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView(auth, onSignedOut)));
               }
             ),
             ListTile(
@@ -1455,58 +1476,60 @@ class NextPageState extends State<NextPage>{
   bool hide = true;
   Widget build(BuildContext context){
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text(name.replaceAll('.mp4','').replaceAll('.MOV','').replaceAll('.mov','')),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.orange,
+          title: Text(name.replaceAll('.mp4','').replaceAll('.MOV','').replaceAll('.mov','')),
 
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){
-              //control.seekTo(Duration(seconds: 0));
-              control.setVolume(0.0);
-              control.removeListener(listen);
-              Navigator.pop(context);
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: (){
+                //control.seekTo(Duration(seconds: 0));
+                control.setVolume(0.0);
+                control.removeListener(listen);
+                Navigator.pop(context);
 
-
-            }
-
-        ),
-        actions: <Widget>[
-          FutureBuilder(
-            future: testThere(name),
-            builder: (BuildContext context, AsyncSnapshot<bool> snap) {
-              if(!snap.hasData){
-                return CircularProgressIndicator();
-              }
-              if(snap.hasData) {
-                if(snap.data) {
-                  return FlatButton(
-                    child: Text('Take The Quiz'),
-                    onPressed: ()async {
-                      await control.pause();
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context) =>
-                              Test(name: name,
-                                task: task,
-                                auth: auth,
-                                onSignedOut: onSignedOut,)));
-
-                    }
-                  );
-                }
-                else{
-                  return Container();
-                }
 
               }
-            }
+
           ),
-        ],
-      ),
+          actions: <Widget>[
+            FutureBuilder(
+              future: testThere(name),
+              builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+                if(!snap.hasData){
+                  return CircularProgressIndicator();
+                }
+                if(snap.hasData) {
+                  if(snap.data) {
+                    return FlatButton(
+                      child: Text('Take The Quiz'),
+                      onPressed: ()async {
+                        await control.pause();
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) =>
+                                Test(name: name,
+                                  task: task,
+                                  auth: auth,
+                                  onSignedOut: onSignedOut,)));
 
-      body: SingleChildScrollView(
-        child: Container(
+                      }
+                    );
+                  }
+                  else{
+                    return Container();
+                  }
+
+                }
+              }
+            ),
+          ],
+        ),
+
+        body: SingleChildScrollView(
+          child: Container(
 //          child: AspectRatio(
 //            aspectRatio: 16/9,
 //            child: Container(
@@ -1548,9 +1571,9 @@ class NextPageState extends State<NextPage>{
 //
 //          ) ,
 
-        child: Chewie(control, aspectRatio: 16/9,)
+          child: Chewie(control, aspectRatio: 16/9,)
+          ),
         ),
-      ),
 //      floatingActionButton: !tapped ? FloatingActionButton(child: Icon(Icons.play_arrow),onPressed: () {
 //        setState(() {
 //          tapped = true;
@@ -1559,7 +1582,8 @@ class NextPageState extends State<NextPage>{
 //
 //
 //      },) : Container(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      ),
     );
   }
 

@@ -12,7 +12,11 @@ exports.newStudent = functions.firestore.document('users/{documentID}').onCreate
             body: "The student is "+name,
             icon: "default",
             sound: "default",
-        }
+        },
+        data:{
+            'title' : 'A new student signed up',
+            'body' : 'The new student is '+name,
+        },
     };
     const options = {
         priority: 'high',
@@ -34,7 +38,11 @@ exports.newTeacher = functions.firestore.document('users/{documentID}').onCreate
             body: "The teacher is "+name,
             icon: "default",
             sound: "default",
-        }
+        },
+        data:{
+            'title' : 'A new teacher signed up',
+            'body' : 'The new teacher is '+name,
+        },
     };
     const options = {
         priority: 'high',
@@ -61,12 +69,16 @@ exports.approved = functions.firestore.document('users/{documentID}').onUpdate((
         //     sound: 'default',
         //     color: 'orange',
         // },
-        android:{
+        notification:{
             title: 'Your account has been approved',
             body : 'You can now access the content of the app',
-            icon: 'ic_stat_ic_notification',
+            icon: 'default',
             sound: 'default',
             color: 'orange',
+        },
+        data:{
+            'title' : 'Your account has been approved',
+            'body' : 'You can now access the content of the app',
         },
     };
     const notification2 = {
@@ -76,7 +88,11 @@ exports.approved = functions.firestore.document('users/{documentID}').onUpdate((
             icon: "default",
             sound: 'default',
             color: 'orange',
-        }
+        },
+        data:{
+            'title' : 'Your account has been approved',
+            'body' : 'You can now access the content of the app',
+        },
     };
     if(before != after){
         if(after){

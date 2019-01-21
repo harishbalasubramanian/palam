@@ -16,6 +16,9 @@ class Auth implements BaseAuth{
   static bool done = false;
   LoginPageState l = new LoginPageState();
   static AuthStatus bauth;
+  static String remail = '';
+  static String rname = '';
+  static AuthStatus rstatus;
   Future<String> signInWithEmailAndPassword(String email, String password, AuthStatus role)async{
     bool au = false;
     FirebaseUser user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password).whenComplete((){
@@ -24,6 +27,8 @@ class Auth implements BaseAuth{
     while(!au){
       continue;
     }
+    remail = email;
+
     Firestore.instance.collection('/users').where('uid',isEqualTo: user.uid).getDocuments().then((docs){
         if(docs.documents[0].exists){
           if(docs.documents[0].data['status']=='student'){
@@ -37,8 +42,8 @@ class Auth implements BaseAuth{
           }
 
         }
-
-
+        rname = docs.documents[0].data['name'];
+        rstatus = role;
       bauth = role;
       LoginPageState.auth = RootPageState.auth = bauth;
       debugPrint('login: ${LoginPageState.auth}');
@@ -61,6 +66,8 @@ class Auth implements BaseAuth{
       'approved' : false,
       'name' : name
     });
+    rname = name;
+    remail = _email;
     user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email, password: _password);
     await Firestore.instance.collection('users').where('uid',isEqualTo: user.uid).getDocuments().then((docs){
       if(docs.documents[0].exists){
@@ -73,7 +80,7 @@ class Auth implements BaseAuth{
         else if (docs.documents[0].data['status'] == 'admin'){
           role = AuthStatus.admin;
         }
-
+        rstatus = role;
       }
 
       debugPrint('autther ${RootPageState.auther}');
@@ -110,7 +117,9 @@ class Auth implements BaseAuth{
 
         debugPrint('val $val');
       }
-
+      remail = value.documents[0].data['email'];
+      rname = value.documents[0].data['name'];
+      rstatus = bauth;
     });
     debugPrint('bauth $bauth');
     LoginPageState.auth = RootPageState.auth = bauth;
@@ -119,7 +128,10 @@ class Auth implements BaseAuth{
   static Future<void> signOut() async{
 
     await FirebaseAuth.instance.signOut();
-    LoginPageState.auth = RootPageState.auth = bauth = null;
+    LoginPageState.auth = RootPageState.auth = bauth = rstatus =  null;
+    remail = '';
+    rname = '';
+
   }
 
 

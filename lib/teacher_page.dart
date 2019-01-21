@@ -20,6 +20,7 @@ import 'authentication/root_page.dart';
 import 'package:chewie/chewie.dart';
 import 'student_view.dart';
 import 'package:dio/dio.dart';
+import 'Wait.dart';
 class TeacherPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
@@ -61,6 +62,9 @@ class TeacherPageState extends State<TeacherPage>{
         LoginPageState.isLoading = false;
         Auth.done = false;
         Navigator.push(context, MaterialPageRoute(builder: (context)=> RootPage(auth: new Auth())),);
+        Auth.remail = '';
+        Auth.rname = '';
+        Auth.rstatus = null;
       });
       debugPrint('${RootPageState.authStatus}');
     }catch(e){
@@ -229,7 +233,7 @@ class TeacherPageState extends State<TeacherPage>{
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              child: Image.asset('images/PalamLogo.jpeg'),
+              child: Image.asset('images/PalamLogo.png'),
             ),
             ListTile(
                 title: Text('Home'),
@@ -242,7 +246,7 @@ class TeacherPageState extends State<TeacherPage>{
                 title: Text('View Students'),
                 onTap: (){
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView(auth, onSignedOut)));
                 }
             ),
             ListTile(
@@ -1034,129 +1038,172 @@ class FileUploadState extends State<FileUpload>{
   VoidCallback onSignedOut;
   FileUploadState(this.videoName, {@required this.auth, @required this.onSignedOut});
   Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('File Upload'),
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> TeacherPage(auth: auth, onSignedOut: onSignedOut,)));
-              setState(() {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uid).snapshots(),
+      builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+        if(!snapshot.hasData){
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.orange,
+              title: Text('Quiz Upload'),
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        RootPageState.auther = snapshot.data.documents[0].data['approved'] ? Auther.approved : Auther.notApproved;
+        if(RootPageState.auther == Auther.approved) {
+          return Scaffold(
+              appBar: AppBar(
+                title: Text('Quiz Upload'),
+                leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context) =>
+                              TeacherPage(
+                                auth: auth, onSignedOut: onSignedOut,)));
+                      setState(() {
 
-              });
-            }
-        ),
-      ),
-
-      body:  Center(
-        child:  !loading ? RawMaterialButton(
-
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-            fillColor: Colors.orange,
-            elevation: 0.0,
-            padding: EdgeInsets.all(20.0),
-            child: Text('Upload Test'),
-            onPressed: ()async{
-              List<Map<String,dynamic>>test = [];
-
-              path = await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: 'txt');
-
-              File file = File(path);
-
-              val = await file.readAsString();
-              List<String> questions = val.split('Question');
-              questions.removeAt(0);
-              for(int i = 0; i < questions.length; i++){
-                String question = questions[i];
-                List<String> lines = List<String>();
-                question = 'Question$question';
-                int start = 0;
-                int count = 0;
-                while(start >= 0){
-                  start = question.indexOf('Op',start+1);
-                  if(start != -1){
-                    count++;
-                  }
-                }
-                lines = question.split('\n');
-                List<Map<String,dynamic>> options = List<Map<String,dynamic>>();
-                List<Map<String,dynamic>> explanations = List<Map<String,dynamic>>();
-                for(int j = 0; j < count; j++){
-                  options.addAll([{
-                    'option ${j+1}' : lines[j+1].replaceAll('Op','')
-                  }],);
-                  explanations.addAll([{
-                    'explanation ${j+1}' : lines[count+j+3].replaceAll('Ex','')
-                  }],);
-                }
-
-                test.add(
-                  {
-                    'question ${i+1}':{
-                      'question' : lines[0],
-                      'options' : options,
-                      'answer' : lines[count+1].substring(7,9),
-                      'explanations' : explanations
+                      });
                     }
-                  },
-                );
+                ),
+              ),
+
+              body: Center(
+                child: !loading ? RawMaterialButton(
+
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0)),
+                    fillColor: Colors.orange,
+                    elevation: 0.0,
+                    padding: EdgeInsets.all(20.0),
+                    child: Text('Upload Quiz'),
+                    onPressed: () async {
+                      List<Map<String, dynamic>>test = [];
+
+                      path = await FilePicker.getFilePath(
+                          type: FileType.CUSTOM, fileExtension: 'txt');
+
+                      File file = File(path);
+
+                      val = await file.readAsString();
+                      List<String> questions = val.split('Question');
+                      questions.removeAt(0);
+                      for (int i = 0; i < questions.length; i++) {
+                        String question = questions[i];
+                        List<String> lines = List<String>();
+                        question = 'Question$question';
+                        int start = 0;
+                        int count = 0;
+                        while (start >= 0) {
+                          start = question.indexOf('Op', start + 1);
+                          if (start != -1) {
+                            count++;
+                          }
+                        }
+                        lines = question.split('\n');
+                        List<Map<String, dynamic>> options = List<
+                            Map<String, dynamic>>();
+                        List<Map<String, dynamic>> explanations = List<
+                            Map<String, dynamic>>();
+                        for (int j = 0; j < count; j++) {
+                          options.addAll([{
+                            'option ${j + 1}': lines[j + 1].replaceAll('Op', '')
+                          }
+                          ],);
+                          explanations.addAll([{
+                            'explanation ${j + 1}': lines[count + j + 3]
+                                .replaceAll('Ex', '')
+                          }
+                          ],);
+                        }
+
+                        test.add(
+                          {
+                            'question ${i + 1}': {
+                              'question': lines[0],
+                              'options': options,
+                              'answer': lines[count + 1].substring(7, 9),
+                              'explanations': explanations
+                            }
+                          },
+                        );
+                      }
+                      ind = json.encode(test).replaceAll(r'\r', '');
+                      File file2 = File(
+                          '${Directory.systemTemp.path}/${videoName.replaceAll(
+                              '.mp4', '')}.txt'.replaceAll(' ', ''));
+                      await file2.writeAsString(ind);
+                      ByteData bytes = await rootBundle.load(file2.path);
+                      String fileName = '${videoName.replaceAll(
+                          '.mp4', '.txt')}'
+                          .replaceAll(' ', '');
+                      file2 = File('${Directory.systemTemp.path}/$fileName');
+                      file2.writeAsBytesSync(
+                          bytes.buffer.asInt8List(), mode: FileMode.write);
+                      StorageReference ref = FirebaseStorage.instance.ref()
+                          .child(
+                          file2.path.replaceAll(
+                              '${Directory.systemTemp.path}', 'tests'));
+                      StorageUploadTask task = ref.putFile(file2);
+                      ref = FirebaseStorage.instance.ref().child('$file2');
+                      String _path = await(await task.onComplete).ref
+                          .getDownloadURL();
+                      Firestore.instance.collection('/tests')
+                          .document()
+                          .setData(
+                          <String, dynamic>{
+                            'name': fileName,
+                            'downloadURL': _path
+                          });
+                      prefs = await SharedPreferences.getInstance();
+                      prefs.setBool('$fileName', false);
+                      HttpClient httpClient = HttpClient();
+                      if (!TeacherPageState.cool) {
+                        debugPrint('1');
+                        var request = await httpClient.getUrl(Uri.parse(_path));
+                        debugPrint('2');
+                        var response = await request.close();
+                        debugPrint('3');
+                        var bytes = await consolidateHttpClientResponseBytes(
+                            response);
+                        debugPrint('4');
+                        String dir = (await getApplicationDocumentsDirectory())
+                            .path;
+
+                        File file = new File(
+                            '$dir/${videoName.replaceAll('.mp4', '')}.txt');
+
+                        await file.writeAsBytes(bytes);
+
+                        prefs = await SharedPreferences.getInstance();
+
+                        prefs.setString(
+                            'Test${videoName.replaceAll('.mp4', '')}.txt',
+                            file.path);
+
+                        debugPrint(file.path);
+                      }
+                    }
+                ) : Row(
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Uploading'),
+                  ],
+                ),
 
 
+              )
 
 
-
-              }
-              ind = json.encode(test).replaceAll(r'\r','');
-              File file2 = File('${Directory.systemTemp.path}/${videoName.replaceAll('.mp4','')}.txt'.replaceAll(' ',''));
-              await file2.writeAsString(ind);
-              ByteData bytes = await rootBundle.load(file2.path);
-              String fileName = '${videoName.replaceAll('.mp4','.txt')}'.replaceAll(' ','');
-              file2 = File('${Directory.systemTemp.path}/$fileName');
-              file2.writeAsBytesSync(bytes.buffer.asInt8List(),mode: FileMode.write);
-              StorageReference ref = FirebaseStorage.instance.ref().child(file2.path.replaceAll('${Directory.systemTemp.path}','tests'));
-              StorageUploadTask task = ref.putFile(file2);
-              ref = FirebaseStorage.instance.ref().child('$file2');
-              String _path = await(await task.onComplete).ref.getDownloadURL();
-              Firestore.instance.collection('/tests').document().setData(<String,dynamic>{
-                'name' : fileName,
-                'downloadURL' : _path
-              });
-              prefs = await SharedPreferences.getInstance();
-              prefs.setBool('$fileName',false);
-              HttpClient httpClient = HttpClient();
-              if(!TeacherPageState.cool){
-
-                debugPrint('1');
-                var request = await httpClient.getUrl(Uri.parse(_path));
-                debugPrint('2');
-                var response = await request.close();
-                debugPrint('3');
-                var bytes = await consolidateHttpClientResponseBytes(response);
-                debugPrint('4');
-                String dir = (await getApplicationDocumentsDirectory()).path;
-
-                File file = new File('$dir/${videoName.replaceAll('.mp4','')}.txt');
-
-                await file.writeAsBytes(bytes);
-
-                prefs = await SharedPreferences.getInstance();
-
-                prefs.setString('Test${videoName.replaceAll('.mp4','')}.txt',file.path);
-
-                debugPrint(file.path);
-              }
-            }
-        ) : Row(
-          children: <Widget>[
-            CircularProgressIndicator(),
-            Text('Uploading'),
-          ],
-        ),
-
-
-
-      ),
-
+          );
+        }
+        else{
+          return Wait(auth: auth, onSignedOut: onSignedOut);
+        }
+      },
     );
   }
 }
@@ -1423,60 +1470,75 @@ class NextPageState extends State<NextPage>{
     return isThere;
   }
   bool hide = true;
+  bool app = true;
   Widget build(BuildContext context){
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text(name.replaceAll('.mp4','')),
+    return  WillPopScope(
+      onWillPop: () async => false,
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uid).snapshots(),
+        builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+          if(!snapshot.hasData){
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.orange,
+                title: Text(name.replaceAll('.mp4','')),
+              ),
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          RootPageState.auther = snapshot.data.documents[0].data['approved'] ? Auther.approved : Auther.notApproved;
+          if(RootPageState.auther == Auther.approved) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.orange,
+                title: Text(name.replaceAll('.mp4', '')),
 
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){
-              //control.seekTo(Duration(seconds: 0));
-              control.setVolume(0.0);
-              control.removeListener(listen);
-              Navigator.pop(context);
+                leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      //control.seekTo(Duration(seconds: 0));
+                      control.setVolume(0.0);
+                      control.removeListener(listen);
+                      Navigator.pop(context);
+                    }
 
-
-            }
-
-        ),
-        actions: <Widget>[
-          FutureBuilder(
-              future: testThere(name),
-              builder: (BuildContext context, AsyncSnapshot<bool> snap) {
-                if(!snap.hasData){
-                  return CircularProgressIndicator();
-                }
-                if(snap.hasData) {
-                  if(snap.data) {
-                    return FlatButton(
-                        child: Text('Take The Quiz'),
-                        onPressed: ()async {
-                          await control.pause();
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) =>
-                                  Test(name: name,
-                                    task: task,
-                                    auth: auth,
-                                    onSignedOut: onSignedOut,)));
-
+                ),
+                actions: <Widget>[
+                  FutureBuilder(
+                      future: testThere(name),
+                      builder: (BuildContext context, AsyncSnapshot<bool> snap) {
+                        if (!snap.hasData) {
+                          return CircularProgressIndicator();
                         }
-                    );
-                  }
-                  else{
-                    return Container();
-                  }
+                        if (snap.hasData) {
+                          if (snap.data) {
+                            return FlatButton(
+                                child: Text('Take The Quiz'),
+                                onPressed: () async {
+                                  await control.pause();
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) =>
+                                          Test(name: name,
+                                            task: task,
+                                            auth: auth,
+                                            onSignedOut: onSignedOut,)));
+                                }
+                            );
+                          }
+                          else {
+                            return Container();
+                          }
+                        }
+                      }
+                  ),
+                ],
+              ),
 
-                }
-              }
-          ),
-        ],
-      ),
-
-      body: SingleChildScrollView(
-        child: Container(
+              body: SingleChildScrollView(
+                child: Container(
 //          child: AspectRatio(
 //            aspectRatio: 16/9,
 //            child: Container(
@@ -1518,9 +1580,10 @@ class NextPageState extends State<NextPage>{
 //
 //          ) ,
 
-            child: Chewie(control, aspectRatio: 16/9,)
-        ),
-      ),
+                    child: Chewie(control, aspectRatio: 16 / 9,)
+                ),
+              ),
+
 //      floatingActionButton: !tapped ? FloatingActionButton(child: Icon(Icons.play_arrow),onPressed: () {
 //        setState(() {
 //          tapped = true;
@@ -1529,7 +1592,20 @@ class NextPageState extends State<NextPage>{
 //
 //
 //      },) : Container(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButtonLocation: FloatingActionButtonLocation
+                  .centerFloat,
+            );
+          }
+          else{
+            try{
+              control.pause();
+            }catch(e){
+
+            }
+            return Wait(auth: auth, onSignedOut: onSignedOut);
+          }
+        },
+      ),
     );
   }
 
@@ -1665,71 +1741,97 @@ class SecondState extends State<Second>{
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      key: scaffold,
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uid).snapshots(),
+      builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+        if(!snapshot.hasData){
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.orange,
+              title: Text('Upload A Video'),
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        RootPageState.auther = snapshot.data.documents[0].data['approved'] ? Auther.approved : Auther.notApproved;
+        if(RootPageState.auther == Auther.approved) {
+          return Scaffold(
+            key: scaffold,
 
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text('Upload A Video'),
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> TeacherPage(auth: auth, onSignedOut: onSignedOut,)));
-              setState(() {
+            appBar: AppBar(
+              backgroundColor: Colors.orange,
+              title: Text('Upload A Video'),
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            TeacherPage(
+                              auth: auth, onSignedOut: onSignedOut,)));
+                    setState(() {
 
-              });
-            }
+                    });
+                  }
 
-        ),
-      ),
-      body: !isLoading ? SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(8.0),
-                child: TextFormField(
-                    controller: control,
-                    decoration: InputDecoration(labelText: 'Title of Video'),
-                    validator: (value) {
-                      if(value.isEmpty){
-                        return 'Title can\'t be empty';
-                      }
-
-                      if(value.contains(' ')){
-                        return 'Title can\'t contain any spaces';
-                      }
-                      if(value.length > 15){
-                        return 'Title has to be less or equal than 15 characters';
-                      }
-
-                    }
-                ),
               ),
-              Container(
-                padding: EdgeInsets.only(top: 30.0),
-                child: RawMaterialButton(
+            ),
+            body: !isLoading ? SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          controller: control,
+                          decoration: InputDecoration(
+                              labelText: 'Title of Video'),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Title can\'t be empty';
+                            }
 
-                  child: Text('Upload Video'),
+                            if (value.contains(' ')) {
+                              return 'Title can\'t contain any spaces';
+                            }
+                            if (value.length > 15) {
+                              return 'Title has to be less or equal than 15 characters';
+                            }
+                          }
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 30.0),
+                      child: RawMaterialButton(
 
-                  onPressed: () => doStuff(),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                  padding: EdgeInsets.all(15.0),
-                  fillColor: Colors.orange,
-                  elevation: 0.0,
-                ),
+                        child: Text('Upload Video'),
+
+                        onPressed: () => doStuff(),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0)),
+                        padding: EdgeInsets.all(15.0),
+                        fillColor: Colors.orange,
+                        elevation: 0.0,
+                      ),
+                    ),
+                  ],
+                )
+            ) : Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                  Text('   Uploading'),
+                ],
               ),
-            ],
-          )
-      ) : Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CircularProgressIndicator(),
-            Text('   Uploading'),
-          ],
-        ),
-      ),
+            ),
+          );
+        }
+        else{
+          return Wait(auth: auth, onSignedOut: onSignedOut);
+        }
+      },
     );
 
   }
@@ -2064,24 +2166,46 @@ class TestState extends State<Test>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffold,
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text(name.replaceAll('.mp4','')+' Quiz'),
+    return StreamBuilder(
+      stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uid).snapshots(),
+      builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+        if(!snapshot.hasData){
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.orange,
+              title: Text(name.replaceAll('.mp4','')+' Quiz'),
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        RootPageState.auther = snapshot.data.documents[0].data['approved'] ? Auther.approved : Auther.notApproved;
+        if(RootPageState.auther == Auther.approved) {
+          return Scaffold(
+            key: scaffold,
+            appBar: AppBar(
+              backgroundColor: Colors.orange,
+              title: Text(name.replaceAll('.mp4', '') + ' Quiz'),
 
-      ),
+            ),
 
-      body: loaded ? SingleChildScrollView(
-        child: Center(
+            body: loaded ? SingleChildScrollView(
+              child: Center(
 
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
 
-            children: loopOptions(),
-          ),
-        ),
-      ) : Center(child: CircularProgressIndicator()),
+                  children: loopOptions(),
+                ),
+              ),
+            ) : Center(child: CircularProgressIndicator()),
+          );
+        }
+        else{
+          return Wait(auth: auth, onSignedOut: onSignedOut);
+        }
+      },
     );
   }
 
