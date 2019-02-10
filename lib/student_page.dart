@@ -23,7 +23,9 @@ class StudentPage extends StatefulWidget{
   final VoidCallback onSignedOut;
   String uid;
   String className;
-  StudentPage({this.auth,this.onSignedOut,this.uid,this.className});
+  String code;
+  final String teacherName;
+  StudentPage({this.auth,this.onSignedOut,this.uid,this.className,this.code,this.teacherName});
   @override
   State<StatefulWidget> createState() {
     return new StudentPageState(auth: auth, onSignedOut: onSignedOut,uid: uid);
@@ -201,11 +203,24 @@ class StudentPageState extends State<StudentPage>{
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      key: scaffold,
-      appBar: AppBar(
-        title: Text(widget.className),
-        actions: <Widget>[
+    return StreamBuilder(
+      stream: Firestore.instance.collection('classes').where('code',isEqualTo: widget.code).snapshots(),
+      builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snupshot){
+        if(!snupshot.hasData){
+          return Scaffold(
+              appBar: AppBar(
+                title: Text('Getting Data'),
+                automaticallyImplyLeading: false,
+              ),
+              body: Center(child: CircularProgressIndicator())
+          );
+        }
+
+        return Scaffold(
+          key: scaffold,
+          appBar: AppBar(
+            title: Text(widget.className),
+            actions: <Widget>[
 //          IconButton(icon: Icon(Icons.accessibility),onPressed: () {
 //            setState(() {
 //              signedIn = false;
@@ -219,77 +234,77 @@ class StudentPageState extends State<StudentPage>{
 
 //          )
 
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            DrawerHeader(
-              child: Image.asset('images/PalamLogo.png'),
-            ),
-            ListTile(
-              title: Text('Back to Hub'),
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> StudentHub()));
-              },
-            ),
-            ListTile(
-                title: Text('Home'),
-                onTap: (){
-                  Navigator.pop(context);
-                }
-            ),
-            ListTile(
-                title: Text('Sign Out'),
-                onTap: (){
-                  setState(() {
-                    signedIn = false;
-
-                  });
-                  signOut();
-                }
-            ),
-          ],
-        ),
-      ),
-      body: !loading && signedIn ? StreamBuilder(
-          stream: Firestore.instance.collection('videos').snapshots(),
-          builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-
-            if(!snap.hasData)
-              return Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Text('   Loading'),
-                  ],
+            ],
+          ),
+          drawer: Drawer(
+            child: ListView(
+              children: <Widget>[
+                DrawerHeader(
+                  child: Image.asset('images/PalamLogo.png'),
                 ),
-              );
-            final int messageCount = snap.data.documents.length;
+                ListTile(
+                  title: Text('Back to Hub'),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> StudentHub()));
+                  },
+                ),
+                ListTile(
+                    title: Text('Home'),
+                    onTap: (){
+                      Navigator.pop(context);
+                    }
+                ),
+                ListTile(
+                    title: Text('Sign Out'),
+                    onTap: (){
+                      setState(() {
+                        signedIn = false;
+
+                      });
+                      signOut();
+                    }
+                ),
+              ],
+            ),
+          ),
+          body: !loading && signedIn ? StreamBuilder(
+              stream: Firestore.instance.collection('videos').snapshots(),
+              builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
+
+                if(!snap.hasData)
+                  return Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator(),
+                        Text('   Loading'),
+                      ],
+                    ),
+                  );
+                final int messageCount = snap.data.documents.length;
 
 
-            if(messageCount == 0) return Center( child : Text('No videos were uploaded'));
-            return ListView.builder(
-                itemCount: messageCount,
-                itemBuilder: (BuildContext context, int index){
+                if(messageCount == 0) return Center( child : Text('No videos were uploaded'));
+                return ListView.builder(
+                    itemCount: messageCount,
+                    itemBuilder: (BuildContext context, int index){
 
-                  DocumentSnapshot snapshot = snap.data.documents[index];
-                  sneck.removeRange(0,sneck.length);
-                  for(int i = 0; i < messageCount; i++){
-                    sneck.add(false);
-                    //debugPrint('i $i');
-                  }
+                      DocumentSnapshot snapshot = snap.data.documents[index];
+                      sneck.removeRange(0,sneck.length);
+                      for(int i = 0; i < messageCount; i++){
+                        sneck.add(false);
+                        //debugPrint('i $i');
+                      }
 
-                  while(index+1>calor.length){
-                    calor.add(Colors.orange);
-                  }
+                      while(index+1>calor.length){
+                        calor.add(Colors.orange);
+                      }
 //                  colorr(snapshot['name'].replaceAll('.mp4','.txt'),index);
-                  SharedPreferences.getInstance().then((pref){
-                    prefs = pref;
-                    //debugPrint('sup '+prefs.get(snapshot['name']).toString());
-                  });
-                  //debugPrint(calor[index].toString());
+                      SharedPreferences.getInstance().then((pref){
+                        prefs = pref;
+                        //debugPrint('sup '+prefs.get(snapshot['name']).toString());
+                      });
+                      //debugPrint(calor[index].toString());
 
 
 
@@ -310,174 +325,176 @@ class StudentPageState extends State<StudentPage>{
 //                    }
 //
 //                  });
-                  return FutureBuilder(
-                      future: firestoree(index, snapshot),
-                      builder : (BuildContext context, AsyncSnapshot<List<bool>> snapper) {
-                        //debugPrint(snapper.data.toString() + 'snam');
-                        if(!snapper.hasData){
-                          return Center(
-                              child: CircularProgressIndicator()
-                          );
-                        }
-                        if (snapper.hasData) {
-                          cool = snapper.data[1];
-                          return ListTile(
-                              title: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Padding(padding: EdgeInsets.only(left: 16.0)),
-                                  Text(snapshot['name'].replaceAll('.mp4','')),
+                      return FutureBuilder(
+                          future: firestoree(index, snapshot),
+                          builder : (BuildContext context, AsyncSnapshot<List<bool>> snapper) {
+                            //debugPrint(snapper.data.toString() + 'snam');
+                            if(!snapper.hasData){
+                              return Center(
+                                  child: CircularProgressIndicator()
+                              );
+                            }
+                            if (snapper.hasData) {
+                              cool = snapper.data[1];
+                              return ListTile(
+                                  title: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(left: 16.0)),
+                                      Text(snapshot['name'].replaceAll('.mp4','')),
 
 
-                                  snapper.data[1] ? IconButton(
-                                      icon: Icon(Icons.file_download),
-                                      color: Theme
-                                          .of(context)
-                                          .accentColor,
-                                      onPressed: () async {
-                                        setState(() {
-                                          loading = true;
-                                        });
-                                        await downloadFile(
-                                            snapshot['downloadURL'],
-                                            snapshot['name']);
-                                        setState(() {
-                                          loading = false;
-                                          scaffold.currentState.showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    snapshot['name'] +
-                                                        ' has downloaded'),
-                                              ));
-                                        });
-                                        try {
-                                          QuerySnapshot snapper = await Firestore
-                                              .instance
-                                              .collection('tests').where('name',
-                                              isEqualTo: snapshot['name']
-                                                  .replaceAll(
-                                                  '.mp4', '.txt')).getDocuments();
-                                          if (snapper.documents[0].exists) {
+                                      snapper.data[1] ? IconButton(
+                                          icon: Icon(Icons.file_download),
+                                          color: Theme
+                                              .of(context)
+                                              .accentColor,
+                                          onPressed: () async {
+                                            setState(() {
+                                              loading = true;
+                                            });
                                             await downloadFile(
-                                                snapper
-                                                    .documents[0]['downloadURL'],
-                                                'Test' +
-                                                    snapper.documents[0]['name']);
+                                                snapshot['downloadURL'],
+                                                snapshot['name']);
+                                            setState(() {
+                                              loading = false;
+                                              scaffold.currentState.showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        snapshot['name'] +
+                                                            ' has downloaded'),
+                                                  ));
+                                            });
+                                            try {
+                                              QuerySnapshot snapper = await Firestore
+                                                  .instance
+                                                  .collection('tests').where('name',
+                                                  isEqualTo: snapshot['name']
+                                                      .replaceAll(
+                                                      '.mp4', '.txt')).getDocuments();
+                                              if (snapper.documents[0].exists) {
+                                                await downloadFile(
+                                                    snapper
+                                                        .documents[0]['downloadURL'],
+                                                    'Test' +
+                                                        snapper.documents[0]['name']);
+                                              }
+                                              setState(() {
+                                                loading = false;
+                                                scaffold.currentState.showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          snapshot['name'] +
+                                                              ' has downloaded'),
+                                                    ));
+                                                cool = false;
+                                              });
+                                            } catch (e) {
+
+                                            }
                                           }
-                                          setState(() {
-                                            loading = false;
-                                            scaffold.currentState.showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                      snapshot['name'] +
-                                                          ' has downloaded'),
-                                                ));
-                                            cool = false;
-                                          });
-                                        } catch (e) {
+                                      ):
+                                      IconButton(
+                                          icon: Icon(Icons.delete),
+                                          color: Colors.orange,
+                                          onPressed: () async {
+                                            var alert = AlertDialog(
+                                              title: Text(
+                                                  'Are you sure that you want to delete this from your device?'),
+                                              content: Row(
+                                                children: <Widget>[
+                                                  FlatButton(
+                                                      child: Text('Yes'),
+                                                      onPressed: () async {
+                                                        prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                        String naame = prefs
+                                                            .getString(
+                                                            snapshot['name']) ?? null;
+                                                        if (naame != null) {
+                                                          File file = File(naame);
+                                                          file.delete();
+                                                        }
+                                                        String naaame = prefs
+                                                            .getString(
+                                                            'Test' +
+                                                                snapshot['name']) ??
+                                                            null;
+                                                        if (naaame != null) {
+                                                          File file = File(naaame);
+                                                          file.delete();
+                                                        }
+                                                        NextPageState.check = false;
+                                                        try {
+                                                          prefs.remove(
+                                                              snapshot['name']);
+                                                          prefs.remove('Test' +
+                                                              snapshot['name']
+                                                                  .replaceAll(
+                                                                  '.mp4', '.txt'));
+                                                        } catch (e) {
 
-                                        }
-                                      }
-                                  ):
-                                  IconButton(
-                                      icon: Icon(Icons.delete),
-                                      color: Colors.orange,
-                                      onPressed: () async {
-                                        var alert = AlertDialog(
-                                          title: Text(
-                                              'Are you sure that you want to delete this from your device?'),
-                                          content: Row(
-                                            children: <Widget>[
-                                              FlatButton(
-                                                  child: Text('Yes'),
-                                                  onPressed: () async {
-                                                    prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                    String naame = prefs
-                                                        .getString(
-                                                        snapshot['name']) ?? null;
-                                                    if (naame != null) {
-                                                      File file = File(naame);
-                                                      file.delete();
-                                                    }
-                                                    String naaame = prefs
-                                                        .getString(
-                                                        'Test' +
-                                                            snapshot['name']) ??
-                                                        null;
-                                                    if (naaame != null) {
-                                                      File file = File(naaame);
-                                                      file.delete();
-                                                    }
-                                                    NextPageState.check = false;
-                                                    try {
-                                                      prefs.remove(
-                                                          snapshot['name']);
-                                                      prefs.remove('Test' +
-                                                          snapshot['name']
-                                                              .replaceAll(
-                                                              '.mp4', '.txt'));
-                                                    } catch (e) {
+                                                        }
+                                                        setState(() {
+                                                          cool = true;
+                                                        });
+                                                        Navigator.pop(context);
+                                                      }
+                                                  ),
+                                                  FlatButton(
+                                                      child: Text('No'),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      }
+                                                  ),
 
-                                                    }
-                                                    setState(() {
-                                                      cool = true;
-                                                    });
-                                                    Navigator.pop(context);
-                                                  }
+                                                ],
                                               ),
-                                              FlatButton(
-                                                  child: Text('No'),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  }
-                                              ),
+                                            );
+                                            showDialog(
+                                                context: context, builder: (context) {
+                                              return alert;
+                                            });
+                                          }
+                                      ),
 
-                                            ],
-                                          ),
-                                        );
-                                        showDialog(
-                                            context: context, builder: (context) {
-                                          return alert;
-                                        });
-                                      }
+                                    ],
                                   ),
-
-                                ],
-                              ),
-                              enabled: true,
-                              selected: true,
+                                  enabled: true,
+                                  selected: true,
 
 
-                              onTap: () async {
-                                url = snapshot['downloadURL'];
-                                debugPrint('url1 $url');
-                                prefs = await SharedPreferences.getInstance();
-                                String task = prefs.getString(snapshot['name']) ??
-                                    '';
-                                debugPrint('task $task');
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) =>
-                                        NextPage(
-                                          name: snapshot['name'],
-                                          task: task,
-                                          auth: auth,
-                                          onSignedOut: onSignedOut,
-                                          url: url,
-                                        )));
-                              }
-                          );
-                        }
-                      }
-                  );
-                }
-            );
-          }
-      ) :
-      Center(child: CircularProgressIndicator()),
+                                  onTap: () async {
+                                    url = snapshot['downloadURL'];
+                                    debugPrint('url1 $url');
+                                    prefs = await SharedPreferences.getInstance();
+                                    String task = prefs.getString(snapshot['name']) ??
+                                        '';
+                                    debugPrint('task $task');
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) =>
+                                            NextPage(
+                                              name: snapshot['name'],
+                                              task: task,
+                                              auth: auth,
+                                              onSignedOut: onSignedOut,
+                                              url: url,
+                                            )));
+                                  }
+                              );
+                            }
+                          }
+                      );
+                    }
+                );
+              }
+          ) :
+          Center(child: CircularProgressIndicator()),
 
 
+        );
+      },
     );
   }
   method(bool cool, DocumentSnapshot snapshot, int index){

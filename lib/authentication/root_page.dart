@@ -8,6 +8,7 @@ import 'package:prsd/admin_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:prsd/teacherHub.dart';
 class RootPage extends StatefulWidget{
   RootPage({@required this.auth});
   final BaseAuth auth;
@@ -276,11 +277,14 @@ class RootPageState extends State<RootPage>{
                           }
                         }
                       });
-
-                      return new TeacherPage(
+                      return TeacherHub(
                         auth: widget.auth,
                         onSignedOut: _signedOut,
                       );
+//                      return new TeacherPage(
+//                        auth: widget.auth,
+//                        onSignedOut: _signedOut,
+//                      );
                     }
                   }
                   if (auth == AuthStatus.admin) {

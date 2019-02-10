@@ -8,15 +8,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'student_page.dart';
 import 'teacher_page.dart';
-class StudentHub extends StatefulWidget {
+class TeacherHub extends StatefulWidget {
   BaseAuth auth;
   VoidCallback onSignedOut;
-  StudentHub({this.auth,this.onSignedOut});
+  TeacherHub({this.auth,this.onSignedOut});
   @override
-  StudentHubState createState() => StudentHubState();
+  TeacherHubState createState() => TeacherHubState();
 }
 
-class StudentHubState extends State<StudentHub> {
+class TeacherHubState extends State<TeacherHub> {
   FirebaseMessaging messaging = new FirebaseMessaging();
 
   @override
@@ -27,10 +27,10 @@ class StudentHubState extends State<StudentHub> {
         backgroundColor: Colors.orange,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
-            onPressed:(){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>AddPage()));
-            }
+              icon: Icon(Icons.add),
+              onPressed:(){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CreatePage()));
+              }
           ),
         ],
       ),
@@ -38,7 +38,7 @@ class StudentHubState extends State<StudentHub> {
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              child: Image.asset('images/PalamLogo.png')
+                child: Image.asset('images/PalamLogo.png')
             ),
             ListTile(
                 title: Text('Hub'),
@@ -84,6 +84,11 @@ class StudentHubState extends State<StudentHub> {
       body: StreamBuilder(
           stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uuserId).snapshots(),
           builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+            if(snapshot.data.documents[0].data['classes'] == null){
+              return Center(
+                child: Text('No classes created'),
+              );
+            }
             return ListView.builder(
               itemCount: snapshot.data.documents[0].data['classes'].length,
               itemBuilder: (BuildContext context, int index){
@@ -91,7 +96,7 @@ class StudentHubState extends State<StudentHub> {
                   title: Text(snapshot.data.documents[0].data['classes'][index]),
                   subtitle: Text(snapshot.data.documents[0].data['teachers'][index]),
                   onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentPage(auth: widget.auth, onSignedOut: widget.onSignedOut, uid: RootPageState.uid,className: snapshot.data.documents[0].data['classes'][index],code: snapshot.data.documents[0].data['codes'][index],teacherName: snapshot.data.documents[0].data['teachers'][index],)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherPage(auth: widget.auth, onSignedOut: widget.onSignedOut, uid: RootPageState.uid,className: snapshot.data.documents[0].data['classes'][index],code: snapshot.data.documents[0].data['codes'][index])));
                   },
                 );
               },
@@ -101,12 +106,12 @@ class StudentHubState extends State<StudentHub> {
     );
   }
 }
-class AddPage extends StatefulWidget {
+class CreatePage extends StatefulWidget {
   @override
-  AddPageState createState() => AddPageState();
+  CreatePageState createState() => CreatePageState();
 }
 
-class AddPageState extends State<AddPage> {
+class CreatePageState extends State<CreatePage> {
   TextEditingController control = new TextEditingController();
   int counter(){
     int number = 0;
@@ -151,75 +156,75 @@ class AddPageState extends State<AddPage> {
               Container(
                 padding: EdgeInsets.all(15.0),
                 child: TextFormField(
-                  controller: control,
-                  decoration: InputDecoration(
-                    labelText: 'Enter Code',
+                    controller: control,
+                    decoration: InputDecoration(
+                      labelText: 'Enter Code',
 
-                  ),
-                  validator: (value){
-                    if(!check){
-                      return 'You have already joined this class';
-                    }
-                  },
-                  maxLength: 6
+                    ),
+                    validator: (value){
+                      if(!check){
+                        return 'You have already joined this class';
+                      }
+                    },
+                    maxLength: 6
                 ),
 
               ),
               RawMaterialButton(
-                fillColor: Colors.orange,
-                elevation: 0.0,
-                child: Text('Join Class'),
-                shape: new RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                onPressed: ()async{
+                  fillColor: Colors.orange,
+                  elevation: 0.0,
+                  child: Text('Join Class'),
+                  shape: new RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                  onPressed: ()async{
 
-                  QuerySnapshot snap = await Firestore.instance.collection('classes').where('code',isEqualTo: control.text).getDocuments();
-                  QuerySnapshot snapshot = await Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uuserId).getDocuments();
-                  if(snapshot.documents[0].data['codes'] != null && snapshot.documents[0].data['codes'].length > 0) {
-                    if (snapshot.documents[0].data['codes'].contains(
-                        control.text)) {
-                      final former = form.currentState;
-                      check = false;
-                      former.validate();
-                    }
-                  }
-                  if(check) {
-                    try {
-                      bool check = false;
-                      check = snapshot.documents[0].data['classes'] == null;
-                      if (!((snapshot.documents[0].data['classes']).contains(
-                          snap.documents[0].data['name'])) || check) {
-                        await Firestore.instance.collection('classes').document(
-                            snap.documents[0].documentID)
-                            .collection('users')
-                            .document()
-                            .setData({
-                          'approved': false,
-                          'email': snapshot.documents[0].data['email'],
-                          'uid': snapshot.documents[0].data['uid'],
-                          'name': snapshot.documents[0].data['name'],
-                          'status': snapshot.documents[0].data['status'],
-                        });
-                        snap =
-                        await Firestore.instance.collection('classes').where(
-                            'code', isEqualTo: control.text).getDocuments();
-
-                        List classList = new List.from(
-                            snapshot.documents[0].data['classes'] ?? []);
-                        List codeList = new List.from(
-                            snapshot.documents[0].data['codes'] ?? []);
-                        List teacherList = new List.from(
-                            snapshot.documents[0].data['teachers'] ?? []);
-                        classList.add(snap.documents[0].data['name']);
-                        teacherList.add(snap.documents[0].data['teacherName']);
-                        codeList.add(snap.documents[0].data['code']);
-                        await Firestore.instance.collection('users').document(
-                            snapshot.documents[0].documentID).updateData({
-                          'classes': classList,
-                          'teachers': teacherList,
-                          'codes': codeList,
-                        });
+                    QuerySnapshot snap = await Firestore.instance.collection('classes').where('code',isEqualTo: control.text).getDocuments();
+                    QuerySnapshot snapshot = await Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uuserId).getDocuments();
+                    if(snapshot.documents[0].data['codes'] != null && snapshot.documents[0].data['codes'].length > 0) {
+                      if (snapshot.documents[0].data['codes'].contains(
+                          control.text)) {
+                        final former = form.currentState;
+                        check = false;
+                        former.validate();
                       }
-                    } catch (e) {
+                    }
+                    if(check) {
+                      try {
+                        bool check = false;
+                        check = snapshot.documents[0].data['classes'] == null;
+                        if (!((snapshot.documents[0].data['classes']).contains(
+                            snap.documents[0].data['name'])) || check) {
+                          await Firestore.instance.collection('classes').document(
+                              snap.documents[0].documentID)
+                              .collection('users')
+                              .document()
+                              .setData({
+                            'approved': false,
+                            'email': snapshot.documents[0].data['email'],
+                            'uid': snapshot.documents[0].data['uid'],
+                            'name': snapshot.documents[0].data['name'],
+                            'status': snapshot.documents[0].data['status'],
+                          });
+                          snap =
+                          await Firestore.instance.collection('classes').where(
+                              'code', isEqualTo: control.text).getDocuments();
+
+                          List classList = new List.from(
+                              snapshot.documents[0].data['classes'] ?? []);
+                          List codeList = new List.from(
+                              snapshot.documents[0].data['codes'] ?? []);
+                          List teacherList = new List.from(
+                              snapshot.documents[0].data['teachers'] ?? []);
+                          classList.add(snap.documents[0].data['name']);
+                          teacherList.add(snap.documents[0].data['teacherName']);
+                          codeList.add(snap.documents[0].data['code']);
+                          await Firestore.instance.collection('users').document(
+                              snapshot.documents[0].documentID).updateData({
+                            'classes': classList,
+                            'teachers': teacherList,
+                            'codes': codeList,
+                          });
+                        }
+                      } catch (e) {
 //                  await Firestore.instance.collection('classes').document(snap.documents[0].documentID).collection('users').document().setData({
 //                    'approved': false,
 //                    'email': snapshot.documents[0].data['email'],
@@ -239,11 +244,11 @@ class AddPageState extends State<AddPage> {
 //                    'classes' : classList,
 //                    'teachers' : teacherList,
 //                  });
-                      debugPrint('e $e');
+                        debugPrint('e $e');
+                      }
                     }
+                    Navigator.pop(context);
                   }
-                  Navigator.pop(context);
-                }
               ),
             ],
           ),

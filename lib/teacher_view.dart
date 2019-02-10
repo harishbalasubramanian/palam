@@ -22,6 +22,7 @@ class TeacherViewState extends State<TeacherView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
+      stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uuserId).snapshots(),
       builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
         if(!snapshot.hasData){
           return Scaffold(
