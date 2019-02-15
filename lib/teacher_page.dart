@@ -27,7 +27,8 @@ class TeacherPage extends StatefulWidget{
   final String className;
   String uid;
   final String code;
-  TeacherPage({this.auth,this.onSignedOut,this.uid, this.className, this.code});
+  final String teacherName;
+  TeacherPage({this.auth,this.onSignedOut,this.uid, this.className, this.code,this.teacherName});
   @override
   State<StatefulWidget> createState() {
     return new TeacherPageState(auth: auth, onSignedOut: onSignedOut,uid: uid);
@@ -50,9 +51,10 @@ class TeacherPageState extends State<TeacherPage>{
   TeacherPageState({this.auth,this.onSignedOut,this.uid});
   BaseAuth auth;
   static bool signedIn;
+  static String reference = '';
   bool loading = false;
   final VoidCallback onSignedOut;
-
+  static String code ='';
   void signOut() async{
     try{
       debugPrint('one');
@@ -90,6 +92,8 @@ class TeacherPageState extends State<TeacherPage>{
 //      allowedFileExtensions: ['txt'],
 //    );
     signedIn = true;
+    code = widget.code;
+
     messaging.configure(
       onLaunch: (Map<String, dynamic> map){
         debugPrint('onLaunch called');
@@ -111,7 +115,102 @@ class TeacherPageState extends State<TeacherPage>{
     messaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
       debugPrint('IOS Settings Registered');
     });
+    SharedPreferences.getInstance().then((prefer)async {
+      Set<String> keys = prefer.getKeys();
+      //QuerySnapshot snapshot = await Firestore.instance.collection('classes').document(reference).collection('videos').getDocuments());
+      QuerySnapshot snap = await Firestore.instance.collection('classes')
+          .document(reference).collection('videos')
+          .getDocuments();
+      List<DocumentSnapshot> snupshot = snap.documents;
+      keys.forEach((snapshot) {
+        if(snapshot.contains('.mp4')){
+          String naame = prefs.getString(widget.code+snapshot);
+          if (naame !=
+              null) {
+            File file = File(
+                naame);
+            file.delete();
+          }
+          String naaame = prefs
+              .getString(
+              widget
+                  .code +
+                  'Test' +
+                  snapshot) ??
+              null;
+          if (naaame !=
+              null) {
+            File file = File(
+                naaame);
+            file.delete();
+          }
+          NextPageState
+              .check =
+          false;
+          try {
+            prefs.remove(
+                widget
+                    .code +
+                    snapshot);
+            prefs.remove(
+                widget
+                    .code +
+                    'Test' +
+                    snapshot
+                        .replaceAll(
+                        '.mp4',
+                        '.txt'));
+          } catch (e) {
 
+          }
+          setState(() {
+            cool = true;
+          });
+        }
+      });
+
+//      if (naame !=
+//          null) {
+//        File file = File(
+//            naame);
+//        file.delete();
+//      }
+//      String naaame = prefs
+//          .getString(
+//          widget
+//              .teacherName +
+//              'Test' +
+//              snapshot['name']) ??
+//          null;
+//      if (naaame !=
+//          null) {
+//        File file = File(
+//            naaame);
+//        file.delete();
+//      }
+//      NextPageState
+//          .check =
+//      false;
+//      try {
+//        prefs.remove(
+//            widget
+//                .teacherName +
+//                snapshot['name']);
+//        prefs.remove(
+//            widget
+//                .teacherName +
+//                'Test' +
+//                snapshot['name']
+//                    .replaceAll(
+//                    '.mp4',
+//                    '.txt'));
+//      } catch (e) {
+//
+//      }
+//      setState(() {
+//        cool = true;
+//      });
+    });
   }
 
 
@@ -150,7 +249,7 @@ class TeacherPageState extends State<TeacherPage>{
       await dio.download(url, path);
       prefs = await SharedPreferences.getInstance();
 
-      prefs.setString(name,path);
+      prefs.setString(widget.code+name,path);
 
       debugPrint(path);
       //Navigator.push(context, MaterialPageRoute(builder: (context)=>NextPage(auth: auth, onSignedOut: onSignedOut, name: name, url: url, task: path)));
@@ -180,7 +279,7 @@ class TeacherPageState extends State<TeacherPage>{
   Future<List<bool>> firestoree (int index,DocumentSnapshot snapshot) async {
     bool check;
     bool smeck;
-    QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt')).getDocuments();
+    QuerySnapshot docs = await Firestore.instance.collection('classes').document(reference).collection('tests').where('name',isEqualTo: snapshot['name'].replaceAll('.mp4','.txt')).getDocuments();
 //      Future<bool> name = Firestore.instance.collection('tests').where('name', isEqualTo: snapshot['name'].replaceAll('.mp4', '.txt')).getDocuments().then((docs){
 //     try {
 //       if (docs.documents[0].exists) check = true;
@@ -201,14 +300,14 @@ class TeacherPageState extends State<TeacherPage>{
     try{
       if(docs.documents[0].exists) check = true;
       prefs = await SharedPreferences.getInstance();
-      cool = prefs.getString(snapshot['name']) != null ? false : true;
+      cool = prefs.getString(widget.code+snapshot['name']) != null ? false : true;
 
     }catch(e){
       if (e.toString() == 'RangeError (index): Invalid value: Valid value range is empty: 0') {
         check = false;
       }
     }
-    smeck = prefs.getString(snapshot['name']) != null ? false : true;
+    smeck = prefs.getString(widget.code+snapshot['name']) != null ? false : true;
     return [check,smeck];
   }
 
@@ -226,6 +325,7 @@ class TeacherPageState extends State<TeacherPage>{
   Widget build(BuildContext context) {
 
     return StreamBuilder(
+      stream: Firestore.instance.collection('classes').where('code',isEqualTo: code).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snupshot){
         if(!snupshot.hasData){
           return Scaffold(
@@ -237,6 +337,7 @@ class TeacherPageState extends State<TeacherPage>{
             ),
           );
         }
+        reference = snupshot.data.documents[0].documentID;
         return Scaffold(
         key: scaffold,
         appBar: AppBar(
@@ -261,7 +362,7 @@ class TeacherPageState extends State<TeacherPage>{
                   title: Text('View Students'),
                   onTap: (){
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView(auth, onSignedOut)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>StudentView(auth, onSignedOut, reference: reference)));
                   }
               ),
               ListTile(
@@ -279,7 +380,7 @@ class TeacherPageState extends State<TeacherPage>{
           ),
         ),
         body: !loading && signedIn ? StreamBuilder(
-            stream: Firestore.instance.collection('videos').snapshots(),
+            stream: Firestore.instance.collection('classes').document(reference).collection('videos').snapshots(),
             builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
 
               if(!snap.hasData)
@@ -370,7 +471,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                 snapshot['downloadURL'],
                                                 snapshot['name']);
                                             QuerySnapshot snapper = await Firestore
-                                                .instance.collection('tests')
+                                                .instance.collection('classes').document(reference).collection('tests')
                                                 .where('name',
                                                 isEqualTo: snapshot['name']
                                                     .replaceAll('.mp4', '.txt'))
@@ -411,7 +512,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                               .getInstance();
                                                           String naame = prefs
                                                               .getString(
-                                                              snapshot['name']) ??
+                                                              widget.code+snapshot['name']) ??
                                                               null;
                                                           debugPrint(naame);
                                                           if (naame != null) {
@@ -421,8 +522,8 @@ class TeacherPageState extends State<TeacherPage>{
                                                           NextPageState.check =
                                                           false;
                                                           prefs.remove(
-                                                              snapshot['name']);
-                                                          prefs.remove('Test' +
+                                                              widget.code+snapshot['name']);
+                                                          prefs.remove(widget.code+'Test' +
                                                               snapshot['name']
                                                                   .replaceAll(
                                                                   '.mp4', '.txt'));
@@ -471,7 +572,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                                   'videos'));
                                                           ref.delete();
                                                           await Firestore.instance
-                                                              .collection('videos')
+                                                              .collection('classes').document(reference).collection('videos')
                                                               .where('name',
                                                               isEqualTo: snapshot['name'])
                                                               .getDocuments()
@@ -497,7 +598,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                                       'tests'));
                                                           ref.delete();
                                                           Firestore.instance
-                                                              .collection('tests')
+                                                              .collection('classes').document(reference).collection('tests')
                                                               .where('name',
                                                               isEqualTo: snapshot['name']
                                                                   .replaceAll(
@@ -516,9 +617,9 @@ class TeacherPageState extends State<TeacherPage>{
 
                                                           try {
                                                             prefs.remove(
-                                                                snapshot['name']);
+                                                                widget.code+snapshot['name']);
                                                             prefs.remove(
-                                                                snapshot['name']
+                                                                widget.code+snapshot['name']
                                                                     .replaceAll(
                                                                     ' ', '')
                                                                     .replaceAll(
@@ -528,7 +629,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                             debugPrint('e $e');
                                                           }
                                                           prefs.setBool(
-                                                              snapshot['name']
+                                                              widget.code+snapshot['name']
                                                                   .replaceAll(
                                                                   ' ', '')
                                                                   .replaceAll(
@@ -570,7 +671,7 @@ class TeacherPageState extends State<TeacherPage>{
                                       debugPrint('url1 $url');
                                       prefs = await SharedPreferences.getInstance();
                                       String task = prefs.getString(
-                                          snapshot['name']) ?? '';
+                                          widget.code+snapshot['name']) ?? '';
                                       Navigator.push(context, MaterialPageRoute(
                                           builder: (context) =>
                                               NextPage(
@@ -619,7 +720,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                                   'tests'));
                                                           ref.delete();
                                                           Firestore.instance
-                                                              .collection('tests')
+                                                              .collection('classes').document(reference).collection('videos')
                                                               .where('name',
                                                               isEqualTo: snapshot['name']
                                                                   .replaceAll(
@@ -638,9 +739,9 @@ class TeacherPageState extends State<TeacherPage>{
 
                                                           try {
                                                             prefs.remove(
-                                                                snapshot['name']);
+                                                                widget.code+snapshot['name']);
                                                             prefs.remove(
-                                                                snapshot['name']
+                                                                widget.code+snapshot['name']
                                                                     .replaceAll(
                                                                     ' ', '')
                                                                     .replaceAll(
@@ -650,7 +751,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                             debugPrint('e $e');
                                                           }
                                                           prefs.setBool(
-                                                              snapshot['name']
+                                                              widget.code+snapshot['name']
                                                                   .replaceAll(
                                                                   ' ', '')
                                                                   .replaceAll(
@@ -716,7 +817,7 @@ class TeacherPageState extends State<TeacherPage>{
                                           try {
                                             QuerySnapshot snapper = await Firestore
                                                 .instance
-                                                .collection('tests').where('name',
+                                                .collection('classes').document(reference).collection('videos').where('name',
                                                 isEqualTo: snapshot['name']
                                                     .replaceAll(
                                                     '.mp4', '.txt')).getDocuments();
@@ -759,13 +860,13 @@ class TeacherPageState extends State<TeacherPage>{
                                                           .getInstance();
                                                       String naame = prefs
                                                           .getString(
-                                                          snapshot['name']) ?? null;
+                                                          widget.code+snapshot['name']) ?? null;
                                                       if (naame != null) {
                                                         File file = File(naame);
                                                         file.delete();
                                                       }
                                                       String naaame = prefs
-                                                          .getString(
+                                                          .getString(widget.code+
                                                           'Test' +
                                                               snapshot['name']) ??
                                                           null;
@@ -776,8 +877,8 @@ class TeacherPageState extends State<TeacherPage>{
                                                       NextPageState.check = false;
                                                       try {
                                                         prefs.remove(
-                                                            snapshot['name']);
-                                                        prefs.remove('Test' +
+                                                            widget.code+snapshot['name']);
+                                                        prefs.remove(widget.code+'Test' +
                                                             snapshot['name']
                                                                 .replaceAll(
                                                                 '.mp4', '.txt'));
@@ -824,7 +925,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                             .getInstance();
                                                         String naame = prefs
                                                             .getString(
-                                                            snapshot['name']) ??
+                                                            widget.code+snapshot['name']) ??
                                                             null;
                                                         if (naame != null) {
                                                           File file = File(naame);
@@ -832,7 +933,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                         }
                                                         NextPageState.check = false;
                                                         String naaame = prefs
-                                                            .getString('Test' +
+                                                            .getString(widget.code+'Test' +
                                                             snapshot['name']
                                                                 .replaceAll(
                                                                 '.mp4', '.txt')) ??
@@ -856,7 +957,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                                 'videos'));
                                                         ref.delete();
                                                         await Firestore.instance
-                                                            .collection('videos')
+                                                            .collection('classes').document(reference).collection('videos')
                                                             .where('name',
                                                             isEqualTo: snapshot['name'])
                                                             .getDocuments()
@@ -882,7 +983,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                         ref.delete();
                                                         Firestore.instance
                                                             .collection(
-                                                            'tests')
+                                                            'classes').document(reference).collection('tests')
                                                             .where('name',
                                                             isEqualTo: snapshot['name']
                                                                 .replaceAll(
@@ -902,9 +1003,9 @@ class TeacherPageState extends State<TeacherPage>{
 
                                                         try {
                                                           prefs.remove(
-                                                              snapshot['name']);
+                                                              widget.code+snapshot['name']);
                                                           prefs.remove(
-                                                              snapshot['name']
+                                                              widget.code+snapshot['name']
                                                                   .replaceAll(
                                                                   ' ', '')
                                                                   .replaceAll(
@@ -913,7 +1014,7 @@ class TeacherPageState extends State<TeacherPage>{
                                                           debugPrint('e $e');
                                                         }
                                                         prefs.setBool(
-                                                            snapshot['name']
+                                                            widget.code+snapshot['name']
                                                                 .replaceAll(
                                                                 ' ', '')
                                                                 .replaceAll(
@@ -963,7 +1064,7 @@ class TeacherPageState extends State<TeacherPage>{
                                   url = snapshot['downloadURL'];
                                   debugPrint('url1 $url');
                                   prefs = await SharedPreferences.getInstance();
-                                  String task = prefs.getString(snapshot['name']) ??
+                                  String task = prefs.getString(widget.code+snapshot['name']) ??
                                       '';
                                   debugPrint('task $task');
                                   Navigator.push(context, MaterialPageRoute(
@@ -1168,15 +1269,17 @@ class FileUploadState extends State<FileUpload>{
                       ref = FirebaseStorage.instance.ref().child('$file2');
                       String _path = await(await task.onComplete).ref
                           .getDownloadURL();
-                      Firestore.instance.collection('/tests')
-                          .document()
+                      QuerySnapshot docs = await Firestore.instance.collection('classes').where('code',isEqualTo: TeacherPageState.code).getDocuments();
+
+                      Firestore.instance.collection('classes')
+                          .document(docs.documents[0].documentID).collection('tests').document()
                           .setData(
                           <String, dynamic>{
                             'name': fileName,
                             'downloadURL': _path
                           });
                       prefs = await SharedPreferences.getInstance();
-                      prefs.setBool('$fileName', false);
+                      prefs.setBool(TeacherPageState.code+'$fileName', false);
                       HttpClient httpClient = HttpClient();
                       if (!TeacherPageState.cool) {
                         debugPrint('1');
@@ -1198,7 +1301,7 @@ class FileUploadState extends State<FileUpload>{
                         prefs = await SharedPreferences.getInstance();
 
                         prefs.setString(
-                            'Test${videoName.replaceAll('.mp4', '')}.txt',
+                            TeacherPageState.code+'Test${videoName.replaceAll('.mp4', '')}.txt',
                             file.path);
 
                         debugPrint(file.path);
@@ -1261,7 +1364,7 @@ class NextPageState extends State<NextPage>{
 //
 //      });
     };
-    Firestore.instance.collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments().then((docs){
+    Firestore.instance.collection('classes').document(TeacherPageState.reference).collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments().then((docs){
       try {
         if (docs.documents[0].exists) {
           sneeze = true;
@@ -1478,7 +1581,7 @@ class NextPageState extends State<NextPage>{
   }
   Future<bool> testThere (String name)async{
     bool isThere = false;
-    QuerySnapshot docs = await Firestore.instance.collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments();
+    QuerySnapshot docs = await Firestore.instance.collection('classes').document(TeacherPageState.reference).collection('tests').where('name',isEqualTo: name.replaceAll('.mp4','.txt')).getDocuments();
     try {
       if (docs.documents[0].exists) isThere = true;
     }catch(e){
@@ -1739,7 +1842,8 @@ class SecondState extends State<Second>{
     _path = await (await task.onComplete).ref.getDownloadURL();
     debugPrint(_path);
     curpath = control.text;
-    Firestore.instance.collection('videos').document().setData(<String,dynamic>{
+    QuerySnapshot docs = await Firestore.instance.collection('classes').where('code',isEqualTo: TeacherPageState.code).getDocuments();
+    Firestore.instance.collection('classes').document(docs.documents[0].documentID).collection('videos').document().setData(<String,dynamic>{
       'name' : control.text+'.mp4',
       'downloadURL' : _path
     });
@@ -1755,6 +1859,7 @@ class SecondState extends State<Second>{
     storage = new FirebaseStorage();
   }
   bool isLoading = false;
+  GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
 
@@ -1795,44 +1900,52 @@ class SecondState extends State<Second>{
               ),
             ),
             body: !isLoading ? SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(8.0),
-                      child: TextFormField(
-                          controller: control,
-                          decoration: InputDecoration(
-                              labelText: 'Title of Video'),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Title can\'t be empty';
-                            }
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                            controller: control,
+                            decoration: InputDecoration(
+                                labelText: 'Title of Video',
 
-                            if (value.contains(' ')) {
-                              return 'Title can\'t contain any spaces';
-                            }
-                            if (value.length > 15) {
-                              return 'Title has to be less or equal than 15 characters';
-                            }
-                          }
+                            ),
+                            maxLength: 15,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Title can\'t be empty';
+                              }
+
+                              if (value.contains(' ')) {
+                                return 'Title can\'t contain any spaces';
+                              }
+                              if(value.contains('mp4') || value.contains('txt') || value.contains('MOV') || value.contains('mov')){
+                                return 'This title is invalid. Please change the title';
+                              }
+
+                            },
+
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 30.0),
-                      child: RawMaterialButton(
+                      Container(
+                        padding: EdgeInsets.only(top: 30.0),
+                        child: RawMaterialButton(
 
-                        child: Text('Upload Video'),
+                          child: Text('Upload Video'),
 
-                        onPressed: () => doStuff(),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0)),
-                        padding: EdgeInsets.all(15.0),
-                        fillColor: Colors.orange,
-                        elevation: 0.0,
+                          onPressed: () => doStuff(),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0)),
+                          padding: EdgeInsets.all(15.0),
+                          fillColor: Colors.orange,
+                          elevation: 0.0,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 )
             ) : Center(
               child: Row(
@@ -1855,21 +1968,23 @@ class SecondState extends State<Second>{
 
   void doStuff()async{
     try {
+      final form = formKey.currentState;
+      form.save();
+      if(form.validate()) {
+        setState(() {
+          isLoading = true;
+        });
+        await uploadFile(
+            await FilePicker.getFilePath(
+                type: FileType.CUSTOM, fileExtension: 'mp4'));
+        //debugPrint('Path:'+(await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
+        setState(() {
+          isLoading = false;
+          control.text = '';
 
-      setState(() {
-        isLoading = true;
-      });
-      await uploadFile(
-          await FilePicker.getFilePath(type: FileType.CUSTOM, fileExtension: 'mp4'));
-      //debugPrint('Path:'+(await ImagePicker.pickVideo(source: ImageSource.gallery)).path);
-      setState(() {
-        isLoading = false;
-        control.text = '';
-
-        _showSnackBar();
-
-      });
-
+          _showSnackBar();
+        });
+      }
     }
     catch(e){
       debugPrint(e.toString());
@@ -1913,13 +2028,13 @@ class TestState extends State<Test>{
   Future<List> getTest()async{
     name = widget.name;
     prefs = await SharedPreferences.getInstance();
-    String filepath = prefs.getString('Test'+name.replaceAll('.mp4','.txt')) ?? "";
+    String filepath = prefs.getString(TeacherPageState.code+'Test'+name.replaceAll('.mp4','.txt')) ?? "";
     if(filepath != ""){
       File file = File(filepath);
       return json.decode(file.readAsStringSync());
     }
     if(filepath == "") {
-      QuerySnapshot docs = await Firestore.instance.collection('tests').where(
+      QuerySnapshot docs = await Firestore.instance.collection('classes').document(TeacherPageState.reference).collection('videos').where(
           'name', isEqualTo: name.replaceAll('.mp4', '.txt')).getDocuments();
 
       if (docs.documents[0].exists) {

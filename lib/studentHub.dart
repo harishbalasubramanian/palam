@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'student_page.dart';
 import 'teacher_page.dart';
+
 class StudentHub extends StatefulWidget {
   BaseAuth auth;
   VoidCallback onSignedOut;
@@ -84,6 +85,16 @@ class StudentHubState extends State<StudentHub> {
       body: StreamBuilder(
           stream: Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uuserId).snapshots(),
           builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+            if(!snapshot.hasData){
+              return Center(
+                child: Row(
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('   Loading'),
+                  ],
+                ),
+              );
+            }
             return ListView.builder(
               itemCount: snapshot.data.documents[0].data['classes'].length,
               itemBuilder: (BuildContext context, int index){
@@ -135,10 +146,12 @@ class AddPageState extends State<AddPage> {
 //    return map;
 //  }
   GlobalKey<FormState> form = new GlobalKey<FormState>();
+  GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
   bool check = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffold,
       appBar: AppBar(
         title: Text('Add Class'),
       ),
@@ -242,7 +255,16 @@ class AddPageState extends State<AddPage> {
                       debugPrint('e $e');
                     }
                   }
+
                   Navigator.pop(context);
+                  if(!check){
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('You have already joined this class'),
+                      ),
+                    );
+                    debugPrint('sent');
+                  }
                 }
               ),
             ],

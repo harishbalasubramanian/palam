@@ -12,7 +12,8 @@ import 'Wait.dart';
 class StudentView extends StatefulWidget {
   BaseAuth auth;
   VoidCallback onSignedOut;
-  StudentView(this.auth, this.onSignedOut);
+  final String reference;
+  StudentView(this.auth, this.onSignedOut, {this.reference});
   @override
   StudentViewState createState() => StudentViewState();
 }
@@ -112,7 +113,7 @@ class StudentViewState extends State<StudentView> {
                 ),
               ),
               body: StreamBuilder(
-                  stream: Firestore.instance.collection('users').where(
+                  stream: Firestore.instance.collection('classes').document(widget.reference).collection('users').where(
                       'status', isEqualTo: 'student').snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
