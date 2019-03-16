@@ -21,6 +21,7 @@ import 'package:chewie/chewie.dart';
 import 'student_view.dart';
 import 'package:dio/dio.dart';
 import 'Wait.dart';
+import 'teacherHub.dart';
 class TeacherPage extends StatefulWidget{
   final BaseAuth auth;
   final VoidCallback onSignedOut;
@@ -44,6 +45,7 @@ class TeacherPageState extends State<TeacherPage>{
   String curpath;
   StorageUploadTask u;
   SharedPreferences prefs;
+  String className = '';
   static String url = '';
   GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
   //static FlutterDocumentPickerParams params;
@@ -93,7 +95,7 @@ class TeacherPageState extends State<TeacherPage>{
 //    );
     signedIn = true;
     code = widget.code;
-
+    className = widget.className;
     messaging.configure(
       onLaunch: (Map<String, dynamic> map){
         debugPrint('onLaunch called');
@@ -338,10 +340,11 @@ class TeacherPageState extends State<TeacherPage>{
           );
         }
         reference = snupshot.data.documents[0].documentID;
+        debugPrint('reference $reference');
         return Scaffold(
         key: scaffold,
         appBar: AppBar(
-          title: Text(widget.className),
+          title: Text(snupshot.data.documents[0].data['name']),
            // ,trailing: Image.asset('images/PalamLogo.jpeg'),
 
         ),
@@ -350,6 +353,12 @@ class TeacherPageState extends State<TeacherPage>{
             children: <Widget>[
               DrawerHeader(
                 child: Image.asset('images/PalamLogo.png'),
+              ),
+              ListTile(
+                title: Text('Back to Hub'),
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherHub()),);
+                }
               ),
               ListTile(
                   title: Text('Home'),

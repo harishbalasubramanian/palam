@@ -9,6 +9,7 @@ import 'teacher_view.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'admin_page.dart';
 import 'Wait.dart';
+import 'teacherHub.dart';
 class StudentView extends StatefulWidget {
   BaseAuth auth;
   VoidCallback onSignedOut;
@@ -54,12 +55,22 @@ class StudentViewState extends State<StudentView> {
                       child: Image.asset('images/PalamLogo.png'),
                     ),
                     ListTile(
+                      title: Text('Back to Hub'),
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherHub()),);
+                      }
+                    ),
+                    ListTile(
                         title: Text('Home'),
-                        onTap: () {
+                        onTap: () async{
                           Navigator.pop(context);
+
+                          QuerySnapshot fire = await Firestore.instance.collection('classes').where('code',isEqualTo: TeacherPageState.code).getDocuments();
                           if (RootPageState.auth == AuthStatus.teacher)
                             Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => TeacherPage()));
+                                builder: (context) => TeacherPage(auth: widget.auth, onSignedOut: widget.onSignedOut, uid: snapshot.data.documents[0].data['uid'],
+                                className: fire.documents[0].data['className'], code: fire.documents[0].data['code'], teacherName: fire.documents[0].data['teacherName'],
+                                )));
                           else
                             Navigator.push(context, MaterialPageRoute(
                                 builder: (context) => AdminPage()));

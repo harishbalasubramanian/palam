@@ -219,13 +219,6 @@
             </list>
           </value>
         </entry>
-        <entry key="password">
-          <value>
-            <list>
-              <option value="$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/password-1.0.0/lib" />
-            </list>
-          </value>
-        </entry>
         <entry key="path">
           <value>
             <list>
@@ -251,13 +244,6 @@
           <value>
             <list>
               <option value="$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/platform-2.2.0/lib" />
-            </list>
-          </value>
-        </entry>
-        <entry key="pointycastle">
-          <value>
-            <list>
-              <option value="$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/pointycastle-1.0.0/lib" />
             </list>
           </value>
         </entry>
@@ -391,12 +377,10 @@
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.3+1/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.1.6/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/open_iconic_flutter-0.3.0/lib" />
-      <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/password-1.0.0/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.6.2/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.4.1/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/petitparser-2.0.2/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/platform-2.2.0/lib" />
-      <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/pointycastle-1.0.0/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-2.0.1/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.3/lib" />
       <root url="file://$USER_HOME$/Desktop/FlutterPrograms/downloads/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.4.1/lib" />

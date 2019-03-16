@@ -119,7 +119,7 @@ class StudentWaitState extends State<StudentWait> {
       ),
       body: Center(
         child: Text(
-          '''You have not been approved so please come back at another time or contact your teacher or administrator''',textAlign: TextAlign.center,
+          '''You have not been approved so please come back at another time or contact your teacher''',textAlign: TextAlign.center,
           style: TextStyle(fontFamily: "Serif",fontSize: 16.0),
         ),
       ),
