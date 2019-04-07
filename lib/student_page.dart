@@ -15,8 +15,8 @@ import 'authentication/Login.dart';
 import 'authentication/root_page.dart';
 import 'package:chewie/chewie.dart';
 import 'package:dio/dio.dart';
-import 'Wait.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'Wait.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'studentHub.dart';
 import 'StudentWait.dart';
 class StudentPage extends StatefulWidget{
