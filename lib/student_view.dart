@@ -124,7 +124,9 @@ class StudentViewState extends State<StudentView> {
                 ),
               ),
               body: StreamBuilder(
-                  stream: Firestore.instance.collection('classes').document(widget.reference).collection('users').where(
+//                  stream: Firestore.instance.collection('classes').document(widget.reference).collection('users').where(
+//                      'status', isEqualTo: 'student').snapshots(),
+                  stream: Firestore.instance.collection('users').where(
                       'status', isEqualTo: 'student').snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -65,15 +65,22 @@ class StudentWaitState extends State<StudentWait> {
     try {
       await Auth.signOut();
       debugPrint('here');
-      setState(() {
-        RootPageState.authStatus = AuthStat.notSignedIn;
-        LoginPageState.isLoading = false;
-        Auth.done = false;
-        yay = false;
-        Auth.remail = '';
-        Auth.rname = '';
-        Auth.rstatus = null;
-      });
+//      setState(() {
+//        RootPageState.authStatus = AuthStat.notSignedIn;
+//        LoginPageState.isLoading = false;
+//        Auth.done = false;
+//        yay = false;
+//        Auth.remail = '';
+//        Auth.rname = '';
+//        Auth.rstatus = null;
+//      });
+      RootPageState.authStatus = AuthStat.notSignedIn;
+      LoginPageState.isLoading = false;
+      Auth.done = false;
+      yay = false;
+      Auth.remail = '';
+      Auth.rname = '';
+      Auth.rstatus = null;
     }catch(e){
       debugPrint('e $e');
     }

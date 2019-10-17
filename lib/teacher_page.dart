@@ -45,7 +45,7 @@ class TeacherPageState extends State<TeacherPage>{
   String curpath;
   StorageUploadTask u;
   SharedPreferences prefs;
-  String className = '';
+  static String className = '';
   static String url = '';
   GlobalKey<ScaffoldState> scaffold = new GlobalKey<ScaffoldState>();
   //static FlutterDocumentPickerParams params;
@@ -391,7 +391,7 @@ class TeacherPageState extends State<TeacherPage>{
         body: !loading && signedIn ? StreamBuilder(
             stream: Firestore.instance.collection('classes').document(reference).collection('videos').snapshots(),
             builder:(BuildContext context, AsyncSnapshot<QuerySnapshot> snap) {
-
+              debugPrint('refs '+reference);
               if(!snap.hasData)
                 return Center(
                   child: Row(
@@ -1972,6 +1972,9 @@ class SecondState extends State<Second>{
             appBar: AppBar(
               backgroundColor: Colors.orange,
               title: Text('Upload A Video'),
+              leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> TeacherPage(auth: auth, onSignedOut: onSignedOut,code: TeacherPageState.code, className: TeacherPageState.className, uid: RootPageState.uid)));
+              },),
             ),
             body: Center(
               child: CircularProgressIndicator(),

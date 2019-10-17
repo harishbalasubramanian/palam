@@ -394,17 +394,17 @@ class CreatePageState extends State<CreatePage> {
                             'teacherName' : snapshot.data.documents[0].data['name'],
                           });
                           QuerySnapshot snapps = await Firestore.instance.collection('users').where('uid',isEqualTo: RootPageState.uid).getDocuments();
-                          List<String> classes = new List<String>();
+                          List classes = new List();
                           if(snapps.documents[0].data['classes'] != null){
                             classes.addAll(snapps.documents[0].data['classes']);
                           }
                           classes.add(control.text);
-                          List<String> codes = new List<String>();
+                          List codes = new List();
                           if(snapps.documents[0].data['codes'] != null){
                             codes.addAll(snapps.documents[0].data['codes']);
                           }
                           codes.add(r);
-                          List<String> teachers = new List<String>();
+                          List teachers = new List();
                           if(snapps.documents[0].data['teachers'] != null){
                             teachers.addAll(snapps.documents[0].data['teachers']);
                           }
