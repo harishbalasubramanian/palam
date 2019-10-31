@@ -91,6 +91,13 @@ class StudentViewState extends State<StudentView> {
                         }
                     ),
                     ListTile(
+                      title: Text('View Code'),
+                      onTap: (){
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> CodePage(auth: widget.auth, onSignedOut: widget.onSignedOut,reference: widget.reference,)));
+                      },
+                    ),
+                    ListTile(
                         title: Text('Sign Out'),
                         onTap: () async {
                           TeacherPageState.signedIn = false;
@@ -126,7 +133,7 @@ class StudentViewState extends State<StudentView> {
               body: StreamBuilder(
 //                  stream: Firestore.instance.collection('classes').document(widget.reference).collection('users').where(
 //                      'status', isEqualTo: 'student').snapshots(),
-                  stream: Firestore.instance.collection('users').where(
+                  stream: Firestore.instance.collection('classes').document(widget.reference).collection('users').where(
                       'status', isEqualTo: 'student').snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -172,7 +179,7 @@ class StudentViewState extends State<StudentView> {
                                     setState(() {
                                       value[index] = change;
                                     });
-                                    Firestore.instance.collection('users')
+                                    Firestore.instance.collection('classes').document(widget.reference).collection('users')
                                         .where(
                                         'uid', isEqualTo: snapshot.data
                                         .documents[index]['uid'])

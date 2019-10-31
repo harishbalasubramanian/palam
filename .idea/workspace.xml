@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="f161d4e7-a0e1-4051-84d0-854d1547355e" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" afterPath="$PROJECT_DIR$/ios/Podfile.lock" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" />
-      <change beforePath="$PROJECT_DIR$/lib/StudentWait.dart" afterPath="$PROJECT_DIR$/lib/StudentWait.dart" />
+      <change beforePath="$PROJECT_DIR$/lib/student_page.dart" afterPath="$PROJECT_DIR$/lib/student_page.dart" />
       <change beforePath="$PROJECT_DIR$/lib/student_view.dart" afterPath="$PROJECT_DIR$/lib/student_view.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/teacherHub.dart" afterPath="$PROJECT_DIR$/lib/teacherHub.dart" />
       <change beforePath="$PROJECT_DIR$/lib/teacher_page.dart" afterPath="$PROJECT_DIR$/lib/teacher_page.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -32,20 +29,8 @@
       <file leaf-file-name="studentHub.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/studentHub.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
+            <state relative-caret-position="0">
               <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="student_page.dart" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/student_page.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="48" column="13" lean-forward="false" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -56,7 +41,7 @@
       <file leaf-file-name="admin_page.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15585">
+            <state relative-caret-position="678">
               <caret line="1062" column="16" lean-forward="false" selection-start-line="1062" selection-start-column="6" selection-end-line="1062" selection-end-column="16" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
@@ -68,7 +53,7 @@
       <file leaf-file-name="StudentWait.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/StudentWait.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="900">
+            <state relative-caret-position="678">
               <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="25" selection-end-line="66" selection-end-column="25" />
               <folding />
             </state>
@@ -78,8 +63,20 @@
       <file leaf-file-name="student_view.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/student_view.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="15" column="24" lean-forward="false" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="24" />
+            <state relative-caret-position="1499">
+              <caret line="102" column="42" lean-forward="false" selection-start-line="102" selection-start-column="26" selection-end-line="102" selection-end-column="42" />
+              <folding>
+                <element signature="e#0#39#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="student_page.dart" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/student_page.dart">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="6192">
+              <caret line="745" column="80" lean-forward="false" selection-start-line="745" selection-start-column="71" selection-end-line="745" selection-end-column="80" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -90,8 +87,8 @@
       <file leaf-file-name="teacher_page.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/teacher_page.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="1975" column="180" lean-forward="false" selection-start-line="1975" selection-start-column="180" selection-end-line="1975" selection-end-column="180" />
+            <state relative-caret-position="351">
+              <caret line="1446" column="98" lean-forward="false" selection-start-line="1446" selection-start-column="98" selection-end-line="1446" selection-end-column="98" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -121,36 +118,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>widget.teacherName</find>
-      <find>initState</find>
-      <find>CreatePage</find>
-      <find>StudentPage</find>
-      <find>teacher</find>
-      <find>RootPageState.</find>
-      <find>Wait</find>
-      <find>StudentView</find>
       <find>List.from</find>
       <find>Navigator.push</find>
       <find>Back To Hub</find>
       <find>loading</find>
       <find>ListTile</find>
       <find>ListView.builder</find>
-      <find>ExpansionTile</find>
       <find>upload</find>
-      <find>File</find>
-      <find>class</find>
       <find>Auther.approved</find>
       <find>setState</find>
-      <find>NextPage</find>
-      <find>FileUpload</find>
       <find>floatingactionbutton</find>
       <find>view students</find>
       <find>Second</find>
-      <find>reference</find>
       <find>teacherName</find>
       <find>StreamBuilder</find>
       <find>TeacherPage</find>
       <find>leading</find>
+      <find>reference</find>
+      <find>sneeze</find>
+      <find>testThere</find>
+      <find>ExpansionTile</find>
+      <find>Drawer</find>
+      <find>CodePage</find>
+      <find>drawer</find>
+      <find>UploadFile</find>
+      <find>File</find>
+      <find>Test</find>
+      <find>TeacherPageState</find>
+      <find>class</find>
+      <find>NextPage</find>
+      <find>FileUpload</find>
     </findStrings>
     <replaceStrings>
       <replace>control</replace>
@@ -192,18 +189,18 @@
         <option value="$PROJECT_DIR$/pixel" />
         <option value="$PROJECT_DIR$/lib/studentHub.dart" />
         <option value="$PROJECT_DIR$/pubspec.yaml" />
-        <option value="$PROJECT_DIR$/lib/student_page.dart" />
         <option value="$PROJECT_DIR$/lib/teacherHub.dart" />
-        <option value="$PROJECT_DIR$/lib/student_view.dart" />
         <option value="$PROJECT_DIR$/lib/StudentWait.dart" />
+        <option value="$PROJECT_DIR$/lib/student_view.dart" />
+        <option value="$PROJECT_DIR$/lib/student_page.dart" />
         <option value="$PROJECT_DIR$/lib/teacher_page.dart" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="643" />
-    <option name="y" value="158" />
-    <option name="width" value="1489" />
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="x" value="308" />
+    <option name="y" value="24" />
+    <option name="width" value="1372" />
     <option name="height" value="947" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -222,8 +219,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -387,8 +382,10 @@
         </subPane>
         <option name="show-excluded-files" value="false" />
       </pane>
+      <pane id="AndroidView" />
       <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -632,7 +629,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="643" y="158" width="1489" height="947" extended-state="0" />
+    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298122" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
@@ -641,16 +638,16 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25928622" sideWeight="0.51371115" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31021437" sideWeight="0.5127458" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Dart Analysis" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32394367" sideWeight="0.49016753" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Dart Analysis" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3234391" sideWeight="0.49016753" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37089202" sideWeight="0.497558" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298122" sideWeight="0.4947589" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28638497" sideWeight="0.4872542" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25588536" sideWeight="0.4872542" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Flutter Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32792583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297619" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24602626" sideWeight="0.48628885" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21733822" sideWeight="0.48628885" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32983926" sideWeight="0.50644565" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -715,11 +712,77 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="10" />
+      <option name="time" value="12" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/lib/studentHub.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/student_page.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="48" column="13" lean-forward="false" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15585">
+          <caret line="1062" column="16" lean-forward="false" selection-start-line="1062" selection-start-column="6" selection-end-line="1062" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/StudentWait.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="900">
+          <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="25" selection-end-line="66" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/student_view.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="15" column="24" lean-forward="false" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/teacherHub.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5940">
+          <caret line="406" column="50" lean-forward="false" selection-start-line="406" selection-start-column="50" selection-end-line="406" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/teacher_page.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29280">
+          <caret line="1975" column="180" lean-forward="false" selection-start-line="1975" selection-start-column="180" selection-end-line="1975" selection-end-column="180" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/studentHub.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -1010,54 +1073,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/studentHub.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/student_page.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="48" column="13" lean-forward="false" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15585">
-          <caret line="1062" column="16" lean-forward="false" selection-start-line="1062" selection-start-column="6" selection-end-line="1062" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/StudentWait.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="900">
-          <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="25" selection-end-line="66" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/student_view.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="15" column="24" lean-forward="false" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/teacherHub.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5940">
@@ -1066,10 +1081,74 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/androidem">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="28" lean-forward="true" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/studentHub.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nexus">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="24" lean-forward="true" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/StudentWait.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="678">
+          <caret line="66" column="25" lean-forward="false" selection-start-line="66" selection-start-column="25" selection-end-line="66" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/student_view.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1499">
+          <caret line="102" column="42" lean-forward="false" selection-start-line="102" selection-start-column="26" selection-end-line="102" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/admin_page.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="678">
+          <caret line="1062" column="16" lean-forward="false" selection-start-line="1062" selection-start-column="6" selection-end-line="1062" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/student_page.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6192">
+          <caret line="745" column="80" lean-forward="false" selection-start-line="745" selection-start-column="71" selection-end-line="745" selection-end-column="80" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/teacher_page.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="1975" column="180" lean-forward="false" selection-start-line="1975" selection-start-column="180" selection-end-line="1975" selection-end-column="180" />
+        <state relative-caret-position="351">
+          <caret line="1446" column="98" lean-forward="false" selection-start-line="1446" selection-start-column="98" selection-end-line="1446" selection-end-column="98" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

@@ -461,52 +461,29 @@ class StudentPageState extends State<StudentPage>{
                                           children: <Widget>[
                                             Padding(padding: EdgeInsets.only(
                                                 left: 16.0)),
-                                            Text(snapshot['name'].replaceAll(
-                                                '.mp4', '')),
+                                            Text(snapshot['name'].replaceAll('.mp4',''), style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 15.0),),
 
-
-                                            snapper.data[1] ? IconButton(
-                                                icon: Icon(Icons.file_download),
-                                                color: Theme
-                                                    .of(context)
-                                                    .accentColor,
-                                                onPressed: () async {
-                                                  setState(() {
-                                                    loading = true;
-                                                  });
-                                                  await downloadFile(
-                                                      snapshot['downloadURL'],
-                                                      snapshot['name']);
-                                                  setState(() {
-                                                    loading = false;
-                                                    scaffold.currentState
-                                                        .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                              snapshot['name'] +
-                                                                  ' has downloaded'),
-                                                        ));
-                                                  });
-                                                  try {
-                                                    QuerySnapshot snapper = await Firestore
-                                                        .instance.collection(
-                                                        'classes').document(
-                                                        reference)
-                                                        .collection('tests')
-                                                        .where('name',
-                                                        isEqualTo: snapshot['name']
-                                                            .replaceAll(
-                                                            '.mp4', '.txt'))
-                                                        .getDocuments();
-                                                    if (snapper.documents[0]
-                                                        .exists) {
-                                                      await downloadFile(
-                                                          snapper
-                                                              .documents[0]['downloadURL'],
-                                                          'Test' +
-                                                              snapper
-                                                                  .documents[0]['name']);
-                                                    }
+                                          ],
+                                        ),
+                                        //
+                                           trailing: snapper.data[1] ? Container(
+                                             width: 40.0,
+                                             decoration: BoxDecoration(
+                                               shape: BoxShape.circle,
+                                               color: Colors.green,
+                                             ),
+                                             child: IconButton(
+                                                  icon: Icon(Icons.file_download, color: Colors.white),
+                                                  color: Theme
+                                                      .of(context)
+                                                      .accentColor,
+                                                  onPressed: () async {
+                                                    setState(() {
+                                                      loading = true;
+                                                    });
+                                                    await downloadFile(
+                                                        snapshot['downloadURL'],
+                                                        snapshot['name']);
                                                     setState(() {
                                                       loading = false;
                                                       scaffold.currentState
@@ -516,100 +493,138 @@ class StudentPageState extends State<StudentPage>{
                                                                 snapshot['name'] +
                                                                     ' has downloaded'),
                                                           ));
-                                                      cool = false;
                                                     });
-                                                  } catch (e) {
+                                                    try {
+                                                      QuerySnapshot snapper = await Firestore
+                                                          .instance.collection(
+                                                          'classes').document(
+                                                          reference)
+                                                          .collection('tests')
+                                                          .where('name',
+                                                          isEqualTo: snapshot['name']
+                                                              .replaceAll(
+                                                              '.mp4', '.txt'))
+                                                          .getDocuments();
+                                                      if (snapper.documents[0]
+                                                          .exists) {
+                                                        await downloadFile(
+                                                            snapper
+                                                                .documents[0]['downloadURL'],
+                                                            'Test' +
+                                                                snapper
+                                                                    .documents[0]['name']);
+                                                      }
+                                                      setState(() {
+                                                        loading = false;
+                                                        scaffold.currentState
+                                                            .showSnackBar(
+                                                            SnackBar(
+                                                              content: Text(
+                                                                  snapshot['name'] +
+                                                                      ' has downloaded'),
+                                                            ));
+                                                        cool = false;
+                                                      });
+                                                    } catch (e) {
 
+                                                    }
                                                   }
-                                                }
-                                            ) :
-                                            IconButton(
-                                                icon: Icon(Icons.delete),
-                                                color: Colors.orange,
-                                                onPressed: () async {
-                                                  var alert = AlertDialog(
-                                                    title: Text(
-                                                        'Are you sure that you want to delete this from your device?'),
-                                                    content: Row(
-                                                      children: <Widget>[
-                                                        FlatButton(
-                                                            child: Text('Yes'),
-                                                            onPressed: () async {
-                                                              prefs =
-                                                              await SharedPreferences
-                                                                  .getInstance();
-                                                              String naame = prefs
-                                                                  .getString(
-                                                                  widget
-                                                                      .code +
-                                                                      snapshot['name']) ??
-                                                                  null;
-                                                              if (naame !=
-                                                                  null) {
-                                                                File file = File(
-                                                                    naame);
-                                                                file.delete();
-                                                              }
-                                                              String naaame = prefs
-                                                                  .getString(
-                                                                  widget
-                                                                      .code +
-                                                                      'Test' +
-                                                                      snapshot['name']) ??
-                                                                  null;
-                                                              if (naaame !=
-                                                                  null) {
-                                                                File file = File(
-                                                                    naaame);
-                                                                file.delete();
-                                                              }
-                                                              NextPageState
-                                                                  .check =
-                                                              false;
-                                                              try {
-                                                                prefs.remove(
+                                              ),
+                                           ) :
+                                            Container(
+                                              width: 40.0,
+                                              decoration: BoxDecoration(
+
+                                                shape: BoxShape.circle,
+                                                color: Colors.red,
+                                              ),
+                                              child: IconButton(
+                                                  icon: Icon(Icons.delete, color: Colors.white),
+
+                                                  onPressed: () async {
+                                                    var alert = AlertDialog(
+                                                      title: Text(
+                                                          'Are you sure that you want to delete this from your device?'),
+                                                      content: Row(
+                                                        children: <Widget>[
+                                                          FlatButton(
+                                                              child: Text('Yes'),
+                                                              onPressed: () async {
+                                                                prefs =
+                                                                await SharedPreferences
+                                                                    .getInstance();
+                                                                String naame = prefs
+                                                                    .getString(
                                                                     widget
                                                                         .code +
-                                                                        snapshot['name']);
-                                                                prefs.remove(
+                                                                        snapshot['name']) ??
+                                                                    null;
+                                                                if (naame !=
+                                                                    null) {
+                                                                  File file = File(
+                                                                      naame);
+                                                                  file.delete();
+                                                                }
+                                                                String naaame = prefs
+                                                                    .getString(
                                                                     widget
                                                                         .code +
                                                                         'Test' +
-                                                                        snapshot['name']
-                                                                            .replaceAll(
-                                                                            '.mp4',
-                                                                            '.txt'));
-                                                              } catch (e) {
+                                                                        snapshot['name']) ??
+                                                                    null;
+                                                                if (naaame !=
+                                                                    null) {
+                                                                  File file = File(
+                                                                      naaame);
+                                                                  file.delete();
+                                                                }
+                                                                NextPageState
+                                                                    .check =
+                                                                false;
+                                                                try {
+                                                                  prefs.remove(
+                                                                      widget
+                                                                          .code +
+                                                                          snapshot['name']);
+                                                                  prefs.remove(
+                                                                      widget
+                                                                          .code +
+                                                                          'Test' +
+                                                                          snapshot['name']
+                                                                              .replaceAll(
+                                                                              '.mp4',
+                                                                              '.txt'));
+                                                                } catch (e) {
 
+                                                                }
+                                                                setState(() {
+                                                                  cool = true;
+                                                                });
+                                                                Navigator.pop(
+                                                                    context);
                                                               }
-                                                              setState(() {
-                                                                cool = true;
-                                                              });
-                                                              Navigator.pop(
-                                                                  context);
-                                                            }
-                                                        ),
-                                                        FlatButton(
-                                                            child: Text('No'),
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            }
-                                                        ),
+                                                          ),
+                                                          FlatButton(
+                                                              child: Text('No'),
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              }
+                                                          ),
 
-                                                      ],
-                                                    ),
-                                                  );
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return alert;
-                                                      });
-                                                }
+                                                        ],
+                                                      ),
+                                                    );
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return alert;
+                                                        });
+                                                  }
+                                              ),
                                             ),
 
-                                          ],
-                                        ),
+
                                         enabled: true,
                                         selected: true,
 
