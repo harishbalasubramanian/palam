@@ -1,8 +1,3 @@
-# prsd
+# Palam
 
-A new Flutter project.
-
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+A major mobile app that was launched to help students across medical universities learn more about medicine.
